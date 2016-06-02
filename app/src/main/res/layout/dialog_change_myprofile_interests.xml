@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/dialog_change_password"
+    android:orientation="vertical"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+   <TextView
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:gravity="center"
+       android:text="Change your interests!\n\n (comma seperated values)"
+       android:layout_margin="10dp"
+       android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+    <EditText
+        android:id="@+id/change_myprofile_interests"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:hint=""
+        android:inputType="text" />
+
+</LinearLayout>

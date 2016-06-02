@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">TicketMatch</string>
+    <string-array name="dropdown_logo">
+        <item></item>
+        <item>Change Password</item>
+        <item>Logout</item>
+    </string-array>
+    <string-array name="register_gender">
+        <item>Neutral</item>
+        <item>Male</item>
+        <item>Female</item>
+    </string-array>
+</resources>
