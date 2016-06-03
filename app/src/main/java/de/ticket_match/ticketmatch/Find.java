@@ -58,7 +58,7 @@ public class Find extends AppCompatActivity {
         String dates = date.getText().toString();
         String locations = location.getText().toString();
 
-        if (dates.equals("") | locations.equals("")){
+        if (dates.equals("Date") | locations.equals("")){
             Toast.makeText(getApplicationContext(),"Please fill in all information!",Toast.LENGTH_SHORT).show();
         }else {
 
