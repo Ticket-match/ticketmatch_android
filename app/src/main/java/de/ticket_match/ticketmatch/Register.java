@@ -4,10 +4,12 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
@@ -18,9 +20,20 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 import java.util.Calendar;
 
 public class Register extends AppCompatActivity {
+
+    private FirebaseAuth mAuth;
+    private FirebaseAuth.AuthStateListener mAuthListener;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,6 +44,37 @@ public class Register extends AppCompatActivity {
         adapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
         ((Spinner)findViewById(R.id.register_gender)).setAdapter(adapter);
 
+        // Firebase Authentication Listener
+        mAuth = FirebaseAuth.getInstance();
+        mAuthListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                if (user != null) {
+                    // User is signed in
+                    Log.d("Firebase", "onAuthStateChanged:signed_in:" + user.getUid());
+                    //TODO: Forward to the next screen after successful registration
+                } else {
+                    // User is signed out
+                    Log.d("Firebase", "onAuthStateChanged:signed_out");
+                }
+                // ...
+            }
+        };
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        mAuth.addAuthStateListener(mAuthListener);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (mAuthListener != null) {
+            mAuth.removeAuthStateListener(mAuthListener);
+        }
     }
 
     @Override
@@ -61,6 +105,24 @@ public class Register extends AppCompatActivity {
         } else if(!email.contains("@")) {
             Toast.makeText(getApplicationContext(), "Please provide an email adress!", Toast.LENGTH_SHORT).show();
         } else {
+            // Create an Account via Firebase Authentication
+            mAuth.createUserWithEmailAndPassword(email, password)
+                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            Log.d("Firebase", "createUserWithEmail:onComplete:" + task.isSuccessful());
+
+                            // If sign in fails, display a message to the user. If sign in succeeds
+                            // the auth state listener will be notified and logic to handle the
+                            // signed in user can be handled in the listener.
+                            if (!task.isSuccessful()) {
+                                Toast.makeText(Register.this, "Authentication failed.",
+                                        Toast.LENGTH_SHORT).show();
+                            }
+
+                            // ...
+                        }
+                    });
             Toast.makeText(getApplicationContext(),firstname+lastname+email+password+location+birthdate+gender,Toast.LENGTH_SHORT).show();
         }
     }
