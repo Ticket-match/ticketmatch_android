@@ -9,52 +9,67 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.PopupMenu;
-import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 
-public class ForeignProfileRating extends AppCompatActivity {
+public class Offer_Overview extends AppCompatActivity {
 
-    ArrayList<String> listitems_ratings = new ArrayList<String>(0);
-    ArrayList<String> listitems_rating_text = new ArrayList<String>(0);
+    ArrayList<String> listitems_offer = new ArrayList<String>(0);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_foreign_profile_rating);
+        setContentView(R.layout.activity_offer__overview);
 
-        listitems_ratings.add("3.5");
-        listitems_rating_text.add("Nils Z.|12.05.2016|Cinema");
-        listitems_ratings.add("1");
-        listitems_rating_text.add("Nils Z.|12.05.2016|Pick Nick");
+        ListView listview = (ListView) findViewById(R.id.offeroverview_list);
 
-        ((ListView) findViewById(R.id.foreignprofile_ratings)).setAdapter(new CustomAdapter(this, listitems_ratings, listitems_rating_text));
+        ViewGroup header = (ViewGroup)getLayoutInflater().inflate(R.layout.offeroverview_headerlayout, listview, false);
+        listview.addHeaderView(header);
+//|15:00|14,00€|Mannheim
+        listitems_offer.add("Cinema|Star Wars|25.05.2014|15:00");
+        listitems_offer.add("Cinema&Picnic|12.05.2013|20:15");
+        listview.setAdapter(new CustomAdapter(this, listitems_offer));
+
+        listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String offer_ticket = listitems_offer.get(position-1);
+
+                Bundle values = new Bundle();
+                values.putString("offer", offer_ticket);
+                Intent offer_detailscreen = new Intent(getApplicationContext(), Offer_Detail.class);
+                offer_detailscreen.putExtras(values);
+                startActivity(offer_detailscreen);
+            }
+        });
+    }
+
+    public void btn_newoffer (View view){
+        Intent newoffer = new Intent(this, NewOffer.class);
+        startActivity(newoffer);
+
     }
 
     public static class CustomAdapter extends BaseAdapter {
-        ArrayList<String> rating;
-        ArrayList<String> rating_text;
+        ArrayList<String> result;
         Context context;
         private static LayoutInflater inflater=null;
 
-        public CustomAdapter(ForeignProfileRating mainActivity, ArrayList<String> rating, ArrayList<String> rating_text) {
-            this.rating = rating;
-            this.rating_text = rating_text;
+        public CustomAdapter(Offer_Overview mainActivity, ArrayList<String>  offerlist) {
+            result=offerlist;
             context=mainActivity;
             inflater = ( LayoutInflater )context.
                     getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         }
         @Override
         public int getCount() {
-            return rating.size();
+            return result.size();
         }
 
         @Override
@@ -69,29 +84,19 @@ public class ForeignProfileRating extends AppCompatActivity {
 
         @Override
         public View getView(final int position, View convertView, ViewGroup parent) {
-            View rowView = inflater.inflate(R.layout.listitem_ratings, null);
-            String text = rating_text.get(position);
-            text = text.substring(0, text.indexOf("|")) + "\n" + text.substring(text.indexOf("|")+1,text.indexOf("|",text.indexOf("|")+1)) + "\n" + text.substring(text.indexOf("|",text.indexOf("|")+1)+1,text.length());
-            ((RatingBar)rowView.findViewById(R.id.listitem_rating_stars)).setRating(new Float(rating.get(position)));
-            ((TextView) rowView.findViewById(R.id.listitem_rating_text)).setText(text);
+            // TODO Auto-generated method stub
+
+            String text = result.get(position);
+            String type = text.substring(0, text.indexOf("|"));
+            String date = text.substring(text.indexOf("|")+1,text.indexOf("|",text.indexOf("|")+1));
+            String time = text.substring(text.indexOf("|",text.indexOf("|")+1)+1,text.length());
+
+            View rowView = inflater.inflate(R.layout.listitem_offeroverview, null);
+
+            ((TextView) rowView.findViewById(R.id.row_type)).setText(type);
+            ((TextView) rowView.findViewById(R.id.row_date)).setText(date);
+            ((TextView) rowView.findViewById(R.id.row_time)).setText(time);
             return rowView;
-        }
-
-    }
-
-    public void btn_newrating (View view) {
-        String rating = Float.toString(((RatingBar)findViewById(R.id.newrating_stars)).getRating()).substring(0,2);
-        String rating_text = ((EditText)findViewById(R.id.newrating_text)).getText().toString();
-
-        if (rating.equals("") | rating_text.equals("")) {
-            Toast.makeText(getApplicationContext(),"Please fill out the requiered information!",Toast.LENGTH_SHORT).show();
-        } else {
-            String rt = "me|" + new SimpleDateFormat("dd.MM.yyyy").format(new Date()) + "|" + rating_text;
-            listitems_ratings.add(rating);
-            listitems_rating_text.add(rt);
-            ((CustomAdapter)((ListView) findViewById(R.id.foreignprofile_ratings)).getAdapter()).notifyDataSetChanged();
-            ((EditText)findViewById(R.id.newrating_text)).setText("");
-            ((RatingBar)findViewById(R.id.newrating_stars)).setRating(0);
         }
 
     }
@@ -136,14 +141,12 @@ public class ForeignProfileRating extends AppCompatActivity {
     }
 
     public void btn_ticketoffer(View view) {
-        Intent offeroverview = new Intent(this, Offer_Overview.class);
-        startActivity(offeroverview);
+
     }
 
     public void btn_search(View view) {
-        Toast.makeText(getApplicationContext(),"btn_search",Toast.LENGTH_SHORT).show();
-        Intent inte = new Intent(this, ForeignProfile.class);
-        startActivity(inte);
+        Intent find = new Intent(this, Find.class);
+        startActivity(find);
     }
 
     public void btn_makematch(View view) {

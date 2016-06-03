@@ -10,4 +10,19 @@
         <item>Male</item>
         <item>Female</item>
     </string-array>
+    <string-array name="event_type">
+        <item>Cinema</item>
+        <item>Theatre</item>
+        <item>Sports</item>
+        <item>Picnic</item>
+        <item>Concert</item>
+        <item>Festival</item>
+        <item>Museum</item>
+        <item>Market</item>
+        <item>Exposition</item>
+    </string-array>
+    <string-array name="currency">
+        <item>EUR</item>
+        <item>USD</item>
+    </string-array>
 </resources>

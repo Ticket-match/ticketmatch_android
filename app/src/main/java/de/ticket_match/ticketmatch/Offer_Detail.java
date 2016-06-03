@@ -5,42 +5,47 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.ImageButton;
-import android.widget.ListView;
 import android.widget.PopupMenu;
-import android.widget.RatingBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 
-public class ForeignProfile extends AppCompatActivity {
+public class Offer_Detail extends AppCompatActivity {
+    Bundle bund;
+    String offerdetails = "";
 
-    ArrayList<String> listitems_foreignprofile = new ArrayList<String>(0);
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_foreign_profile);
+        setContentView(R.layout.activity_offer__detail);
 
-        ((ImageButton)findViewById(R.id.foreignprofile_image)).setImageResource(R.drawable.contacts);
 
-        listitems_foreignprofile.add("Cinema");
-        listitems_foreignprofile.add("Pick Nick");
-        ((ListView) findViewById(R.id.foreignprofile_interests)).setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,listitems_foreignprofile));
+        bund = getIntent().getExtras();
+        offerdetails = bund.getString("offer");
 
-        ((RatingBar)findViewById(R.id.foreignprofile_rating)).setRating(new Float("3.5"));
-        ((RatingBar)findViewById(R.id.foreignprofile_rating)).setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if(event.getAction()==MotionEvent.ACTION_DOWN){
-                    Intent foreignprofile_rating =  new Intent(getApplicationContext(), ForeignProfileRating.class);
-                    startActivity(foreignprofile_rating);
-                }
-                return true;
-            }
-        });
+
+        String type = offerdetails.substring(0, offerdetails.indexOf("|"));
+        String eventname = offerdetails.substring(offerdetails.indexOf("|")+1,offerdetails.indexOf("|",offerdetails.indexOf("|")+1));
+        String date = offerdetails.substring(offerdetails.indexOf("|",offerdetails.indexOf("|")+1)+1,offerdetails.length());
+
+
+//+time+"\n"+price+"\n"+location
+        //String time = offerdetails.substring(offerdetails.indexOf("|",offerdetails.indexOf("|")+1)+1,offerdetails.length());
+        //String price = offerdetails.substring(offerdetails.indexOf("|",offerdetails.indexOf("|")+1)+1,offerdetails.length());
+        //String location = offerdetails.substring(offerdetails.indexOf("|",offerdetails.indexOf("|")+1)+1,offerdetails.length());
+
+        TextView t = (TextView)findViewById(R.id.ticket_detail);
+        t.setText(type+"\n"+eventname+"\n"+date+"\n");
+
+    }
+
+    public void btn_delete_offer (View view){
+
+        // Backend delete Row in Database; Open new Screen without dataset
+        Intent offer_overview = new Intent(getApplicationContext(), Offer_Overview.class);
+        startActivity(offer_overview);
 
     }
 
@@ -89,10 +94,12 @@ public class ForeignProfile extends AppCompatActivity {
     }
 
     public void btn_search(View view) {
-        Toast.makeText(getApplicationContext(),"btn_search",Toast.LENGTH_SHORT).show();
+        Intent find = new Intent(this, Find.class);
+        startActivity(find);
     }
 
     public void btn_makematch(View view) {
         Toast.makeText(getApplicationContext(),"btn_makematch",Toast.LENGTH_SHORT).show();
     }
+
 }

@@ -42,7 +42,13 @@
         <activity android:name=".Message_Overview" />
         <activity android:name=".Message_Chat" />
         <activity android:name=".ForeignProfile" />
-        <activity android:name=".ForeignProfileRating"></activity>
+        <activity android:name=".ForeignProfileRating" />
+        <activity android:name=".Offer_Overview" />
+        <activity android:name=".NewOffer" />
+        <activity android:name=".Offer_Detail" />
+        <activity android:name=".Find" />
+        <activity android:name=".Find_Vendor" />
+        <activity android:name=".Message_Vendor"></activity>
     </application>
 
 </manifest>

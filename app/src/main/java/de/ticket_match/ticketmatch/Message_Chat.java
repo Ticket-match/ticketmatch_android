@@ -96,13 +96,13 @@ public class Message_Chat extends AppCompatActivity {
     }
 
     public void btn_ticketoffer(View view) {
-        Toast.makeText(getApplicationContext(),"btn_ticketoffer",Toast.LENGTH_SHORT).show();
+        Intent offeroverview = new Intent(this, Offer_Overview.class);
+        startActivity(offeroverview);
     }
 
     public void btn_search(View view) {
-        Toast.makeText(getApplicationContext(),"btn_search",Toast.LENGTH_SHORT).show();
-        Intent inte = new Intent(this, ForeignProfile.class);
-        startActivity(inte);
+        Intent find = new Intent(this, Find.class);
+        startActivity(find);
     }
 
     public void btn_makematch(View view) {
@@ -111,7 +111,7 @@ public class Message_Chat extends AppCompatActivity {
 
     public static class CustomAdapter extends BaseAdapter {
         ArrayList<String> result;
-String sname;
+        String sname;
         Context context;
         private static LayoutInflater inflater=null;
 
@@ -155,7 +155,6 @@ String sname;
                 ((TextView) rowView.findViewById(R.id.listitem_messagechat)).setText(smessage);
                 ((TextView) rowView.findViewById(R.id.listitem_messagechat_date)).setText(sdate);
             }
-
 
             return rowView;
         }

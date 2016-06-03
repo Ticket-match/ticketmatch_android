@@ -192,13 +192,13 @@ public class MyProfile extends AppCompatActivity {
     }
 
     public void btn_ticketoffer(View view) {
-        Toast.makeText(getApplicationContext(),"btn_ticketoffer",Toast.LENGTH_SHORT).show();
+        Intent offeroverview = new Intent(this, Offer_Overview.class);
+        startActivity(offeroverview);
     }
 
     public void btn_search(View view) {
-        Toast.makeText(getApplicationContext(),"btn_search",Toast.LENGTH_SHORT).show();
-        Intent inte = new Intent(this, ForeignProfile.class);
-        startActivity(inte);
+        Intent find = new Intent(this, Find.class);
+        startActivity(find);
     }
 
     public void btn_makematch(View view) {
@@ -270,8 +270,7 @@ public class MyProfile extends AppCompatActivity {
         public CustomAdapter(MyProfile mainActivity, ArrayList<String>  prgmNameList) {
             result=prgmNameList;
             context=mainActivity;
-            inflater = ( LayoutInflater )context.
-                    getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            inflater = ( LayoutInflater )context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         }
         @Override
         public int getCount() {
