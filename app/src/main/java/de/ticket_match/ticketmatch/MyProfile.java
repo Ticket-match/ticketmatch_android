@@ -183,7 +183,8 @@ public class MyProfile extends AppCompatActivity {
     }
 
     public void btn_profile(View view) {
-
+        Intent myprofile = new Intent(this, MyProfile.class);
+        startActivity(myprofile);
     }
 
     public void btn_message(View view) {
@@ -202,7 +203,8 @@ public class MyProfile extends AppCompatActivity {
     }
 
     public void btn_makematch(View view) {
-        Toast.makeText(getApplicationContext(),"btn_makematch",Toast.LENGTH_SHORT).show();
+        Intent makeadate = new Intent(this, MakeADate.class);
+        startActivity(makeadate);
     }
 
 

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/makeaddate_headerlayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:stretchColumns="*">
+
+    <TableRow
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        >
+
+        <TextView
+            android:layout_width="0dp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:layout_column="0"
+            android:text="Type"
+            android:textColor="#0084FF"
+            android:textStyle="normal|bold"
+            android:layout_margin="10dp"
+            android:gravity="left"
+            android:layout_weight="1.5"
+            android:id="@+id/textView3" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:layout_column="1"
+            android:text="Name"
+            android:textColor="#0084FF"
+            android:textStyle="normal|bold"
+            android:layout_margin="10dp"
+            android:gravity="left"
+            android:layout_weight="1.5"
+            />
+
+        <TextView
+            android:layout_width="0dp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:layout_column="2"
+            android:text="Date"
+            android:textColor="#0084FF"
+            android:textStyle="normal|bold"
+            android:layout_margin="10dp"
+            android:gravity="left"
+            android:layout_weight="1.5"
+            />
+
+        <TextView
+            android:layout_width="0dp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:layout_column="2"
+            android:text="Location"
+            android:textColor="#0084FF"
+            android:textStyle="normal|bold"
+            android:layout_margin="10dp"
+            android:gravity="left"
+            android:layout_weight="2.2"
+            />
+
+        <TextView
+            android:layout_width="0dp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:layout_column="2"
+            android:text="Who"
+            android:textColor="#0084FF"
+            android:textStyle="normal|bold"
+            android:layout_margin="10dp"
+            android:gravity="left"
+            android:layout_weight="1"
+            />
+
+    </TableRow>
+
+</TableLayout>

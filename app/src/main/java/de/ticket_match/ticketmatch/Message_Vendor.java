@@ -79,6 +79,7 @@ public class Message_Vendor extends AppCompatActivity {
     }
 
     public void btn_makematch(View view) {
-        Toast.makeText(getApplicationContext(),"btn_makematch",Toast.LENGTH_SHORT).show();
+        Intent makeadate = new Intent(this, MakeADate.class);
+        startActivity(makeadate);
     }
 }

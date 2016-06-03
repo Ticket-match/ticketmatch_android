@@ -2,6 +2,7 @@ package de.ticket_match.ticketmatch;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -11,6 +12,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
@@ -141,7 +144,8 @@ public class Offer_Overview extends AppCompatActivity {
     }
 
     public void btn_ticketoffer(View view) {
-
+        Intent offeroverview = new Intent(this, Offer_Overview.class);
+        startActivity(offeroverview);
     }
 
     public void btn_search(View view) {
@@ -150,6 +154,7 @@ public class Offer_Overview extends AppCompatActivity {
     }
 
     public void btn_makematch(View view) {
-        Toast.makeText(getApplicationContext(),"btn_makematch",Toast.LENGTH_SHORT).show();
+        Intent makeadate = new Intent(this, MakeADate.class);
+        startActivity(makeadate);
     }
 }

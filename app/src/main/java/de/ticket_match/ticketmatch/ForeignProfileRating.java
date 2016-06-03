@@ -141,12 +141,12 @@ public class ForeignProfileRating extends AppCompatActivity {
     }
 
     public void btn_search(View view) {
-        Toast.makeText(getApplicationContext(),"btn_search",Toast.LENGTH_SHORT).show();
-        Intent inte = new Intent(this, ForeignProfile.class);
-        startActivity(inte);
+        Intent find = new Intent(this, Find.class);
+        startActivity(find);
     }
 
     public void btn_makematch(View view) {
-        Toast.makeText(getApplicationContext(),"btn_makematch",Toast.LENGTH_SHORT).show();
+        Intent makeadate = new Intent(this, MakeADate.class);
+        startActivity(makeadate);
     }
 }

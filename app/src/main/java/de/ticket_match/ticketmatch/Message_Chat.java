@@ -91,8 +91,8 @@ public class Message_Chat extends AppCompatActivity {
     }
 
     public void btn_message(View view) {
-        Intent message_overview = new Intent(this, Message_Overview.class);
-        startActivity(message_overview);
+        Intent message = new Intent(this, Message_Overview.class);
+        startActivity(message);
     }
 
     public void btn_ticketoffer(View view) {
@@ -106,7 +106,8 @@ public class Message_Chat extends AppCompatActivity {
     }
 
     public void btn_makematch(View view) {
-        Toast.makeText(getApplicationContext(),"btn_makematch",Toast.LENGTH_SHORT).show();
+        Intent makeadate = new Intent(this, MakeADate.class);
+        startActivity(makeadate);
     }
 
     public static class CustomAdapter extends BaseAdapter {
