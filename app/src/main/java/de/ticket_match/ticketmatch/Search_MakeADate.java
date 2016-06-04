@@ -51,8 +51,6 @@ public class Search_MakeADate extends AppCompatActivity {
 
         // Get data out of input screen and save in Backend. With Strings or Array?
 
-        Toast.makeText(getApplicationContext(),"Your date is registered!",Toast.LENGTH_SHORT).show();
-
         Intent makeadateresults = new Intent(getApplicationContext(), MakeADate_SearchResults.class);
         startActivity(makeadateresults);
 

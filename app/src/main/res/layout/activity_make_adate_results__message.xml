@@ -5,15 +5,14 @@
     android:id="@+id/find"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="de.ticket_match.ticketmatch.Find">
+    tools:context="de.ticket_match.ticketmatch.MakeADateResults_Message">
 
     <RelativeLayout
         android:id="@+id/header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:background="#2196F3"
-        >
+        android:background="#0084FF">
 
         <LinearLayout
             android:orientation="vertical"
@@ -48,9 +47,8 @@
                     android:layout_row="0"
                     android:id="@+id/textView"
                     android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                    android:textSize="30sp"
-                    android:textColor="#ffffff"
-                    android:alpha="0.87"/>
+                    android:textSize="36sp"
+                    android:textColor="#ffffff" />
             </GridLayout>
 
             <View
@@ -62,12 +60,11 @@
     </RelativeLayout>
 
     <RelativeLayout
-        android:background="#2196F3"
+        android:background="#0084FF"
         android:id="@+id/footer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        >
+        android:layout_alignParentBottom="true">
 
         <LinearLayout
             android:orientation="vertical"
@@ -97,8 +94,7 @@
                     android:layout_column="0"
                     android:layout_margin="8dp"
                     android:background="@drawable/contacts"
-                    android:onClick="btn_profile"
-                    android:alpha="0.87"/>
+                    android:onClick="btn_profile"/>
 
                 <ImageButton
                     android:layout_width="wrap_content"
@@ -107,8 +103,7 @@
                     android:layout_column="1"
                     android:background="@drawable/message"
                     android:layout_margin="8dp"
-                    android:onClick="btn_message"
-                    android:alpha="0.87"/>
+                    android:onClick="btn_message" />
 
                 <ImageButton
                     android:layout_width="wrap_content"
@@ -117,8 +112,7 @@
                     android:layout_column="2"
                     android:background="@drawable/ticket"
                     android:layout_margin="8dp"
-                    android:onClick="btn_ticketoffer"
-                    android:alpha="0.87"/>
+                    android:onClick="btn_ticketoffer" />
 
                 <ImageButton
                     android:layout_width="wrap_content"
@@ -127,8 +121,7 @@
                     android:layout_column="4"
                     android:background="@drawable/group"
                     android:layout_margin="8dp"
-                    android:onClick="btn_makematch"
-                    android:alpha="0.87"/>
+                    android:onClick="btn_makematch" />
 
                 <ImageButton
                     android:layout_width="wrap_content"
@@ -138,7 +131,7 @@
                     android:background="@drawable/search"
                     android:layout_margin="8dp"
                     android:id="@+id/imageButton"
-                    android:alpha="0.87"/>
+                    android:onClick="btn_search"/>
             </GridLayout>
 
         </LinearLayout>
@@ -149,6 +142,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
+
         android:layout_above="@+id/footer"
         android:layout_below="@+id/header"
         >
@@ -157,76 +151,48 @@
             android:layout_width="match_parent"
             android:layout_height="10dp"/>
 
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/makeadateresults_message_subject"
+            android:hint="Subject"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="10dp"/>
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/makeadateresults_message_message"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="10dp"
+            android:hint="Type your message here..."/>
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_gravity="center">
 
-            <LinearLayout
+            <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
-            <TextView
-                android:text="Date"
+                android:text="View Profile"
+                android:onClick="foreign_profile"/>
+
+            <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/search_date"
-                android:onClick="find_date"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:layout_marginBottom="10dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginLeft="10dp"
-                android:alpha="0.38"/>
-
-            <EditText
-                android:hint="Event Location"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/find_eventlocation"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:layout_marginBottom="10dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginLeft="10dp"
-                android:alpha="0.38"/>
-
-            </LinearLayout>
-
-
-                <ImageButton
-                    android:id="@+id/find_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/search_filled"
-                    android:onClick="btn_find"
-                    android:layout_gravity="center"
-                    android:layout_marginLeft="30dp"
-                    android:alpha="0.54"
-                    />
+                android:text="Send Message"
+                android:onClick="send_message"/>
 
         </LinearLayout>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="#aaaaaa"
-            android:layout_gravity="center"/>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="10dp"/>
-
-        <ListView
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:id="@+id/find_results"
-            android:layout_weight="1"
-            android:alpha="0.54"/>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="10dp" />
-
     </LinearLayout>
+
+
+
 
 </android.widget.RelativeLayout>
