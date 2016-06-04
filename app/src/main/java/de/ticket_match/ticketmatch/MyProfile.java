@@ -31,6 +31,8 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -102,6 +104,9 @@ public class MyProfile extends AppCompatActivity {
                         return true;
                     case R.id.logout:
                         Toast.makeText(getApplicationContext(),"logout",Toast.LENGTH_SHORT).show();
+                        FirebaseAuth.getInstance().signOut();
+                        Intent mainActivity = new Intent(getApplicationContext(), MainActivity.class);
+                        startActivity(mainActivity);
                         return true;
                     default:
                         return false;

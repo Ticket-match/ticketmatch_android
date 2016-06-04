@@ -4,6 +4,7 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -52,8 +53,10 @@ public class Register extends AppCompatActivity {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
                     // User is signed in
+                    //TODO: Delete Logs
                     Log.d("Firebase", "onAuthStateChanged:signed_in:" + user.getUid());
-                    //TODO: Forward to the next screen after successful registration
+                    Intent myProfile = new Intent(getApplicationContext(), MyProfile.class);
+                    startActivity(myProfile);
                 } else {
                     // User is signed out
                     Log.d("Firebase", "onAuthStateChanged:signed_out");
@@ -116,7 +119,7 @@ public class Register extends AppCompatActivity {
                             // the auth state listener will be notified and logic to handle the
                             // signed in user can be handled in the listener.
                             if (!task.isSuccessful()) {
-                                Toast.makeText(Register.this, "Authentication failed.",
+                                Toast.makeText(getApplicationContext(), "Authentication failed.",
                                         Toast.LENGTH_SHORT).show();
                             }
 
