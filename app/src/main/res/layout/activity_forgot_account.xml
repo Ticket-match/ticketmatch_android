@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:background="#0084FF">
+        android:background="#2196F3">
 
         <LinearLayout
             android:orientation="vertical"
@@ -41,99 +41,22 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Ticket Match"
+                    android:text="Forgot Account?"
                     android:layout_gravity="center"
                     android:layout_column="1"
                     android:layout_row="0"
                     android:id="@+id/textView"
                     android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                    android:textSize="36sp"
-                    android:textColor="#ffffff" />
+                    android:textSize="30sp"
+                    android:textColor="#ffffff"
+                    android:alpha="0.87"/>
             </GridLayout>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="#000000" />
-        </LinearLayout>
-
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:background="#0084FF"
-        android:id="@+id/footer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:visibility="gone">
-
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_column="0"
-            android:layout_row="2">
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="#000000" />
-
-            <GridLayout
-
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:columnCount="5"
-                android:rowCount="1"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="5dp">
-
-                <ImageButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_row="0"
-                    android:layout_column="0"
-                    android:layout_margin="8dp"
-                    android:onClick="btn_profile"
-                    android:background="@drawable/contacts" />
-
-                <ImageButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_row="0"
-                    android:layout_column="1"
-                    android:background="@drawable/message"
-                    android:layout_margin="8dp"
-                    android:onClick="btn_message" />
-
-                <ImageButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_row="0"
-                    android:layout_column="2"
-                    android:background="@drawable/ticket"
-                    android:layout_margin="8dp"
-                    android:onClick="btn_ticketoffer" />
-
-                <ImageButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_row="0"
-                    android:layout_column="3"
-                    android:background="@drawable/search"
-                    android:layout_margin="8dp"
-                    android:onClick="btn_search" />
-
-                <ImageButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_row="0"
-                    android:layout_column="4"
-                    android:background="@drawable/group"
-                    android:layout_margin="8dp"
-                    android:onClick="btn_makematch" />
-            </GridLayout>
-
+                android:background="#000000"
+                android:alpha="0.12"/>
         </LinearLayout>
 
     </RelativeLayout>
@@ -150,40 +73,18 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-
             <View
                 android:layout_width="match_parent"
                 android:layout_height="20dp"/>
 
-            <TextView
-                android:text="Forgot Account?"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:id="@+id/textView2"
-                android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                android:textColor="#0084ff"
-                android:textStyle="normal|bold" />
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="20dp"/>
-
-            <View
-                android:layout_width="300dp"
-                android:layout_height="1dp"
-                android:background="#222222"
-                android:layout_gravity="center"/>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="20dp"/>
 
             <TextView
                 android:text="Provide your email adress!"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:alpha="0.54"/>
 
             <View
                 android:layout_width="match_parent"
@@ -199,7 +100,8 @@
                 android:src="@drawable/message"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1" />
+                android:layout_weight="1"
+                android:alpha="0.38"/>
 
             <EditText
                 android:layout_width="200dp"
@@ -209,7 +111,8 @@
                 android:id="@+id/forgotAccount_mail"
                 android:hint="E-Mail"
                 android:singleLine="true"
-                android:selectAllOnFocus="true" />
+                android:selectAllOnFocus="true"
+                android:alpha="0.38"/>
         </LinearLayout>
 
             <View
@@ -221,7 +124,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:onClick="btn_forgotAccount" />
+                android:onClick="btn_forgotAccount"
+                android:alpha="0.54"/>
 
 
         </LinearLayout>

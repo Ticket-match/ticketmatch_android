@@ -11,9 +11,9 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="5dp"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        android:textColor="#0084FF"
+        android:textColor="#2196F3"
         android:textStyle="normal|bold"
-        android:id="@+id/listitem_messagechat_date"/>
+        android:id="@+id/listitem_messagechat_date" />
 
     <TextView
         android:layout_width="0dp"
@@ -22,6 +22,6 @@
         android:layout_marginLeft="10dp"
         android:layout_marginRight="5dp"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        android:id="@+id/listitem_messagechat"/>
+        android:id="@+id/listitem_messagechat" />
 
 </LinearLayout>

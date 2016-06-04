@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">TicketMatch</string>
     <string-array name="dropdown_logo">
+
         <item></item>
         <item>Change Password</item>
         <item>Logout</item>

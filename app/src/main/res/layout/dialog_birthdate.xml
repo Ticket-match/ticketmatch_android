@@ -10,11 +10,13 @@
        android:gravity="center"
        android:text="Choose your birthday!"
        android:layout_margin="10dp"
-       android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+       android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+       android:alpha="0.87"/>
 
     <DatePicker
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/register_birthdate_datePicker" />
+        android:id="@+id/register_birthdate_datePicker"
+        android:alpha="0.54"/>
 
 </LinearLayout>

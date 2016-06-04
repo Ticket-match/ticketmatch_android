@@ -56,7 +56,8 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="#000000" />
+                android:background="#000000"
+                android:alpha="0.12"/>
         </LinearLayout>
 
     </RelativeLayout>
@@ -79,7 +80,8 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="#000000" />
+                android:background="#000000"
+                android:alpha="0.12"/>
 
             <GridLayout
 
@@ -210,7 +212,8 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:background="#aaaaaa"
-            android:layout_gravity="center"/>
+            android:layout_gravity="center"
+            android:alpha="0.12"/>
 
         <View
             android:layout_width="match_parent"

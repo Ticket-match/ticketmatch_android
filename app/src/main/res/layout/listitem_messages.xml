@@ -12,14 +12,15 @@
         android:scaleType="fitXY"
         android:background="@null"
         android:layout_margin="10dp"
-        android:id="@+id/listitem_message_image" />
+        android:id="@+id/listitem_message_image"
+        />
 
     <TextView
        android:layout_width="match_parent"
        android:layout_height="wrap_content"
        android:layout_toRightOf="@+id/listitem_message_image"
        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        android:id="@+id/listitem_messages_name_subject"/>
+        android:id="@+id/listitem_messages_name_subject" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -27,7 +28,7 @@
         android:layout_marginRight="5dp"
         android:layout_alignParentRight="true"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        android:id="@+id/listitem_messages_date"/>
+        android:id="@+id/listitem_messages_date" />
 
 
 </RelativeLayout>

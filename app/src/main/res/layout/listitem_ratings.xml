@@ -23,7 +23,7 @@
         android:layout_marginLeft="-50dp"
        android:layout_toRightOf="@+id/listitem_rating_stars"
        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        android:id="@+id/listitem_rating_text"/>
+        android:id="@+id/listitem_rating_text" />
 
 
 </RelativeLayout>

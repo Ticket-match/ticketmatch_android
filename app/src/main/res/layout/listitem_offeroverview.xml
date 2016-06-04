@@ -29,7 +29,7 @@
             android:id="@+id/row_date"
             android:layout_column="1"
             android:layout_weight="1.5"
-            android:gravity="left"/>
+            android:gravity="left" />
 
         <TextView
             android:layout_width="0dp"
@@ -38,7 +38,7 @@
             android:id="@+id/row_time"
             android:layout_column="2"
             android:layout_weight="1"
-            android:gravity="left"/>
+            android:gravity="left" />
 
 
     </TableRow>
