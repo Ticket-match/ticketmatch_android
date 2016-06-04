@@ -183,10 +183,9 @@
             android:id="@+id/offeroverview_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/ticket"
+            android:background="@drawable/ticket_filled"
             android:onClick="btn_newoffer"
-            android:layout_gravity="center"/>
-
+            android:layout_gravity="center" />
 
         <View
             android:layout_width="match_parent"

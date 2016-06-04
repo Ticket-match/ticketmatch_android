@@ -91,15 +91,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_row="0"
-                    android:layout_column="0"
-                    android:layout_margin="8dp"
-                    android:background="@drawable/contacts"
-                    android:onClick="btn_profile"/>
-
-                <ImageButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_row="0"
                     android:layout_column="1"
                     android:background="@drawable/message"
                     android:layout_margin="8dp"
@@ -131,6 +122,16 @@
                     android:background="@drawable/group"
                     android:layout_margin="8dp"
                     android:onClick="btn_makematch" />
+
+                <ImageButton
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_row="0"
+                    android:layout_column="0"
+                    android:layout_margin="8dp"
+                    android:background="@drawable/contacts"
+                    android:onClick="btn_profile"
+                    android:id="@+id/imageButton2" />
             </GridLayout>
 
         </LinearLayout>

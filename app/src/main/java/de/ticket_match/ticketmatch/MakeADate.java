@@ -6,48 +6,26 @@ import android.os.Bundle;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ListView;
 import android.widget.PopupMenu;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
+public class MakeADate extends AppCompatActivity {
 
-public class Offer_Detail extends AppCompatActivity {
-    Bundle bund;
-    String offerdetails = "";
+    ListView listview;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_offer__detail);
+        setContentView(R.layout.activity_make_adate);
 
-
-        bund = getIntent().getExtras();
-        offerdetails = bund.getString("offer");
-
-
-        String type = offerdetails.substring(0, offerdetails.indexOf("|"));
-        String eventname = offerdetails.substring(offerdetails.indexOf("|")+1,offerdetails.indexOf("|",offerdetails.indexOf("|")+1));
-        String date = offerdetails.substring(offerdetails.indexOf("|",offerdetails.indexOf("|")+1)+1,offerdetails.length());
-
-
-//+time+"\n"+price+"\n"+location
-        //String time = offerdetails.substring(offerdetails.indexOf("|",offerdetails.indexOf("|")+1)+1,offerdetails.length());
-        //String price = offerdetails.substring(offerdetails.indexOf("|",offerdetails.indexOf("|")+1)+1,offerdetails.length());
-        //String location = offerdetails.substring(offerdetails.indexOf("|",offerdetails.indexOf("|")+1)+1,offerdetails.length());
-
-        TextView t = (TextView)findViewById(R.id.ticket_detail);
-        t.setText(type+"\n"+eventname+"\n"+date+"\n");
-
+        listview = (ListView) findViewById(R.id.listview_makeadate);
+        ViewGroup header = (ViewGroup) getLayoutInflater().inflate(R.layout.makeadate_headerlayout, listview, false);
+        listview.addHeaderView(header);
     }
 
-    public void btn_delete_offer (View view){
 
-        // Backend delete Row in Database; Open new Screen without dataset
-        Intent offer_overview = new Intent(getApplicationContext(), Offer_Overview.class);
-        startActivity(offer_overview);
-
-    }
 
     public void btn_tm_logo(View view) {
 
@@ -99,8 +77,6 @@ public class Offer_Detail extends AppCompatActivity {
     }
 
     public void btn_makematch(View view) {
-        Intent makeadate = new Intent(this, MakeADate.class);
-        startActivity(makeadate);
-    }
 
+    }
 }
