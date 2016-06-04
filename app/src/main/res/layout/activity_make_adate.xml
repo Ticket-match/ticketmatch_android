@@ -177,7 +177,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/search_filled"
-                    android:onClick="btn_find"
+                    android:onClick="btn_save_makeadate"
                     android:layout_gravity="center"
                     android:layout_marginLeft="30dp"
                     />
@@ -187,7 +187,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/group"
-                    android:onClick="btn_find"
+                    android:onClick="btn_find_makeadate"
                     android:layout_gravity="center"
                     android:layout_marginLeft="30dp"
                     />

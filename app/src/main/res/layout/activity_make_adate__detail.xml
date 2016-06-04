@@ -2,10 +2,10 @@
 <android.widget.RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_new_offer"
+    android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="de.ticket_match.ticketmatch.NewOffer">
+    tools:context="de.ticket_match.ticketmatch.MakeADate_Detail">
 
     <RelativeLayout
         android:id="@+id/header"
@@ -137,109 +137,53 @@
 
     </RelativeLayout>
 
+    <!--<ScrollView
+        android:id="@+id/content"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_above="@+id/footer"
+        android:layout_below="@+id/header">-->
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
+
         android:layout_above="@+id/footer"
-        android:layout_below="@+id/header">
-
-
-        <Spinner
-            android:layout_width="300dp"
-            android:layout_height="wrap_content"
-            android:id="@+id/event_type"
-            android:layout_marginBottom="10dp"
-            android:layout_marginTop="10dp"
-            android:layout_gravity="center"/>
-
-        <EditText
-            android:hint="Event Name"
-            android:layout_width="300dp"
-            android:layout_height="wrap_content"
-            android:id="@+id/eventname"
-            android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"
-            android:layout_marginBottom="10dp"
-            android:layout_marginTop="10dp"
-            android:layout_gravity="center"/>
-
-        <EditText
-            android:hint="Event Location"
-            android:layout_width="300dp"
-            android:layout_height="wrap_content"
-            android:id="@+id/eventlocation"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            android:layout_marginBottom="10dp"
-            android:layout_marginTop="10dp"
-            android:layout_gravity="center"/>
-
-        <EditText
-            android:hint="Number of Tickets"
-            android:layout_width="300dp"
-            android:layout_height="wrap_content"
-            android:id="@+id/numberoftickets"
-            android:inputType="number"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            android:layout_marginBottom="10dp"
-            android:layout_marginTop="10dp"
-            android:layout_gravity="center"/>
-
-
-        <TextView
-            android:text="Date"
-            android:layout_width="293dp"
-            android:layout_height="wrap_content"
-            android:id="@+id/date"
-            android:onClick="newoffer_date"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            android:layout_marginBottom="10dp"
-            android:layout_marginTop="10dp"
-            android:layout_gravity="center"/>
-
-        <LinearLayout
-            android:layout_width="300dp"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginBottom="10dp"
-            android:layout_marginTop="10dp"
-            android:layout_gravity="center"
-            >
-
-            <EditText
-                android:hint="Price"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/price"
-                android:inputType="number"
-                android:layout_marginRight="20dp"/>
-
-            <Spinner
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/currency"
-                android:layout_marginRight="20dp"/>
-
-            <CheckBox
-                android:text="Free"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/checkbox_price"
-                android:onClick="cb_clicked"/>
-
-
-        </LinearLayout>
-
-        <ImageButton
-            android:id="@+id/offeroverview_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/ticket_filled"
-            android:onClick="btn_newoffer"
-            android:layout_gravity="center"/>
+        android:layout_below="@+id/header"
+        >
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="20dp"/>
+            android:layout_height="10dp"/>
+
+        <TextView
+            android:text="Details"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:textColor="#0084FF"
+            android:textStyle="normal|bold" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="10dp"/>
+
+        <TextView
+            android:id="@+id/makeadate_detail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+
+        <Button
+            android:src="@android:drawable/ic_input_add"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Delete"
+            android:layout_gravity="center"
+            android:onClick="btn_delete_makeadate"/>
 
     </LinearLayout>
 

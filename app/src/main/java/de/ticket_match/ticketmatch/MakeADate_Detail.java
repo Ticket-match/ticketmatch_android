@@ -7,26 +7,27 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.PopupMenu;
+import android.widget.TextView;
 import android.widget.Toast;
 
-public class Message_Vendor extends AppCompatActivity {
+public class MakeADate_Detail extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_message__vendor);
+        setContentView(R.layout.activity_make_adate__detail);
+
+        ((TextView)findViewById(R.id.makeadate_detail)).setText("Cinema"+"\n"+"Star Wars 7"+"\n"+"15.05.2016"+"\n"+"26,00€"+"\n"+"Mannheim"+"\n"+"Lea Lustig");
+
     }
+    public void btn_delete_makeadate (View view){
 
-    public void foreign_profile (View view){
-        Intent foreign = new Intent(this, ForeignProfile.class);
-        startActivity(foreign);
-    }
+        Toast.makeText(getApplicationContext(),"Your date is successfully deleted!",Toast.LENGTH_SHORT).show();
 
-    public void send_message (View view){
-        Toast.makeText(getApplicationContext(),"Your message was sent!",Toast.LENGTH_SHORT).show();
+        // Backend delete Row in Database; Open new Screen without dataset
+        Intent makeadate = new Intent(getApplicationContext(), MakeADate.class);
+        startActivity(makeadate);
 
-        Intent vendor = new Intent(this, Find_Vendor.class);
-        startActivity(vendor);
     }
 
     public void btn_tm_logo(View view) {

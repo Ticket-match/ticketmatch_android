@@ -14,30 +14,18 @@
             android:layout_width="0dp"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             android:layout_column="0"
-            android:text="Type"
-            android:textColor="#0084FF"
-            android:textStyle="normal|bold"
-            android:layout_margin="10dp"
-            android:gravity="left"
-            android:layout_weight="1.5"
-            android:id="@+id/textView3" />
-
-        <TextView
-            android:layout_width="0dp"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            android:layout_column="1"
             android:text="Name"
             android:textColor="#0084FF"
             android:textStyle="normal|bold"
             android:layout_margin="10dp"
             android:gravity="left"
-            android:layout_weight="1.5"
+            android:layout_weight="2"
             />
 
         <TextView
             android:layout_width="0dp"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            android:layout_column="2"
+            android:layout_column="1"
             android:text="Date"
             android:textColor="#0084FF"
             android:textStyle="normal|bold"
@@ -50,24 +38,12 @@
             android:layout_width="0dp"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             android:layout_column="2"
-            android:text="Location"
-            android:textColor="#0084FF"
-            android:textStyle="normal|bold"
-            android:layout_margin="10dp"
-            android:gravity="left"
-            android:layout_weight="2.2"
-            />
-
-        <TextView
-            android:layout_width="0dp"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            android:layout_column="2"
             android:text="Who"
             android:textColor="#0084FF"
             android:textStyle="normal|bold"
             android:layout_margin="10dp"
             android:gravity="left"
-            android:layout_weight="1"
+            android:layout_weight="1.5"
             />
 
     </TableRow>

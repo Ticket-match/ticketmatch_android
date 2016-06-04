@@ -143,10 +143,7 @@ public class Offer_Overview extends AppCompatActivity {
         startActivity(message);
     }
 
-    public void btn_ticketoffer(View view) {
-        Intent offeroverview = new Intent(this, Offer_Overview.class);
-        startActivity(offeroverview);
-    }
+
 
     public void btn_search(View view) {
         Intent find = new Intent(this, Find.class);

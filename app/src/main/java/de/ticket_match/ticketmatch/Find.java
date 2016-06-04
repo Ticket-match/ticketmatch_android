@@ -40,6 +40,8 @@ public class Find extends AppCompatActivity {
         listview = (ListView) findViewById(R.id.find_results);
         ViewGroup header = (ViewGroup) getLayoutInflater().inflate(R.layout.find_headerlayout, listview, false);
         listview.addHeaderView(header);
+
+
     }
 
     public void btn_find (View view){

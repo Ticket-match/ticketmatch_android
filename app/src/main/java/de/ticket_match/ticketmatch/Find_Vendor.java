@@ -29,8 +29,8 @@ public class Find_Vendor extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_find__vendor);
 
-        bund = getIntent().getExtras();
-        find_vendor = bund.getString("find");
+        //bund = getIntent().getExtras();
+        //find_vendor = bund.getString("find");
 
         ListView listview = (ListView)findViewById(R.id.find_vendor);
         listitems_vendor.add("Max Mustermann|3|12,00 EUR");
@@ -150,6 +150,7 @@ public class Find_Vendor extends AppCompatActivity {
     }
 
     public void btn_makematch(View view) {
-        Toast.makeText(getApplicationContext(),"btn_makematch",Toast.LENGTH_SHORT).show();
+        Intent makeadate = new Intent(this, MakeADate.class);
+        startActivity(makeadate);
     }
 }

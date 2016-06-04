@@ -107,6 +107,8 @@ public class Register extends AppCompatActivity {
             Toast.makeText(getApplicationContext(),"Please fill out the requiered information!",Toast.LENGTH_SHORT).show();
         } else if(!email.contains("@")) {
             Toast.makeText(getApplicationContext(), "Please provide an email adress!", Toast.LENGTH_SHORT).show();
+        } else if(password.length()<6){
+            Toast.makeText(getApplicationContext(), "Your password must contain at least 6 characters!", Toast.LENGTH_SHORT).show();
         } else {
             // Create an Account via Firebase Authentication
             mAuth.createUserWithEmailAndPassword(email, password)

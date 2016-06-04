@@ -50,7 +50,11 @@
         <activity android:name=".Find" />
         <activity android:name=".Find_Vendor" />
         <activity android:name=".Message_Vendor" />
-        <activity android:name=".MakeADate"></activity>
+        <activity android:name=".MakeADate" />
+        <activity android:name=".MakeADate_Detail" />
+        <activity android:name=".Search_MakeADate" />
+        <activity android:name=".New_MakeAdate" />
+        <activity android:name=".MakeADate_SearchResults"></activity>
     </application>
 
 </manifest>

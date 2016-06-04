@@ -186,12 +186,6 @@ public class MyProfile extends AppCompatActivity {
 
         }
     }
-
-    public void btn_profile(View view) {
-        Intent myprofile = new Intent(this, MyProfile.class);
-        startActivity(myprofile);
-    }
-
     public void btn_message(View view) {
         Intent message = new Intent(this, Message_Overview.class);
         startActivity(message);
