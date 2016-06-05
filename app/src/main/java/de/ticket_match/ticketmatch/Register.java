@@ -3,8 +3,11 @@ package de.ticket_match.ticketmatch;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.ConnectivityManager;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -31,6 +34,7 @@ import java.util.Calendar;
 
 public class Register extends AppCompatActivity {
 
+    private static final String TAG = "Register";
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
 
@@ -54,12 +58,12 @@ public class Register extends AppCompatActivity {
                 if (user != null) {
                     // User is signed in
                     //TODO: Delete Logs
-                    Log.d("Firebase", "onAuthStateChanged:signed_in:" + user.getUid());
+                    Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
                     Intent myProfile = new Intent(getApplicationContext(), MyProfile.class);
                     startActivity(myProfile);
                 } else {
                     // User is signed out
-                    Log.d("Firebase", "onAuthStateChanged:signed_out");
+                    Log.d(TAG, "onAuthStateChanged:signed_out");
                 }
                 // ...
             }
@@ -106,16 +110,19 @@ public class Register extends AppCompatActivity {
         if(firstname.equals("") | lastname.equals("") | email.equals("") | password.equals("") | location.equals("") | birthdate.equals("Birthday")){
             Toast.makeText(getApplicationContext(),"Please fill out the requiered information!",Toast.LENGTH_SHORT).show();
         } else if(!email.contains("@")) {
-            Toast.makeText(getApplicationContext(), "Please provide an email adress!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "Please provide a valid email address!", Toast.LENGTH_SHORT).show();
         } else if(password.length()<6){
             Toast.makeText(getApplicationContext(), "Your password must contain at least 6 characters!", Toast.LENGTH_SHORT).show();
-        } else {
+        } else if (!isNetworkConnected()){
+            Toast.makeText(getApplicationContext(), "No internet connection. Registration failed.", Toast.LENGTH_SHORT).show();
+        }
+        else {
             // Create an Account via Firebase Authentication
             mAuth.createUserWithEmailAndPassword(email, password)
                     .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
-                            Log.d("Firebase", "createUserWithEmail:onComplete:" + task.isSuccessful());
+                            Log.d(TAG, "createUserWithEmail:onComplete:" + task.isSuccessful());
 
                             // If sign in fails, display a message to the user. If sign in succeeds
                             // the auth state listener will be notified and logic to handle the
@@ -128,8 +135,14 @@ public class Register extends AppCompatActivity {
                             // ...
                         }
                     });
-            Toast.makeText(getApplicationContext(),firstname+lastname+email+password+location+birthdate+gender,Toast.LENGTH_SHORT).show();
+
+
         }
+    }
+
+    private boolean isNetworkConnected() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        return cm.getActiveNetworkInfo() != null;
     }
 
     public void register_birthdate(View view) {
