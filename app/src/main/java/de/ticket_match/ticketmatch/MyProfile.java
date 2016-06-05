@@ -11,9 +11,11 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.media.ExifInterface;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.ViewGroup;
@@ -32,6 +34,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -43,12 +51,44 @@ public class MyProfile extends AppCompatActivity {
     int REQUEST_CAMERA = 1;
     int REQUEST_GALLERY = 2;
 
+    private final String TAG = "MyProfile";
+
+    private FirebaseAuth mAuth;
+    private FirebaseAuth.AuthStateListener mAuthListener;
+    private FirebaseDatabase database = FirebaseDatabase.getInstance();
+    private DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
+    private String fireUserId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_profile);
 
+        // Set Profile Name, Gender, Age and Location variables
+        final TextView myProfileName = (TextView) findViewById(R.id.myprofile_name);
+        final TextView myProfileGenderAndAge = (TextView) findViewById(R.id.myprofile_gender_age);
+        final TextView myProfileLocation = (TextView) findViewById(R.id.myprofile_location);
+
+        //Receive profile information from database
+        //TODO: Catch Nullpointer Exception
+        mDatabase.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).addListenerForSingleValueEvent(
+                new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        // Get user value and set the Textviews appropriate
+                        User user = dataSnapshot.getValue(User.class);
+                        myProfileName.setText(user.getFirstName() + " " + user.getLastName());
+                        myProfileGenderAndAge.setText(user.getGender() + " " + user.getBirthday());
+                        myProfileLocation.setText(user.getLocation());
+                    }
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        Log.w(TAG, "getUser:onCancelled", databaseError.toException());
+                    }
+                });
+
+
+        // Set Interests
         listitems.add("Cinema");
         listitems.add("Pick Nick");
         ((ListView) findViewById(R.id.myprofile_interests)).setAdapter(new CustomAdapter(this, listitems));

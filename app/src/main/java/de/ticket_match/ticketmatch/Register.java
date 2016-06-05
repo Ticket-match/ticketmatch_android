@@ -3,20 +3,14 @@ package de.ticket_match.ticketmatch;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
-import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.support.annotation.NonNull;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.Editable;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -29,15 +23,20 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.Calendar;
+import java.util.Date;
 
 public class Register extends AppCompatActivity {
 
     private static final String TAG = "Register";
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
-
+    private FirebaseDatabase database = FirebaseDatabase.getInstance();
+    private DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
+    private User user;
 
 
     @Override
@@ -54,11 +53,12 @@ public class Register extends AppCompatActivity {
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser user = firebaseAuth.getCurrentUser();
-                if (user != null) {
+                FirebaseUser fireUser = firebaseAuth.getCurrentUser();
+                if (fireUser != null) {
                     // User is signed in
-                    //TODO: Delete Logs
-                    Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
+                    Log.d(TAG, "onAuthStateChanged:signed_in:" + fireUser.getUid());
+                    mDatabase.child("users").child(fireUser.getUid()).setValue(user);
+
                     Intent myProfile = new Intent(getApplicationContext(), MyProfile.class);
                     startActivity(myProfile);
                 } else {
@@ -117,6 +117,8 @@ public class Register extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), "No internet connection. Registration failed.", Toast.LENGTH_SHORT).show();
         }
         else {
+            //Create a User class with attributes
+            user = new User(firstname,lastname,gender,birthdate,location);
             // Create an Account via Firebase Authentication
             mAuth.createUserWithEmailAndPassword(email, password)
                     .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -140,6 +142,7 @@ public class Register extends AppCompatActivity {
         }
     }
 
+
     private boolean isNetworkConnected() {
         ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         return cm.getActiveNetworkInfo() != null;
@@ -151,6 +154,7 @@ public class Register extends AppCompatActivity {
     }
 
     public static class RegisterBirthdateDialog extends DialogFragment implements DatePickerDialog.OnDateSetListener {
+
 
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState){
