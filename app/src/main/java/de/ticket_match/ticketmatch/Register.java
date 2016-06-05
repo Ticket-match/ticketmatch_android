@@ -151,6 +151,7 @@ public class Register extends AppCompatActivity {
 
         }
         public void onDateSet(DatePicker view, int year, int month, int day) {
+            //month+1: array starts at 0
             String date = day + "." + (month+1) + "." + year;
             ((TextView)getActivity().findViewById(R.id.register_birthdate)).setText(date);
         }

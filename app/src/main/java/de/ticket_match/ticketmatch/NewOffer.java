@@ -97,6 +97,7 @@ public class NewOffer extends AppCompatActivity {
             return new DatePickerDialog(getActivity(), this, year, month, day);
         }
         public void onDateSet(DatePicker view, int year, int month, int day) {
+            //month+1: array starts at 0
             String date = day + "." + (month+1) + "." + year;
             ((TextView)getActivity().findViewById(R.id.date)).setText(date);
         }
