@@ -126,7 +126,7 @@ public class MainActivity extends AppCompatActivity {
         startActivity(register);
 
     }
-    /*public static class ChangePasswordDialog extends DialogFragment{
+    public static class ChangePasswordDialog extends DialogFragment{
         public Dialog onCreateDialog (Bundle savedInstanceState){
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
             LayoutInflater inflater = getActivity().getLayoutInflater();
@@ -145,6 +145,6 @@ public class MainActivity extends AppCompatActivity {
             });
             return builder.create();
         }
-    }*/
+    }
 
 }

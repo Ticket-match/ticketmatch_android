@@ -146,7 +146,7 @@ public class Find extends AppCompatActivity {
             return new DatePickerDialog(getActivity(), this, year, month, day);
         }
         public void onDateSet(DatePicker view, int year, int month, int day) {
-            String date = day + "." + month + "." + year;
+            String date = day + "." + (month+1) + "." + year;
             ((TextView)getActivity().findViewById(R.id.search_date)).setText(date);
         }
     }
