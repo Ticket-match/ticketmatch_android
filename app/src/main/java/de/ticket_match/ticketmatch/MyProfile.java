@@ -30,6 +30,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.RatingBar;
+import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -100,8 +101,9 @@ public class MyProfile extends AppCompatActivity {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if(event.getAction()==MotionEvent.ACTION_DOWN){
-                    Intent myprofile_rating =  new Intent(getApplicationContext(), MyProfileRatings.class);
-                    startActivity(myprofile_rating);
+                    //Intent myprofile_rating =  new Intent(getApplicationContext(), MyProfileRatings.class);
+                    //startActivity(myprofile_rating);
+                    ((TabHost)getParent().findViewById(R.id.tabHost)).setCurrentTabByTag("myprofile_ratings");
                 }
                 return true;
             }
@@ -126,6 +128,7 @@ public class MyProfile extends AppCompatActivity {
         ((CustomAdapter)((ListView) findViewById(R.id.myprofile_interests)).getAdapter()).notifyDataSetChanged();
     }
 
+    /*
     public void btn_tm_logo(View view) {
 
         PopupMenu popup = new PopupMenu(this, view);
@@ -137,8 +140,6 @@ public class MyProfile extends AppCompatActivity {
             public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()){
                     case R.id.change_password:
-                        //ChangePasswordDialog cdp = new ChangePasswordDialog();
-                        //cdp.show(getFragmentManager(), "cdp");
                         Intent changepassword =  new Intent(getApplicationContext(), ChangePassword.class);
                         startActivity(changepassword);
                         return true;
@@ -157,6 +158,7 @@ public class MyProfile extends AppCompatActivity {
         popup.show();
 
     }
+    */
 
     public void btn_myprofile_image (View view) {
         PopupMenu popup = new PopupMenu(this, view);
@@ -226,6 +228,8 @@ public class MyProfile extends AppCompatActivity {
 
         }
     }
+
+    /*
     public void btn_message(View view) {
         Intent message = new Intent(this, Message_Overview.class);
         startActivity(message);
@@ -245,6 +249,7 @@ public class MyProfile extends AppCompatActivity {
         Intent makeadate = new Intent(this, MakeADate.class);
         startActivity(makeadate);
     }
+    */
 
 
     public void btn_newinterest (View view){
@@ -260,6 +265,7 @@ public class MyProfile extends AppCompatActivity {
         }
     }
 
+    /*
     public static class ChangeInterestsDialog extends DialogFragment{
         public Dialog onCreateDialog (Bundle savedInstanceState){
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -301,7 +307,7 @@ public class MyProfile extends AppCompatActivity {
             });
             return builder.create();
         }
-    }
+    }*/
 
     public static class CustomAdapter extends BaseAdapter {
         ArrayList<String> result;

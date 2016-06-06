@@ -13,6 +13,7 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.PopupMenu;
+import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -44,8 +45,9 @@ public class MakeADate_SearchResults extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String makeadate_searchresults = listitems_makeadate_results.get(position-1);
 
-                Intent makeadateresults_message = new Intent(getApplicationContext(), MakeADateResults_Message.class);
-                startActivity(makeadateresults_message);
+                //Intent makeadateresults_message = new Intent(getApplicationContext(), MakeADateResults_Message.class);
+                //startActivity(makeadateresults_message);
+                ((TabHost)getParent().findViewById(R.id.tabHost)).setCurrentTabByTag("makeadate_search_result_message");
             }
         });
 
@@ -94,6 +96,7 @@ public class MakeADate_SearchResults extends AppCompatActivity {
 
     }
 
+    /*
     public void btn_tm_logo(View view) {
 
         PopupMenu popup = new PopupMenu(this, view);
@@ -147,5 +150,6 @@ public class MakeADate_SearchResults extends AppCompatActivity {
         Intent makeadate = new Intent(this, MakeADate.class);
         startActivity(makeadate);
     }
+    */
 
 }

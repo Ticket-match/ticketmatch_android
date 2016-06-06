@@ -7,6 +7,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.PopupMenu;
+import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,11 +26,13 @@ public class MakeADate_Detail extends AppCompatActivity {
         Toast.makeText(getApplicationContext(),"Your date is successfully deleted!",Toast.LENGTH_SHORT).show();
 
         // Backend delete Row in Database; Open new Screen without dataset
-        Intent makeadate = new Intent(getApplicationContext(), MakeADate.class);
-        startActivity(makeadate);
+        //Intent makeadate = new Intent(getApplicationContext(), MakeADate.class);
+        //startActivity(makeadate);
+        ((TabHost)getParent().findViewById(R.id.tabHost)).setCurrentTabByTag("makeadate");
 
     }
 
+    /*
     public void btn_tm_logo(View view) {
 
         PopupMenu popup = new PopupMenu(this, view);
@@ -83,4 +86,5 @@ public class MakeADate_Detail extends AppCompatActivity {
         Intent makeadate = new Intent(this, MakeADate.class);
         startActivity(makeadate);
     }
+    */
 }

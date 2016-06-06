@@ -76,6 +76,7 @@ public class MyProfileRatings extends AppCompatActivity {
 
     }
 
+    /*
     public void btn_tm_logo(View view) {
 
         PopupMenu popup = new PopupMenu(this, view);
@@ -87,8 +88,6 @@ public class MyProfileRatings extends AppCompatActivity {
             public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()){
                     case R.id.change_password:
-                        //ChangePasswordDialog cdp = new ChangePasswordDialog();
-                        //cdp.show(getFragmentManager(), "cdp");
                         Intent changepassword =  new Intent(getApplicationContext(), ChangePassword.class);
                         startActivity(changepassword);
                         return true;
@@ -129,4 +128,6 @@ public class MyProfileRatings extends AppCompatActivity {
         Intent makeadate = new Intent(this, MakeADate.class);
         startActivity(makeadate);
     }
+
+    */
 }

@@ -12,7 +12,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:background="#2196F3">
+        android:background="#2196F3"
+        android:visibility="gone">
 
         <LinearLayout
             android:orientation="vertical"
@@ -65,7 +66,8 @@
         android:id="@+id/footer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true">
+        android:layout_alignParentBottom="true"
+        android:visibility="gone">
 
         <LinearLayout
             android:orientation="vertical"

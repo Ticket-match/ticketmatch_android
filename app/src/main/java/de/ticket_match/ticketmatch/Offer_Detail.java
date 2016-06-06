@@ -7,6 +7,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.PopupMenu;
+import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,7 +23,7 @@ public class Offer_Detail extends AppCompatActivity {
         setContentView(R.layout.activity_offer__detail);
 
 
-        bund = getIntent().getExtras();
+        bund = ((MainActivityTabHost)getParent()).baseBundle;
         offerdetails = bund.getString("offer");
 
 
@@ -44,11 +45,13 @@ public class Offer_Detail extends AppCompatActivity {
     public void btn_delete_offer (View view){
 
         // Backend delete Row in Database; Open new Screen without dataset
-        Intent offer_overview = new Intent(getApplicationContext(), Offer_Overview.class);
-        startActivity(offer_overview);
+        //Intent offer_overview = new Intent(getApplicationContext(), Offer_Overview.class);
+        //startActivity(offer_overview);
+        ((TabHost)getParent().findViewById(R.id.tabHost)).setCurrentTabByTag("tickets");
 
     }
 
+    /*
     public void btn_tm_logo(View view) {
 
         PopupMenu popup = new PopupMenu(this, view);
@@ -102,5 +105,6 @@ public class Offer_Detail extends AppCompatActivity {
         Intent makeadate = new Intent(this, MakeADate.class);
         startActivity(makeadate);
     }
+    */
 
 }

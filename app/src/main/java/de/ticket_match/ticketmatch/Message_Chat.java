@@ -32,7 +32,7 @@ public class Message_Chat extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_message__chat);
 
-        Bundle bund = getIntent().getExtras();
+        Bundle bund = ((MainActivityTabHost)getParent()).baseBundle;
         name = bund.getString("message_name");
 
         ((TextView) findViewById(R.id.message_chat_name)).setText(name);
@@ -44,6 +44,7 @@ public class Message_Chat extends AppCompatActivity {
 
     }
 
+    /*
     public void btn_tm_logo(View view) {
 
         PopupMenu popup = new PopupMenu(this, view);
@@ -72,6 +73,7 @@ public class Message_Chat extends AppCompatActivity {
         popup.show();
 
     }
+    */
 
     public void btn_sendMessage (View view) {
         String message_text = ((EditText)findViewById(R.id.new_chat_message)).getText().toString();
@@ -85,6 +87,7 @@ public class Message_Chat extends AppCompatActivity {
         }
     }
 
+    /*
     public void btn_profile(View view) {
         Intent myprofile = new Intent(this, MyProfile.class);
         startActivity(myprofile);
@@ -109,6 +112,7 @@ public class Message_Chat extends AppCompatActivity {
         Intent makeadate = new Intent(this, MakeADate.class);
         startActivity(makeadate);
     }
+    */
 
     public static class CustomAdapter extends BaseAdapter {
         ArrayList<String> result;

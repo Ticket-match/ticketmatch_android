@@ -96,6 +96,7 @@ public class ForeignProfileRating extends AppCompatActivity {
 
     }
 
+    /*
     public void btn_tm_logo(View view) {
 
         PopupMenu popup = new PopupMenu(this, view);
@@ -149,4 +150,5 @@ public class ForeignProfileRating extends AppCompatActivity {
         Intent makeadate = new Intent(this, MakeADate.class);
         startActivity(makeadate);
     }
+    */
 }

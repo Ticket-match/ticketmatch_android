@@ -11,6 +11,7 @@ import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.Spinner;
+import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -51,8 +52,9 @@ public class Search_MakeADate extends AppCompatActivity {
 
         // Get data out of input screen and save in Backend. With Strings or Array?
 
-        Intent makeadateresults = new Intent(getApplicationContext(), MakeADate_SearchResults.class);
-        startActivity(makeadateresults);
+        //Intent makeadateresults = new Intent(getApplicationContext(), MakeADate_SearchResults.class);
+        //startActivity(makeadateresults);
+        ((TabHost)getParent().findViewById(R.id.tabHost)).setCurrentTabByTag("makeadate_search_result");
 
     }
 

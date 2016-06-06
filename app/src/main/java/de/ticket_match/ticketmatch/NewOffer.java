@@ -15,6 +15,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.PopupMenu;
 import android.widget.Spinner;
+import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -71,8 +72,9 @@ public class NewOffer extends AppCompatActivity {
         } else {
             // Backend
             Toast.makeText(getApplicationContext(),"Your ticket is registered!",Toast.LENGTH_SHORT).show();
-            Intent offeroverview = new Intent(getApplicationContext(), Offer_Overview.class);
-            startActivity(offeroverview);
+            //Intent offeroverview = new Intent(getApplicationContext(), Offer_Overview.class);
+            //startActivity(offeroverview);
+            ((TabHost)getParent().findViewById(R.id.tabHost)).setCurrentTabByTag("tickets");
         }
 
 
@@ -103,6 +105,7 @@ public class NewOffer extends AppCompatActivity {
         }
     }
 
+    /*
     public void btn_tm_logo(View view) {
 
         PopupMenu popup = new PopupMenu(this, view);
@@ -156,5 +159,6 @@ public class NewOffer extends AppCompatActivity {
         Intent makeadate = new Intent(this, MakeADate.class);
         startActivity(makeadate);
     }
+    */
 
 }

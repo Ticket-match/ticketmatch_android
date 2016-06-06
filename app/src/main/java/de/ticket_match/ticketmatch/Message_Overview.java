@@ -17,6 +17,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.PopupMenu;
+import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -43,16 +44,18 @@ public class Message_Overview extends AppCompatActivity {
                 String message_name = result.get(position);
                 message_name = message_name.substring(0, message_name.indexOf("|"));
 
-                Bundle bund= new Bundle();
+                Bundle bund = ((MainActivityTabHost)getParent()).baseBundle;
                 bund.putString("message_name", message_name);
-                Intent message_chat = new Intent(getApplicationContext(), Message_Chat.class);
-                message_chat.putExtras(bund);
-                startActivity(message_chat);
+                //Intent message_chat = new Intent(getApplicationContext(), Message_Chat.class);
+                //message_chat.putExtras(bund);
+                //startActivity(message_chat);
+                ((TabHost)getParent().findViewById(R.id.tabHost)).setCurrentTabByTag("messages_chat");
             }
         });
 
     }
 
+    /*
     public void btn_tm_logo(View view) {
 
         PopupMenu popup = new PopupMenu(this, view);
@@ -105,6 +108,7 @@ public class Message_Overview extends AppCompatActivity {
         Intent makeadate = new Intent(this, MakeADate.class);
         startActivity(makeadate);
     }
+    */
 
     public static class CustomAdapter extends BaseAdapter {
         ArrayList<Bitmap> images;

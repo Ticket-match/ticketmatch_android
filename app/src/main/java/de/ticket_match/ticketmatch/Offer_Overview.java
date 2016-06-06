@@ -16,6 +16,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.PopupMenu;
+import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -44,18 +45,20 @@ public class Offer_Overview extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String offer_ticket = listitems_offer.get(position-1);
 
-                Bundle values = new Bundle();
+                Bundle values = ((MainActivityTabHost)getParent()).baseBundle;
                 values.putString("offer", offer_ticket);
-                Intent offer_detailscreen = new Intent(getApplicationContext(), Offer_Detail.class);
-                offer_detailscreen.putExtras(values);
-                startActivity(offer_detailscreen);
+                //Intent offer_detailscreen = new Intent(getApplicationContext(), Offer_Detail.class);
+                //offer_detailscreen.putExtras(values);
+                //startActivity(offer_detailscreen);
+                ((TabHost)getParent().findViewById(R.id.tabHost)).setCurrentTabByTag("tickets_offerdetail");
             }
         });
     }
 
     public void btn_newoffer (View view){
-        Intent newoffer = new Intent(this, NewOffer.class);
-        startActivity(newoffer);
+        //Intent newoffer = new Intent(this, NewOffer.class);
+        //startActivity(newoffer);
+        ((TabHost)getParent().findViewById(R.id.tabHost)).setCurrentTabByTag("tickets_newoffer");
 
     }
 
@@ -104,6 +107,7 @@ public class Offer_Overview extends AppCompatActivity {
 
     }
 
+    /*
     public void btn_tm_logo(View view) {
 
         PopupMenu popup = new PopupMenu(this, view);
@@ -154,4 +158,5 @@ public class Offer_Overview extends AppCompatActivity {
         Intent makeadate = new Intent(this, MakeADate.class);
         startActivity(makeadate);
     }
+    */
 }

@@ -12,6 +12,7 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.RatingBar;
+import android.widget.TabHost;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -35,8 +36,9 @@ public class ForeignProfile extends AppCompatActivity {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if(event.getAction()==MotionEvent.ACTION_DOWN){
-                    Intent foreignprofile_rating =  new Intent(getApplicationContext(), ForeignProfileRating.class);
-                    startActivity(foreignprofile_rating);
+                    //Intent foreignprofile_rating =  new Intent(getApplicationContext(), ForeignProfileRating.class);
+                    //startActivity(foreignprofile_rating);
+                    ((TabHost)getParent().findViewById(R.id.tabHost)).setCurrentTabByTag("foreign_profile_ratings");
                 }
                 return true;
             }
@@ -44,6 +46,7 @@ public class ForeignProfile extends AppCompatActivity {
 
     }
 
+    /*
     public void btn_tm_logo(View view) {
 
         PopupMenu popup = new PopupMenu(this, view);
@@ -97,4 +100,5 @@ public class ForeignProfile extends AppCompatActivity {
         Intent makeadate = new Intent(this, MakeADate.class);
         startActivity(makeadate);
     }
+    */
 }

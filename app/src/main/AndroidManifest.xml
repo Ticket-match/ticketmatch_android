@@ -6,22 +6,17 @@
         android:name="android.hardware.camera"
         android:required="true" />
 
-
-
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
-        android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:allowBackup="false"
+        android:icon="@drawable/tm_logo"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <!--
-        android:theme="@android:style/Theme.NoTitleBar.Fullscreen"-->
-
         <activity
             android:name=".MainActivity"
             android:screenOrientation="portrait">
@@ -46,22 +41,57 @@
         <activity
             android:name=".MyProfileRatings"
             android:screenOrientation="portrait" />
-        <activity android:name=".Message_Overview" />
-        <activity android:name=".Message_Chat" />
-        <activity android:name=".ForeignProfile" />
-        <activity android:name=".ForeignProfileRating" />
-        <activity android:name=".Offer_Overview" />
-        <activity android:name=".NewOffer" />
-        <activity android:name=".Offer_Detail" />
-        <activity android:name=".Find" />
-        <activity android:name=".Find_Vendor" />
-        <activity android:name=".Message_Vendor" />
-        <activity android:name=".MakeADate" />
-        <activity android:name=".MakeADate_Detail" />
-        <activity android:name=".Search_MakeADate" />
-        <activity android:name=".New_MakeAdate" />
-        <activity android:name=".MakeADate_SearchResults" />
-        <activity android:name=".MakeADateResults_Message"></activity>
+        <activity
+            android:name=".Message_Overview"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Message_Chat"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ForeignProfile"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ForeignProfileRating"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Offer_Overview"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".NewOffer"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Offer_Detail"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Find"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Find_Vendor"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Message_Vendor"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".MakeADate"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".MakeADate_Detail"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Search_MakeADate"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".New_MakeAdate"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".MakeADate_SearchResults"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".MakeADateResults_Message"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".MainActivityTabHost"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

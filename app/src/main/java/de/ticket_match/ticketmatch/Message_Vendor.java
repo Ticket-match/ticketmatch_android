@@ -7,6 +7,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.PopupMenu;
+import android.widget.TabHost;
 import android.widget.Toast;
 
 public class Message_Vendor extends AppCompatActivity {
@@ -18,17 +19,20 @@ public class Message_Vendor extends AppCompatActivity {
     }
 
     public void foreign_profile (View view){
-        Intent foreign = new Intent(this, ForeignProfile.class);
-        startActivity(foreign);
+        //Intent foreign = new Intent(this, ForeignProfile.class);
+        //startActivity(foreign);
+        ((TabHost)getParent().findViewById(R.id.tabHost)).setCurrentTabByTag("foreign_profile");
     }
 
     public void send_message (View view){
         Toast.makeText(getApplicationContext(),"Your message was sent!",Toast.LENGTH_SHORT).show();
 
-        Intent vendor = new Intent(this, Find_Vendor.class);
-        startActivity(vendor);
+        //Intent vendor = new Intent(this, Find_Vendor.class);
+        //startActivity(vendor);
+        ((TabHost)getParent().findViewById(R.id.tabHost)).setCurrentTabByTag("search_vendor");
     }
 
+    /*
     public void btn_tm_logo(View view) {
 
         PopupMenu popup = new PopupMenu(this, view);
@@ -82,4 +86,5 @@ public class Message_Vendor extends AppCompatActivity {
         Intent makeadate = new Intent(this, MakeADate.class);
         startActivity(makeadate);
     }
+    */
 }

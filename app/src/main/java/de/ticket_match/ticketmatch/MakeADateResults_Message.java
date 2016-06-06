@@ -7,6 +7,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.PopupMenu;
+import android.widget.TabHost;
 import android.widget.Toast;
 
 public class MakeADateResults_Message extends AppCompatActivity {
@@ -18,17 +19,20 @@ public class MakeADateResults_Message extends AppCompatActivity {
     }
 
     public void foreign_profile (View view){
-        Intent foreign = new Intent(this, ForeignProfile.class);
-        startActivity(foreign);
+        //Intent foreign = new Intent(this, ForeignProfile.class);
+        //startActivity(foreign);
+        ((TabHost)getParent().findViewById(R.id.tabHost)).setCurrentTabByTag("foreign_profile");
     }
 
     public void send_message (View view){
         Toast.makeText(getApplicationContext(),"Your message was sent!",Toast.LENGTH_SHORT).show();
 
-        Intent makeadatesearchresults = new Intent(this, MakeADate_SearchResults.class);
-        startActivity(makeadatesearchresults);
+        //Intent makeadatesearchresults = new Intent(this, MakeADate_SearchResults.class);
+        //startActivity(makeadatesearchresults);
+        ((TabHost)getParent().findViewById(R.id.tabHost)).setCurrentTabByTag("makeadate_search_result");
     }
 
+    /*
     public void btn_tm_logo(View view) {
 
         PopupMenu popup = new PopupMenu(this, view);
@@ -82,4 +86,5 @@ public class MakeADateResults_Message extends AppCompatActivity {
         Intent makeadate = new Intent(this, MakeADate.class);
         startActivity(makeadate);
     }
+    */
 }

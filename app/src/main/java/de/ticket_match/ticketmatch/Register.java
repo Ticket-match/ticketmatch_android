@@ -59,7 +59,7 @@ public class Register extends AppCompatActivity {
                     Log.d(TAG, "onAuthStateChanged:signed_in:" + fireUser.getUid());
                     mDatabase.child("users").child(fireUser.getUid()).setValue(user);
 
-                    Intent myProfile = new Intent(getApplicationContext(), MyProfile.class);
+                    Intent myProfile = new Intent(getApplicationContext(), MainActivityTabHost.class);
                     startActivity(myProfile);
                 } else {
                     // User is signed out

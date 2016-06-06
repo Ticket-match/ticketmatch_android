@@ -1,6 +1,5 @@
 package de.ticket_match.ticketmatch;
 
-import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -40,14 +39,12 @@ public class ChangePassword extends AppCompatActivity {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             if (task.isSuccessful()) {
-                                Toast.makeText(getApplicationContext(), "User password updated.", Toast.LENGTH_SHORT).show();
                                 Log.d("Firebase", "User password updated.");
                             }
                         }
                     });
             //TODO: Catch FirebaseAuthRecentLoginRequiredException if user has not logged in recently
             //TODO: Add .addOnFailureListener to handle a not successful change.
-            Toast.makeText(getApplicationContext(), password+passwordreenter, Toast.LENGTH_SHORT).show();
             super.onBackPressed();
         }
 

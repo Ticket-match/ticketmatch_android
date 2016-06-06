@@ -13,6 +13,7 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.PopupMenu;
+import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,8 +43,9 @@ public class MakeADate extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String find_ticket = listitems_makeadate.get(position-1);
 
-                Intent makeadate_detail = new Intent(getApplicationContext(), MakeADate_Detail.class);
-                startActivity(makeadate_detail);
+                //Intent makeadate_detail = new Intent(getApplicationContext(), MakeADate_Detail.class);
+                //startActivity(makeadate_detail);
+                ((TabHost)getParent().findViewById(R.id.tabHost)).setCurrentTabByTag("makeadate_detail");
             }
         });
 
@@ -52,15 +54,17 @@ public class MakeADate extends AppCompatActivity {
 
     public void btn_find_makeadate(View view){
 
-        Intent search_makeadate = new Intent(getApplicationContext(), Search_MakeADate.class);
-        startActivity(search_makeadate);
+        //Intent search_makeadate = new Intent(getApplicationContext(), Search_MakeADate.class);
+        //startActivity(search_makeadate);
+        ((TabHost)getParent().findViewById(R.id.tabHost)).setCurrentTabByTag("makeadate_search");
 
     }
 
     public void btn_save_makeadate(View view){
 
-        Intent newmakeadate = new Intent(getApplicationContext(), New_MakeAdate.class);
-        startActivity(newmakeadate);
+        //Intent newmakeadate = new Intent(getApplicationContext(), New_MakeAdate.class);
+        //startActivity(newmakeadate);
+        ((TabHost)getParent().findViewById(R.id.tabHost)).setCurrentTabByTag("makeadate_new");
     }
 
     public static class CustomAdapter extends BaseAdapter {
@@ -107,6 +111,7 @@ public class MakeADate extends AppCompatActivity {
 
     }
 
+    /*
     public void btn_tm_logo(View view) {
 
         PopupMenu popup = new PopupMenu(this, view);
@@ -159,4 +164,5 @@ public class MakeADate extends AppCompatActivity {
     public void btn_makematch(View view) {
 
     }
+    */
 }

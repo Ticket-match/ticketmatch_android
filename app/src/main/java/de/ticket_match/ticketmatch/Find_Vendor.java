@@ -13,6 +13,7 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.PopupMenu;
+import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,17 +21,13 @@ import java.util.ArrayList;
 
 public class Find_Vendor extends AppCompatActivity {
 
-    Bundle bund;
-    String find_vendor = "";
+
     ArrayList<String> listitems_vendor= new ArrayList<String>(0);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_find__vendor);
-
-        //bund = getIntent().getExtras();
-        //find_vendor = bund.getString("find");
 
         ListView listview = (ListView)findViewById(R.id.find_vendor);
         listitems_vendor.add("Max Mustermann|3|12,00 EUR");
@@ -46,11 +43,12 @@ public class Find_Vendor extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 String vendor = listitems_vendor.get(position-1);
 
-                Bundle values = new Bundle();
+                Bundle values = ((MainActivityTabHost)getParent()).baseBundle;
                 values.putString("vendor", vendor);
-                Intent message_vendor = new Intent(getApplicationContext(), Message_Vendor.class);
-                message_vendor.putExtras(values);
-                startActivity(message_vendor);
+                //Intent message_vendor = new Intent(getApplicationContext(), Message_Vendor.class);
+                //message_vendor.putExtras(values);
+                //startActivity(message_vendor);
+                ((TabHost)getParent().findViewById(R.id.tabHost)).setCurrentTabByTag("search_vendor_message");
             }
         });
 
@@ -100,6 +98,7 @@ public class Find_Vendor extends AppCompatActivity {
 
     }
 
+    /*
     public void btn_tm_logo(View view) {
 
         PopupMenu popup = new PopupMenu(this, view);
@@ -153,4 +152,5 @@ public class Find_Vendor extends AppCompatActivity {
         Intent makeadate = new Intent(this, MakeADate.class);
         startActivity(makeadate);
     }
+    */
 }

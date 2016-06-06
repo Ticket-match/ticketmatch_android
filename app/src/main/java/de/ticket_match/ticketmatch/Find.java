@@ -17,8 +17,12 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.PopupMenu;
+import android.widget.TabHost;
+import android.widget.TabWidget;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -73,11 +77,12 @@ public class Find extends AppCompatActivity {
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     String find_ticket = listitems_find.get(position-1);
 
-                    Bundle values = new Bundle();
+                    Bundle values = ((MainActivityTabHost)getParent()).baseBundle; //new Bundle();
                     values.putString("find", find_ticket);
-                    Intent find_vendor = new Intent(getApplicationContext(), Find_Vendor.class);
-                    find_vendor.putExtras(values);
-                    startActivity(find_vendor);
+                    //Intent find_vendor = new Intent(getApplicationContext(), Find_Vendor.class);
+                    //find_vendor.putExtras(values);
+                    //startActivity(find_vendor);
+                    ((TabHost)getParent().findViewById(R.id.tabHost)).setCurrentTabByTag("search_vendor");
                 }
             });
         }
@@ -128,7 +133,7 @@ public class Find extends AppCompatActivity {
     }
 
     public void find_date(View view) {
-        Find.NewFindDate rbd = new Find.NewFindDate();
+        NewFindDate rbd = new NewFindDate();
         rbd.show(getFragmentManager(), "rbd");
     }
 
@@ -152,6 +157,7 @@ public class Find extends AppCompatActivity {
         }
     }
 
+    /*
     public void btn_tm_logo(View view) {
 
         PopupMenu popup = new PopupMenu(this, view);
@@ -163,8 +169,6 @@ public class Find extends AppCompatActivity {
             public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()){
                     case R.id.change_password:
-                        //ChangePasswordDialog cdp = new ChangePasswordDialog();
-                        //cdp.show(getFragmentManager(), "cdp");
                         Intent changepassword =  new Intent(getApplicationContext(), ChangePassword.class);
                         startActivity(changepassword);
                         return true;
@@ -180,6 +184,7 @@ public class Find extends AppCompatActivity {
         popup.show();
 
     }
+
 
     public void btn_profile(View view) {
         Intent myprofile = new Intent(this, MyProfile.class);
@@ -204,4 +209,5 @@ public class Find extends AppCompatActivity {
         Intent makeadate = new Intent(this, MakeADate.class);
         startActivity(makeadate);
     }
+    */
 }

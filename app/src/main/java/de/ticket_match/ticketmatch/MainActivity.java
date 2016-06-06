@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity {
                 if (user != null) {
                     // User is signed in
                     Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
-                    Intent myprofile =  new Intent(getApplicationContext(), MyProfile.class);
+                    Intent myprofile =  new Intent(getApplicationContext(), MainActivityTabHost.class);
                     startActivity(myprofile);
                 } else {
                     // User is signed out
@@ -127,6 +127,7 @@ public class MainActivity extends AppCompatActivity {
         startActivity(register);
 
     }
+    /*
     public static class ChangePasswordDialog extends DialogFragment{
         public Dialog onCreateDialog (Bundle savedInstanceState){
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -146,6 +147,6 @@ public class MainActivity extends AppCompatActivity {
             });
             return builder.create();
         }
-    }
+    }*/
 
 }
