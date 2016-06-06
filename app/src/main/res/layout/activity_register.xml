@@ -21,36 +21,30 @@
             android:layout_column="0"
             android:layout_row="0">
 
-            <GridLayout
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:columnCount="2"
-                android:rowCount="1"
-                android:layout_marginBottom="5dp">
+                android:layout_height="65dp"
+                android:orientation="horizontal">
 
                 <ImageButton
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:layout_gravity="center"
                     android:background="@drawable/tm_logo"
-                    android:layout_column="0"
-                    android:layout_row="0"
-                    android:layout_margin="10dp"
-                    android:layout_marginLeft="20dp"/>
-                <!-- android:onClick="btn_tm_logo" -->
+                    android:layout_margin="10dp" />
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Ticket Match"
+                    android:text="Register for TicketMatch"
                     android:layout_gravity="center"
-                    android:layout_column="1"
-                    android:layout_row="0"
-                    android:id="@+id/textView"
+                    android:gravity="left"
+                    android:layout_weight="1"
                     android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                    android:textSize="30sp"
-                    android:textColor="#ffffff"
-                    android:alpha="0.87"/>
-            </GridLayout>
+                    android:textColor="#FFFFFF"/>
+
+            </LinearLayout>
 
             <View
                 android:layout_width="match_parent"
@@ -60,6 +54,8 @@
         </LinearLayout>
 
     </RelativeLayout>
+
+
 
     <RelativeLayout
         android:background="#2196F3"
