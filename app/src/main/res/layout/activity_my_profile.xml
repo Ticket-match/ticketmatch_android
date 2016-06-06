@@ -225,6 +225,9 @@
                         android:stepSize="0.5"
                         android:numStars="5"
                         android:isIndicator="true"
+                        android:progressTint="@color/colorAccent"
+                        android:secondaryProgressTint="@android:color/darker_gray"
+                        android:progressBackgroundTint="@android:color/darker_gray"
                         android:alpha="0.54"/>
 
                 </LinearLayout>
