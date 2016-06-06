@@ -70,6 +70,7 @@ public class MyProfile extends AppCompatActivity {
         final TextView myProfileGenderAndAge = (TextView) findViewById(R.id.myprofile_gender_age);
         final TextView myProfileLocation = (TextView) findViewById(R.id.myprofile_location);
 
+
         //Receive profile information from database
         //TODO: Catch Nullpointer Exception
         mDatabase.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).addListenerForSingleValueEvent(
@@ -112,7 +113,6 @@ public class MyProfile extends AppCompatActivity {
         if(savedInstanceState!=null){
             ((ImageButton)findViewById(R.id.myprofile_image)).setImageBitmap((Bitmap)savedInstanceState.getParcelable("profile_image"));
         }
-
     }
 
     @Override

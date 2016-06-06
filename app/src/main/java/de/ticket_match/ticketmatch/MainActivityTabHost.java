@@ -4,6 +4,7 @@ import android.app.LocalActivityManager;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Layout;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -105,6 +106,7 @@ public class MainActivityTabHost extends AppCompatActivity {
         ts5.setIndicator(ts5Ind);
         ts5.setContent(new Intent(this, MakeADate.class));
 
+
         // Tab "Make A Date Detail"
         TabHost.TabSpec ts12 = th.newTabSpec("makeadate_detail");
         View ts12Ind = getLayoutInflater().inflate(R.layout.activity_main_activity_tab_indicator_inv, th.getTabWidget(), false);
@@ -147,10 +149,6 @@ public class MainActivityTabHost extends AppCompatActivity {
         ts18.setIndicator(ts18Ind);
         ts18.setContent(new Intent(this, ForeignProfileRating.class));
 
-
-
-
-
         // Add Tabs to TabHost
         th.addTab(ts1);
         th.addTab(ts2);
@@ -170,6 +168,26 @@ public class MainActivityTabHost extends AppCompatActivity {
         th.addTab(ts16);
         th.addTab(ts17);
         th.addTab(ts18);
+
+        //Listener for tabchange so that header title can be changed
+        th.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
+            @Override
+            public void onTabChanged(String tabId) {
+                if(tabId.equals("myprofile")) {
+                    ((TextView)findViewById(R.id.headerTitle)).setText("My Profile");
+                } else if(tabId.equals("messages")) {
+                    ((TextView)findViewById(R.id.headerTitle)).setText("Messages");
+                } else if(tabId.equals("tickets")) {
+                    ((TextView)findViewById(R.id.headerTitle)).setText("Tickets");
+                } else if(tabId.equals("search")) {
+                    ((TextView)findViewById(R.id.headerTitle)).setText("Search");
+                } else if(tabId.equals("makeadate")) {
+                    ((TextView)findViewById(R.id.headerTitle)).setText("Make a date");
+                } else {
+                    ((TextView)findViewById(R.id.headerTitle)).setText("TicketMatch");
+                }
+            }
+        });
     }
 
     @Override
