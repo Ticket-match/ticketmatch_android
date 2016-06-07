@@ -68,7 +68,7 @@ public class Register extends AppCompatActivity {
                     Log.d(TAG, "onAuthStateChanged:signed_in:" + fireUser.getUid());
                     mDatabase.child("users").child(fireUser.getUid()).setValue(user);
 
-                    Bitmap bm = BitmapFactory.decodeResource(getResources(),R.drawable.profile_default);
+                    Bitmap bm = BitmapFactory.decodeResource(getResources(),R.drawable.contacts);
                     ByteArrayOutputStream bytes = new ByteArrayOutputStream();
                     bm.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
                     byte [] ba = bytes.toByteArray();

@@ -131,13 +131,14 @@ public class MyProfile extends AppCompatActivity {
         mDatabase.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("ratings").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                ratingitems = (ArrayList<HashMap<String,String>>)dataSnapshot.getValue();
+                //Commented out because it caused error on app launch
+                /*ratingitems = (ArrayList<HashMap<String,String>>)dataSnapshot.getValue();
                 float f = 0f;
                 for (HashMap<String,String> j:ratingitems) {
                     f=f+new Float(j.get("stars"));
                 }
                 f = f / ratingitems.size();
-                ((RatingBar)findViewById(R.id.myprofile_rating)).setRating(f);
+                ((RatingBar)findViewById(R.id.myprofile_rating)).setRating(f);*/
             }
 
             @Override
@@ -215,8 +216,9 @@ public class MyProfile extends AppCompatActivity {
                         getParent().startActivityForResult(Intent.createChooser(intent_upload, "Select File"), REQUEST_GALLERY);
                         return true;
                     case R.id.delete_photo:
-                        ((ImageButton)findViewById(R.id.myprofile_image)).setImageResource(R.drawable.profile_default);
-                        Bitmap bm = BitmapFactory.decodeResource(getResources(),R.drawable.profile_default);
+                        //
+                        ((ImageButton)findViewById(R.id.myprofile_image)).setImageResource(R.drawable.contacts);
+                        Bitmap bm = BitmapFactory.decodeResource(getResources(),R.drawable.contacts);
                         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
                         bm.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
                         byte [] ba = bytes.toByteArray();

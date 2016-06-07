@@ -1,6 +1,138 @@
 package de.ticket_match.ticketmatch;
 
-import android.content.Context;
+import android.os.Build;
+import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.view.Gravity;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.TextView;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+
+import com.firebase.client.Firebase;
+
+public class Message_Chat extends AppCompatActivity implements View.OnClickListener,
+        MessageDataSource.MessagesCallbacks{
+
+    public static final String USER_EXTRA = "USER";
+
+    public static final String TAG = "ChatActivity";
+
+    private ArrayList<Message> mMessages;
+    private MessagesAdapter mAdapter;
+    private String mRecipient;
+    private ListView mListView;
+    private Date mLastMessageDate = new Date();
+    private String mConvoId;
+    private MessageDataSource.MessagesListener mListener;
+
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_message__chat);
+
+        mRecipient = "Ashok";
+
+        mListView = (ListView)findViewById(R.id.message_chat);
+        mMessages = new ArrayList<>();
+        mAdapter = new MessagesAdapter(mMessages);
+        mListView.setAdapter(mAdapter);
+
+        //TODO: Set title of chat name
+        /*setTitle(mRecipient);
+        if (getSupportActionBar() != null){
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }*/
+
+        Button sendMessage = (Button)findViewById(R.id.send_message);
+        sendMessage.setOnClickListener(this);
+
+        String[] ids = {"Ajay","-", "Ashok"};
+        //Arrays.sort(ids);
+        mConvoId = ids[0]+ids[1]+ids[2];
+
+
+        //TODO: Change from convoId to messages and then convoId
+        mListener = MessageDataSource.addMessagesListener(mConvoId, this);
+
+    }
+
+    public void onClick(View v) {
+        EditText newMessageView = (EditText)findViewById(R.id.new_chat_message);
+        String newMessage = newMessageView.getText().toString();
+        newMessageView.setText("");
+        Message msg = new Message();
+        msg.setDate(new Date());
+        msg.setText(newMessage);
+        msg.setSender("Ashok");
+
+        MessageDataSource.saveMessage(msg, mConvoId);
+    }
+
+    @Override
+    public void onMessageAdded(Message message) {
+        mMessages.add(message);
+        mAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        MessageDataSource.stop(mListener);
+    }
+
+
+    private class MessagesAdapter extends ArrayAdapter<Message> {
+        MessagesAdapter(ArrayList<Message> messages){
+            super(Message_Chat.this, R.layout.message, R.id.message, messages);
+        }
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            convertView = super.getView(position, convertView, parent);
+            Message message = getItem(position);
+
+            TextView nameView = (TextView)convertView.findViewById(R.id.message);
+            nameView.setText(message.getText());
+
+            LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams)nameView.getLayoutParams();
+
+            int sdk = Build.VERSION.SDK_INT;
+            if (message.getSender().equals("Ashok")){
+                if (sdk >= Build.VERSION_CODES.JELLY_BEAN) {
+                    nameView.setBackground(getDrawable(R.drawable.bubble_right_green));
+                } else{
+                    nameView.setBackgroundDrawable(getDrawable(R.drawable.bubble_right_green));
+                }
+                layoutParams.gravity = Gravity.RIGHT;
+            }else{
+                if (sdk >= Build.VERSION_CODES.JELLY_BEAN) {
+                    nameView.setBackground(getDrawable(R.drawable.bubble_left_gray));
+                } else{
+                    nameView.setBackgroundDrawable(getDrawable(R.drawable.bubble_left_gray));
+                }
+                layoutParams.gravity = Gravity.LEFT;
+            }
+
+            nameView.setLayoutParams(layoutParams);
+
+
+            return convertView;
+        }
+    }
+}
+
+/*import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.support.v7.app.AppCompatActivity;
@@ -22,7 +154,10 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+
 public class Message_Chat extends AppCompatActivity {
+
+
 
     ArrayList<String> chatmessages = new ArrayList<String>(0);
     String name = "";
@@ -44,37 +179,6 @@ public class Message_Chat extends AppCompatActivity {
 
     }
 
-    /*
-    public void btn_tm_logo(View view) {
-
-        PopupMenu popup = new PopupMenu(this, view);
-        MenuInflater inflater = popup.getMenuInflater();
-        inflater.inflate(R.menu.popup_menu, popup.getMenu());
-
-        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                switch (item.getItemId()){
-                    case R.id.change_password:
-                        //ChangePasswordDialog cdp = new ChangePasswordDialog();
-                        //cdp.show(getFragmentManager(), "cdp");
-                        Intent changepassword =  new Intent(getApplicationContext(), ChangePassword.class);
-                        startActivity(changepassword);
-                        return true;
-                    case R.id.logout:
-                        Toast.makeText(getApplicationContext(),"logout",Toast.LENGTH_SHORT).show();
-                        return true;
-                    default:
-                        return false;
-                }
-            }
-        });
-
-        popup.show();
-
-    }
-    */
-
     public void btn_sendMessage (View view) {
         String message_text = ((EditText)findViewById(R.id.new_chat_message)).getText().toString();
         if (message_text.equals("")) {
@@ -86,33 +190,6 @@ public class Message_Chat extends AppCompatActivity {
             ((EditText)findViewById(R.id.new_chat_message)).setText("");
         }
     }
-
-    /*
-    public void btn_profile(View view) {
-        Intent myprofile = new Intent(this, MyProfile.class);
-        startActivity(myprofile);
-    }
-
-    public void btn_message(View view) {
-        Intent message = new Intent(this, Message_Overview.class);
-        startActivity(message);
-    }
-
-    public void btn_ticketoffer(View view) {
-        Intent offeroverview = new Intent(this, Offer_Overview.class);
-        startActivity(offeroverview);
-    }
-
-    public void btn_search(View view) {
-        Intent find = new Intent(this, Find.class);
-        startActivity(find);
-    }
-
-    public void btn_makematch(View view) {
-        Intent makeadate = new Intent(this, MakeADate.class);
-        startActivity(makeadate);
-    }
-    */
 
     public static class CustomAdapter extends BaseAdapter {
         ArrayList<String> result;
@@ -165,4 +242,4 @@ public class Message_Chat extends AppCompatActivity {
         }
 
     }
-}
+}*/

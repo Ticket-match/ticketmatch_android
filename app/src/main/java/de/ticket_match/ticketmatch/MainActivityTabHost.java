@@ -54,6 +54,8 @@ public class MainActivityTabHost extends AppCompatActivity {
         ((ImageView) ts1Ind.findViewById(android.R.id.icon)).setImageResource(R.drawable.contacts);
         ts1.setIndicator(ts1Ind);
         ts1.setContent(new Intent(this, MyProfile.class));
+        //For testing purpose
+        //ts1.setContent(new Intent(this, Message_Chat.class));
 
         // Tab "My Profile Ratings"
         TabHost.TabSpec ts6 = th.newTabSpec("myprofile_ratings");
@@ -62,11 +64,14 @@ public class MainActivityTabHost extends AppCompatActivity {
         ts6.setContent(new Intent(this, MyProfileRatings.class));
 
         // Tab "Messages"
+
         TabHost.TabSpec ts2 = th.newTabSpec("messages");
         View ts2Ind = getLayoutInflater().inflate(R.layout.activity_main_activity_tab_indicator, th.getTabWidget(), false);
         ((TextView) ts2Ind.findViewById(android.R.id.title)).setText("Messages");
         ((ImageView) ts2Ind.findViewById(android.R.id.icon)).setImageResource(R.drawable.message);
         ts2.setIndicator(ts2Ind);
+        //CAUTION: Changed target class Message_Overview to Message_Chat for testing purposes with FireBase Chat
+        //ts2.setContent(new Intent(this, Message_Chat.class));
         ts2.setContent(new Intent(this, Message_Overview.class));
 
         // Tab "Messages Chat"
