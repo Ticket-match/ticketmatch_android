@@ -230,6 +230,8 @@ public class MainActivityTabHost extends AppCompatActivity {
                     ((TextView)findViewById(R.id.headerTitle)).setText("Search Vendor Message");
                 } else if(tabId.equals("makeadate_detail")) {
                     ((TextView)findViewById(R.id.headerTitle)).setText("Date details");
+                } else if(tabId.equals("makeadate_new")) {
+                    ((TextView)findViewById(R.id.headerTitle)).setText("Make a new date");
                 } else if(tabId.equals("makeadate_search")) {
                     ((TextView)findViewById(R.id.headerTitle)).setText("Search a date");
                 } else if(tabId.equals("makeadate_search_result")) {

@@ -59,7 +59,7 @@ public class Message_Chat extends AppCompatActivity implements View.OnClickListe
         sendMessage.setOnClickListener(this);
 
         String[] ids = {"Ajay","-", "Ashok"};
-        //Arrays.sort(ids);
+        Arrays.sort(ids);
         mConvoId = ids[0]+ids[1]+ids[2];
 
 
