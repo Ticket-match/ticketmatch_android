@@ -7,146 +7,6 @@
     android:layout_height="match_parent"
     tools:context="de.ticket_match.ticketmatch.NewOffer">
 
-    <RelativeLayout
-        android:id="@+id/header"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:background="#2196F3"
-        android:visibility="gone">
-
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_column="0"
-            android:layout_row="0">
-
-            <GridLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:columnCount="2"
-                android:rowCount="1"
-                android:layout_marginBottom="5dp">
-
-                <ImageButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/tm_logo"
-                    android:layout_column="0"
-                    android:layout_row="0"
-                    android:layout_margin="10dp"
-                    android:layout_marginLeft="20dp"
-                    android:onClick="btn_tm_logo" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Ticket Match"
-                    android:layout_gravity="center"
-                    android:layout_column="1"
-                    android:layout_row="0"
-                    android:id="@+id/textView"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                    android:textSize="30sp"
-                    android:textColor="#ffffff"
-                    android:alpha="0.87"/>
-            </GridLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="#000000"
-                android:alpha="0.12"/>
-        </LinearLayout>
-
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:background="#2196F3"
-        android:id="@+id/footer"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:visibility="gone">
-
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_column="0"
-            android:layout_row="2">
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="#000000"
-                android:alpha="0.12"/>
-
-            <GridLayout
-
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:columnCount="5"
-                android:rowCount="1"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="5dp">
-
-                <ImageButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_row="0"
-                    android:layout_column="0"
-                    android:layout_margin="8dp"
-                    android:background="@drawable/contacts"
-                    android:onClick="btn_profile"
-                    android:alpha="0.87"/>
-
-                <ImageButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_row="0"
-                    android:layout_column="1"
-                    android:background="@drawable/message"
-                    android:layout_margin="8dp"
-                    android:onClick="btn_message"
-                    android:alpha="0.87"/>
-
-                <ImageButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_row="0"
-                    android:layout_column="2"
-                    android:background="@drawable/ticket"
-                    android:layout_margin="8dp"
-                    android:onClick="btn_ticketoffer"
-                    android:alpha="0.87"/>
-
-                <ImageButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_row="0"
-                    android:layout_column="3"
-                    android:background="@drawable/search"
-                    android:layout_margin="8dp"
-                    android:onClick="btn_search"
-                    android:alpha="0.87"/>
-
-                <ImageButton
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_row="0"
-                    android:layout_column="4"
-                    android:background="@drawable/group"
-                    android:layout_margin="8dp"
-                    android:onClick="btn_makematch"
-                    android:alpha="0.87"/>
-            </GridLayout>
-
-        </LinearLayout>
-
-    </RelativeLayout>
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -173,7 +33,7 @@
             android:layout_marginBottom="5dp"
             android:layout_marginTop="5dp"
             android:layout_gravity="center"
-            android:alpha="0.38"/>
+            android:alpha="0.54"/>
 
         <EditText
             android:hint="Event Location"
@@ -184,7 +44,7 @@
             android:layout_marginBottom="5dp"
             android:layout_marginTop="5dp"
             android:layout_gravity="center"
-            android:alpha="0.38"/>
+            android:alpha="0.54"/>
 
         <EditText
             android:hint="Number of Tickets"
@@ -196,7 +56,7 @@
             android:layout_marginBottom="5dp"
             android:layout_marginTop="5dp"
             android:layout_gravity="center"
-            android:alpha="0.38"/>
+            android:alpha="0.54"/>
 
 
         <TextView
@@ -209,7 +69,7 @@
             android:layout_marginBottom="5dp"
             android:layout_marginTop="5dp"
             android:layout_gravity="center"
-            android:alpha="0.38"/>
+            android:alpha="0.54"/>
 
         <LinearLayout
             android:layout_width="300dp"
@@ -227,7 +87,7 @@
                 android:id="@+id/price"
                 android:inputType="number"
                 android:layout_marginRight="20dp"
-                android:alpha="0.38"/>
+                android:alpha="0.54"/>
 
             <Spinner
                 android:layout_width="wrap_content"
@@ -247,19 +107,21 @@
 
         </LinearLayout>
 
-        <ImageButton
-            android:id="@+id/offeroverview_button"
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab_submit_offer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/ticket_filled"
+            android:layout_gravity="bottom|right"
+            android:gravity="bottom|right"
+            android:layout_marginRight="20dp"
+            android:src="@drawable/ic_done_white_18dp"
+            app:elevation="3dp"
             android:onClick="btn_newoffer"
-            android:layout_gravity="center"
-            android:alpha="0.54"/>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="20dp"/>
+            app:backgroundTint="#FFAB00"
+            android:clickable="true" />
 
     </LinearLayout>
+
 
 </android.widget.RelativeLayout>
