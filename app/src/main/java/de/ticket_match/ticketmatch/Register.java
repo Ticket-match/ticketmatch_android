@@ -5,6 +5,8 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -19,13 +21,19 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
+import java.io.ByteArrayOutputStream;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -36,6 +44,7 @@ public class Register extends AppCompatActivity {
     private FirebaseAuth.AuthStateListener mAuthListener;
     private FirebaseDatabase database = FirebaseDatabase.getInstance();
     private DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
+    private StorageReference mStorage = FirebaseStorage.getInstance().getReference();
     private User user;
 
 
@@ -58,6 +67,12 @@ public class Register extends AppCompatActivity {
                     // User is signed in
                     Log.d(TAG, "onAuthStateChanged:signed_in:" + fireUser.getUid());
                     mDatabase.child("users").child(fireUser.getUid()).setValue(user);
+
+                    Bitmap bm = BitmapFactory.decodeResource(getResources(),R.drawable.profile_default);
+                    ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+                    bm.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+                    byte [] ba = bytes.toByteArray();
+                    UploadTask uT = mStorage.child("images/"+fireUser.getUid()+".jpg").putBytes(ba);
 
                     Intent myProfile = new Intent(getApplicationContext(), MainActivityTabHost.class);
                     startActivity(myProfile);

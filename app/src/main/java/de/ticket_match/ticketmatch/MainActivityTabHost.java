@@ -2,22 +2,39 @@ package de.ticket_match.ticketmatch;
 
 import android.app.LocalActivityManager;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Layout;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 
 public class MainActivityTabHost extends AppCompatActivity {
     Bundle baseBundle = new Bundle();
+    private StorageReference mStorage = FirebaseStorage.getInstance().getReference();
+    int REQUEST_CAMERA = 1;
+    int REQUEST_GALLERY = 2;
+    TabHost th;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,7 +42,7 @@ public class MainActivityTabHost extends AppCompatActivity {
         setContentView(R.layout.activity_main_activity_tab_host);
 
         // TabHost Setup
-        TabHost th = (TabHost)findViewById(R.id.tabHost);
+        th = (TabHost)findViewById(R.id.tabHost);
         LocalActivityManager mLocalActivityManager = new LocalActivityManager(this, false);
         mLocalActivityManager.dispatchCreate(savedInstanceState);
         th.setup(mLocalActivityManager);
@@ -190,9 +207,43 @@ public class MainActivityTabHost extends AppCompatActivity {
         });
     }
 
-    @Override
-    public void onBackPressed() {
-        //super.onBackPressed();
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode==REQUEST_CAMERA & resultCode==RESULT_OK){
+
+            if (data != null) {
+                Bitmap bm_camera = (Bitmap)data.getExtras().get("data");
+                ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+                bm_camera.compress(Bitmap.CompressFormat.JPEG, 50, bytes);
+                byte [] ba = bytes.toByteArray();
+
+                UploadTask uT = mStorage.child("images/"+FirebaseAuth.getInstance().getCurrentUser().getUid()+".jpg").putBytes(ba);
+                ((ImageButton)th.getCurrentView().findViewById(R.id.myprofile_image)).setImageBitmap(bm_camera);
+            }
+
+        } else if(requestCode==REQUEST_GALLERY & resultCode==RESULT_OK){
+
+            if (data != null) {
+                try {
+                    Bitmap bm_upload = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), data.getData());
+
+                    ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+                    bm_upload.compress(Bitmap.CompressFormat.JPEG, 50, bytes);
+                    byte [] ba = bytes.toByteArray();
+                    bm_upload = BitmapFactory.decodeByteArray(ba, 0, ba.length);
+
+                    UploadTask uT = mStorage.child("images/"+FirebaseAuth.getInstance().getCurrentUser().getUid()+".jpg").putBytes(ba);
+                    ((ImageButton)th.getCurrentView().findViewById(R.id.myprofile_image)).setImageBitmap(bm_upload);
+
+                    /*ExifInterface exif = new ExifInterface(data.getData().getPath());
+                    int degree = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+                    Toast.makeText(getApplicationContext(), Integer.toString(degree),Toast.LENGTH_SHORT).show();*/
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+        }
     }
 
     public void btn_tm_logo(View view) {

@@ -11,6 +11,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.media.ExifInterface;
 import android.provider.MediaStore;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -34,6 +35,8 @@ import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -41,14 +44,21 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+
+import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class MyProfile extends AppCompatActivity {
 
-    ArrayList<String> listitems = new ArrayList<String>(0);
+    ArrayList<String> listitems;
+    ArrayList<HashMap<String,String>>ratingitems;
     int REQUEST_CAMERA = 1;
     int REQUEST_GALLERY = 2;
 
@@ -58,7 +68,11 @@ public class MyProfile extends AppCompatActivity {
     private FirebaseAuth.AuthStateListener mAuthListener;
     private FirebaseDatabase database = FirebaseDatabase.getInstance();
     private DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
+    private StorageReference mStorage = FirebaseStorage.getInstance().getReference();
     private String fireUserId;
+
+    MyProfile that = this;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,15 +103,50 @@ public class MyProfile extends AppCompatActivity {
                     }
                 });
 
+        mDatabase.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("interests").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                listitems = (ArrayList<String>)dataSnapshot.getValue();
+                ((ListView) findViewById(R.id.myprofile_interests)).setAdapter(new MyProfile.CustomAdapter(that, listitems));
+            }
 
-        // Set Interests
-        listitems.add("Cinema");
-        listitems.add("Pick Nick");
-        ((ListView) findViewById(R.id.myprofile_interests)).setAdapter(new CustomAdapter(this, listitems));
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
 
-        ((ImageButton)findViewById(R.id.myprofile_image)).setImageResource(R.drawable.contacts);
+            }
+        });
 
-        ((RatingBar)findViewById(R.id.myprofile_rating)).setRating(new Float("3.5"));
+
+        final long b = 512*1024;
+        mStorage.child("images/"+FirebaseAuth.getInstance().getCurrentUser().getUid()+".jpg").getBytes(b).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+            @Override
+            public void onSuccess(byte[] bytes) {
+                Bitmap bm = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                ((ImageButton)findViewById(R.id.myprofile_image)).setImageBitmap(bm);
+            }
+        });
+
+
+
+        mDatabase.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("ratings").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                ratingitems = (ArrayList<HashMap<String,String>>)dataSnapshot.getValue();
+                float f = 0f;
+                for (HashMap<String,String> j:ratingitems) {
+                    f=f+new Float(j.get("stars"));
+                }
+                f = f / ratingitems.size();
+                ((RatingBar)findViewById(R.id.myprofile_rating)).setRating(f);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+
         ((RatingBar)findViewById(R.id.myprofile_rating)).setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -126,44 +175,30 @@ public class MyProfile extends AppCompatActivity {
         String del = ((TextView)((View)view.getParent()).findViewById(R.id.listitem_text)).getText().toString();
         listitems.remove(del);
         ((CustomAdapter)((ListView) findViewById(R.id.myprofile_interests)).getAdapter()).notifyDataSetChanged();
+        mDatabase.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("interests").setValue(listitems);
     }
 
-    /*
-    public void btn_tm_logo(View view) {
+    public void btn_newinterest (View view){
 
-        PopupMenu popup = new PopupMenu(this, view);
-        MenuInflater inflater = popup.getMenuInflater();
-        inflater.inflate(R.menu.popup_menu, popup.getMenu());
-
-        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                switch (item.getItemId()){
-                    case R.id.change_password:
-                        Intent changepassword =  new Intent(getApplicationContext(), ChangePassword.class);
-                        startActivity(changepassword);
-                        return true;
-                    case R.id.logout:
-                        Toast.makeText(getApplicationContext(),"logout",Toast.LENGTH_SHORT).show();
-                        FirebaseAuth.getInstance().signOut();
-                        Intent mainActivity = new Intent(getApplicationContext(), MainActivity.class);
-                        startActivity(mainActivity);
-                        return true;
-                    default:
-                        return false;
-                }
-            }
-        });
-
-        popup.show();
-
+        String text = ((EditText)findViewById(R.id.newinterest_text)).getText().toString();
+        if(text.equals("")) {
+            Toast.makeText(getApplicationContext(), "Please insert an interest!", Toast.LENGTH_SHORT).show();
+        } else if(listitems.contains(text)) {
+            ((EditText)findViewById(R.id.newinterest_text)).setText("");
+            Toast.makeText(getApplicationContext(), "Interest already exists!", Toast.LENGTH_SHORT).show();
+        } else {
+            listitems.add(text);
+            ((EditText)findViewById(R.id.newinterest_text)).setText("");
+            ((CustomAdapter)((ListView) findViewById(R.id.myprofile_interests)).getAdapter()).notifyDataSetChanged();
+            mDatabase.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("interests").setValue(listitems);
+        }
     }
-    */
 
     public void btn_myprofile_image (View view) {
         PopupMenu popup = new PopupMenu(this, view);
         MenuInflater inflater = popup.getMenuInflater();
         inflater.inflate(R.menu.popup_menu_image, popup.getMenu());
+
 
         popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
@@ -171,20 +206,24 @@ public class MyProfile extends AppCompatActivity {
                 switch (item.getItemId()){
                     case R.id.take_photo:
                         Intent intent_camera = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                        startActivityForResult(intent_camera, REQUEST_CAMERA);
+                        getParent().startActivityForResult(intent_camera, REQUEST_CAMERA);
                         return true;
                     case R.id.upload_photo:
                         Intent intent_upload = new Intent();
                         intent_upload.setType("image/*");
                         intent_upload.setAction(Intent.ACTION_GET_CONTENT);
-                        startActivityForResult(Intent.createChooser(intent_upload, "Select File"), REQUEST_GALLERY);
+                        getParent().startActivityForResult(Intent.createChooser(intent_upload, "Select File"), REQUEST_GALLERY);
                         return true;
                     case R.id.delete_photo:
-                        // Backend: delete photo
-                        ((ImageButton)findViewById(R.id.myprofile_image)).setImageResource(R.drawable.contacts);
+                        ((ImageButton)findViewById(R.id.myprofile_image)).setImageResource(R.drawable.profile_default);
+                        Bitmap bm = BitmapFactory.decodeResource(getResources(),R.drawable.profile_default);
+                        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+                        bm.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+                        byte [] ba = bytes.toByteArray();
+                        UploadTask uT = mStorage.child("images/"+FirebaseAuth.getInstance().getCurrentUser().getUid()+".jpg").putBytes(ba);
                         return true;
                     default:
-                        return false;
+                        return true;
                 }
             }
         });
@@ -193,8 +232,10 @@ public class MyProfile extends AppCompatActivity {
 
     }
 
+    /*
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        System.out.println("" + requestCode + requestCode + data);
         if(requestCode==REQUEST_CAMERA & resultCode==RESULT_OK){
 
             Bitmap bm_camera = null;
@@ -204,6 +245,20 @@ public class MyProfile extends AppCompatActivity {
                 bm_camera.compress(Bitmap.CompressFormat.JPEG, 50, bytes);
                 byte [] ba = bytes.toByteArray();
                 bm_camera = BitmapFactory.decodeByteArray(ba, 0, ba.length);
+
+
+                UploadTask uT = mStorage.child("images/"+FirebaseAuth.getInstance().getCurrentUser().getUid()+".jpg").putBytes(ba);
+                uT.addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        System.out.println(e.getMessage());
+                    }
+                }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        System.out.println(taskSnapshot.getDownloadUrl());
+                    }
+                });
 
             }
             ((ImageButton)findViewById(R.id.myprofile_image)).setImageBitmap(bm_camera);
@@ -215,9 +270,16 @@ public class MyProfile extends AppCompatActivity {
                 try {
                     bm_upload = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), data.getData());
 
-                    /*ExifInterface exif = new ExifInterface(data.getData().getPath());
-                    int degree = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
-                    Toast.makeText(getApplicationContext(), Integer.toString(degree),Toast.LENGTH_SHORT).show();*/
+                    ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+                    bm_upload.compress(Bitmap.CompressFormat.JPEG, 50, bytes);
+                    byte [] ba = bytes.toByteArray();
+                    bm_upload = BitmapFactory.decodeByteArray(ba, 0, ba.length);
+
+                    UploadTask uT = mStorage.child("images/"+FirebaseAuth.getInstance().getCurrentUser().getUid()+".jpg").putBytes(ba);
+
+                    //ExifInterface exif = new ExifInterface(data.getData().getPath());
+                    //int degree = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+                    //Toast.makeText(getApplicationContext(), Integer.toString(degree),Toast.LENGTH_SHORT).show();
 
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -226,86 +288,6 @@ public class MyProfile extends AppCompatActivity {
             ((ImageButton)findViewById(R.id.myprofile_image)).setImageBitmap(bm_upload);
             // Backend save photo
 
-        }
-    }
-
-    /*
-    public void btn_message(View view) {
-        Intent message = new Intent(this, Message_Overview.class);
-        startActivity(message);
-    }
-
-    public void btn_ticketoffer(View view) {
-        Intent offeroverview = new Intent(this, Offer_Overview.class);
-        startActivity(offeroverview);
-    }
-
-    public void btn_search(View view) {
-        Intent find = new Intent(this, Find.class);
-        startActivity(find);
-    }
-
-    public void btn_makematch(View view) {
-        Intent makeadate = new Intent(this, MakeADate.class);
-        startActivity(makeadate);
-    }
-    */
-
-
-    public void btn_newinterest (View view){
-
-        String text = ((EditText)findViewById(R.id.newinterest_text)).getText().toString();
-        if(text.equals("")){
-            Toast.makeText(getApplicationContext(),"Please insert an interest!",Toast.LENGTH_SHORT).show();
-        } else{
-            listitems.add(text);
-            ((EditText)findViewById(R.id.newinterest_text)).setText("");
-            ((CustomAdapter)((ListView) findViewById(R.id.myprofile_interests)).getAdapter()).notifyDataSetChanged();
-            // Backend
-        }
-    }
-
-    /*
-    public static class ChangeInterestsDialog extends DialogFragment{
-        public Dialog onCreateDialog (Bundle savedInstanceState){
-            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-            LayoutInflater inflater = getActivity().getLayoutInflater();
-            builder.setView(inflater.inflate(R.layout.dialog_change_myprofile_interests, null));
-
-            builder.setPositiveButton("Change", new DialogInterface.OnClickListener(){
-                public void onClick(DialogInterface dialog, int id ){
-
-                }
-            });
-            builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener(){
-                public void onClick(DialogInterface dialog, int id ){
-                    dialog.cancel();
-
-                }
-            });
-            return builder.create();
-        }
-    }
-
-
-    public static class ChangePasswordDialog extends DialogFragment{
-        public Dialog onCreateDialog (Bundle savedInstanceState){
-            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-            LayoutInflater inflater = getActivity().getLayoutInflater();
-            builder.setView(inflater.inflate(R.layout.dialog_change_password, null));
-
-            builder.setPositiveButton("Change", new DialogInterface.OnClickListener(){
-                public void onClick(DialogInterface dialog, int id ){
-                    Toast.makeText(getActivity(),"Change Password",Toast.LENGTH_SHORT).show();
-                }
-            });
-            builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener(){
-                public void onClick(DialogInterface dialog, int id ){
-                    dialog.cancel();
-
-                }
-            });
-            return builder.create();
         }
     }*/
 
