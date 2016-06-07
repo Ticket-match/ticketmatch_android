@@ -1,8 +1,13 @@
 package de.ticket_match.ticketmatch;
 
+import android.graphics.Color;
+import android.graphics.ColorFilter;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -65,7 +70,6 @@ public class Message_Chat extends AppCompatActivity implements View.OnClickListe
 
         //TODO: Change from convoId to messages and then convoId
         mListener = MessageDataSource.addMessagesListener(mConvoId, this);
-
     }
 
     public void onClick(View v) {
@@ -115,6 +119,8 @@ public class Message_Chat extends AppCompatActivity implements View.OnClickListe
                     nameView.setBackgroundDrawable(getDrawable(R.drawable.bubble_right_green));
                 }
                 layoutParams.gravity = Gravity.RIGHT;
+                //nameView.setGravity(Gravity.RIGHT);
+
             }else{
                 if (sdk >= Build.VERSION_CODES.JELLY_BEAN) {
                     nameView.setBackground(getDrawable(R.drawable.bubble_left_gray));
@@ -122,6 +128,7 @@ public class Message_Chat extends AppCompatActivity implements View.OnClickListe
                     nameView.setBackgroundDrawable(getDrawable(R.drawable.bubble_left_gray));
                 }
                 layoutParams.gravity = Gravity.LEFT;
+                //nameView.setGravity(Gravity.LEFT);
             }
 
             nameView.setLayoutParams(layoutParams);

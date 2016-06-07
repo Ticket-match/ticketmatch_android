@@ -28,6 +28,8 @@ public class MessageDataSource {
         //TODO: Change from convoId to messages and then convoId
         //sRef.child("messages").child(convoId).child(key).setValue(msg);
         sRef.child(convoId).child(key).setValue(msg);
+
+        //sRef.child("messages").child(convoId).child(sDateFormat.format(message.getDate())).setValue(message);
     }
 
     public static MessagesListener addMessagesListener(String convoId, final MessagesCallbacks callbacks){
@@ -49,7 +51,7 @@ public class MessageDataSource {
         }
         @Override
         public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-            HashMap<String,String> msg = (HashMap)dataSnapshot.getValue();
+            /*HashMap<String,String> msg = (HashMap)dataSnapshot.getValue();
             Message message = new Message();
             message.setSender(msg.get(COLUMN_SENDER));
             message.setText(msg.get(COLUMN_TEXT));
@@ -60,6 +62,15 @@ public class MessageDataSource {
             }
             if(callbacks != null){
                 callbacks.onMessageAdded(message);
+            }*/
+            Message rMessage = dataSnapshot.getValue(Message.class);
+            try {
+                rMessage.setDate(sDateFormat.parse(dataSnapshot.getKey()));
+            }catch (Exception e){
+                Log.d(TAG, "Couldn't parse date"+e);
+            }
+            if(callbacks != null){
+                callbacks.onMessageAdded(rMessage);
             }
 
         }

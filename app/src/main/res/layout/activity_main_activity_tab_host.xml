@@ -50,11 +50,6 @@
 
             </LinearLayout>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="#999999" />
-
         </LinearLayout>
 
     </RelativeLayout>
@@ -77,11 +72,6 @@
                 android:layout_weight="1">
 
             </FrameLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="#999999" />
 
             <TabWidget
                 android:id="@android:id/tabs"
