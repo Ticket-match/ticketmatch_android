@@ -195,6 +195,19 @@ public class MainActivityTabHost extends AppCompatActivity {
         th.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
             @Override
             public void onTabChanged(String tabId) {
+                /*if(tabId.equals("myprofile")) {
+                    ((TextView)findViewById(R.id.headerTitle)).setText("My Profile");
+                } else if(tabId.equals("messages")) {
+                    ((TextView)findViewById(R.id.headerTitle)).setText("Messages");
+                } else if(tabId.equals("tickets")) {
+                    ((TextView)findViewById(R.id.headerTitle)).setText("Tickets");
+                } else if(tabId.equals("search")) {
+                    ((TextView)findViewById(R.id.headerTitle)).setText("Search");
+                } else if(tabId.equals("makeadate")) {
+                    ((TextView)findViewById(R.id.headerTitle)).setText("Make a date");
+                } else {
+                    ((TextView)findViewById(R.id.headerTitle)).setText("TicketMatch");
+                }*/
                 if(tabId.equals("myprofile")) {
                     ((TextView)findViewById(R.id.headerTitle)).setText("My Profile");
                 } else if(tabId.equals("messages")) {
@@ -205,6 +218,28 @@ public class MainActivityTabHost extends AppCompatActivity {
                     ((TextView)findViewById(R.id.headerTitle)).setText("Search");
                 } else if(tabId.equals("makeadate")) {
                     ((TextView)findViewById(R.id.headerTitle)).setText("Make a date");
+                } else if(tabId.equals("myprofile_ratings")) {
+                    ((TextView)findViewById(R.id.headerTitle)).setText("My Ratings");
+                } else if(tabId.equals("messages_chat")) {
+                    ((TextView)findViewById(R.id.headerTitle)).setText("Chat");
+                } else if(tabId.equals("tickets_newoffer")) {
+                    ((TextView)findViewById(R.id.headerTitle)).setText("Offer your ticket");
+                } else if(tabId.equals("tickets_offerdetail")) {
+                    ((TextView)findViewById(R.id.headerTitle)).setText("Offer details");
+                } else if(tabId.equals("search_vendor_message")) {
+                    ((TextView)findViewById(R.id.headerTitle)).setText("Search Vendor Message");
+                } else if(tabId.equals("makeadate_detail")) {
+                    ((TextView)findViewById(R.id.headerTitle)).setText("Date details");
+                } else if(tabId.equals("makeadate_search")) {
+                    ((TextView)findViewById(R.id.headerTitle)).setText("Search a date");
+                } else if(tabId.equals("makeadate_search_result")) {
+                    ((TextView)findViewById(R.id.headerTitle)).setText("Search results");
+                } else if(tabId.equals("makeadate_search_result_message")) {
+                    ((TextView)findViewById(R.id.headerTitle)).setText("Search result message");
+                } else if(tabId.equals("foreign_profile")) {
+                    ((TextView)findViewById(R.id.headerTitle)).setText("Profile");
+                } else if(tabId.equals("foreign_profile_ratings")) {
+                    ((TextView)findViewById(R.id.headerTitle)).setText("Ratings");
                 } else {
                     ((TextView)findViewById(R.id.headerTitle)).setText("TicketMatch");
                 }
