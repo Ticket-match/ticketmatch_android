@@ -109,7 +109,7 @@
             <EditText
                 android:layout_width="300dp"
                 android:layout_height="wrap_content"
-                android:inputType="text"
+                android:inputType="textEmailAddress"
                 android:ems="10"
                 android:id="@+id/register_email"
                 android:hint="E-Mail"

@@ -1,11 +1,13 @@
 package de.ticket_match.ticketmatch;
 
+import java.util.HashMap;
+
 public class Ticket {
 
     private String name;
     private String type;
-    private double price;
-    private int quantity;
+    private HashMap<String, String> price;
+    private String quantity;
     private String location;
     private String date;
     private String user;
@@ -14,7 +16,7 @@ public class Ticket {
         // Default constructor required for calls to DataSnapshot.getValue(User.class)
     }
 
-    public Ticket(String name, String type, double price, int quantity, String location, String date, String user){
+    public Ticket(String name, String type, HashMap<String, String> price, String quantity, String location, String date, String user){
         this.setName(name);
         this.setType(type);
         this.setPrice(price);
@@ -41,19 +43,19 @@ public class Ticket {
         this.type = type;
     }
 
-    public double getPrice() {
+    public HashMap<String, String> getPrice() {
         return price;
     }
 
-    public void setPrice(double price) {
+    public void setPrice(HashMap<String, String> price) {
         this.price = price;
     }
 
-    public int getQuantity() {
+    public String getQuantity() {
         return quantity;
     }
 
-    public void setQuantity(int quantity) {
+    public void setQuantity(String quantity) {
         this.quantity = quantity;
     }
 
