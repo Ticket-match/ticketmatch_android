@@ -1,10 +1,8 @@
 package de.ticket_match.ticketmatch;
 
-import java.util.Date;
+import java.util.ArrayList;
+import java.util.HashMap;
 
-/**
- * Created by alexa on 05.06.2016.
- */
 public class User {
 
     private String firstName;
@@ -12,17 +10,21 @@ public class User {
     private String gender;
     private String birthday;
     private String location;
+    private ArrayList<String> interests;
+    private ArrayList<HashMap<String,String>> ratings;
 
     public User(){
         // Default constructor required for calls to DataSnapshot.getValue(User.class)
     }
 
-    public User(String firstName, String lastName, String gender, String birthday, String location) {
+    public User(String firstName, String lastName, String gender, String birthday, String location, ArrayList<String> interests, ArrayList<HashMap<String,String>> ratings) {
         this.setFirstName(firstName);
         this.setLastName(lastName);
         this.setGender(gender);
         this.setBirthday(birthday);
         this.setLocation(location);
+        this.setInterests(interests);
+        this.setRatings(ratings);
     }
 
     public String getFirstName() {
@@ -64,5 +66,21 @@ public class User {
 
     public void setLocation(String location) {
         this.location = location;
+    }
+
+    public ArrayList<String> getInterests() {
+        return interests;
+    }
+
+    public ArrayList<HashMap<String, String>> getRatings() {
+        return ratings;
+    }
+
+    public void setInterests(ArrayList<String> interests) {
+        this.interests = interests;
+    }
+
+    public void setRatings(ArrayList<HashMap<String, String>> ratingitems) {
+        this.ratings = ratingitems;
     }
 }

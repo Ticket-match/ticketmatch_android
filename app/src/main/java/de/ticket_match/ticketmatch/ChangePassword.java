@@ -3,7 +3,6 @@ package de.ticket_match.ticketmatch;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -14,7 +13,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 public class ChangePassword extends AppCompatActivity {
-//Test Push for Git
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,16 +37,12 @@ public class ChangePassword extends AppCompatActivity {
                     .addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
-                            if (task.isSuccessful()) {
-                                Log.d("Firebase", "User password updated.");
+                            if (!task.isSuccessful()) {
+                                Toast.makeText(ChangePassword.this, "Password change failed!", Toast.LENGTH_SHORT).show();
                             }
                         }
                     });
-            //TODO: Catch FirebaseAuthRecentLoginRequiredException if user has not logged in recently
-            //TODO: Add .addOnFailureListener to handle a not successful change.
-            super.onBackPressed();
+            onBackPressed();
         }
-
     }
-
 }

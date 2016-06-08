@@ -1,10 +1,10 @@
 package de.ticket_match.ticketmatch;
 
-import android.content.Intent;
+import android.content.Context;
+import android.net.ConnectivityManager;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -34,21 +34,27 @@ public class ForgotAccount extends AppCompatActivity {
             Toast.makeText(getApplicationContext(),"Please fill out the required information!",Toast.LENGTH_SHORT).show();
         } else if(!email.contains("@")) {
             Toast.makeText(getApplicationContext(), "Please provide an email address!", Toast.LENGTH_SHORT).show();
+        } else if (!isNetworkConnected()){
+            Toast.makeText(getApplicationContext(), "No internet connection. Registration failed.", Toast.LENGTH_SHORT).show();
         } else {
-            FirebaseAuth auth = FirebaseAuth.getInstance();
-            auth.sendPasswordResetEmail(email)
+            FirebaseAuth.getInstance().sendPasswordResetEmail(email)
                     .addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             if (task.isSuccessful()) {
                                 Toast.makeText(getApplicationContext(),"Password reset email is being sent",Toast.LENGTH_SHORT).show();
-                                Log.d("Firebase", "Email sent.");
+                            } else {
+                                Toast.makeText(getApplicationContext(),"Password reset email has failed",Toast.LENGTH_SHORT).show();
                             }
                         }
                     });
-            Intent loginscreen =  new Intent(this, MainActivity.class);
-            startActivity(loginscreen);
+            onBackPressed();
         }
+    }
 
+    // Check Internet Status
+    private boolean isNetworkConnected() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        return cm.getActiveNetworkInfo() != null;
     }
 }

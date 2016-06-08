@@ -4,14 +4,12 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
@@ -21,82 +19,34 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
+import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
+import java.util.HashMap;
 
 public class Register extends AppCompatActivity {
 
-    private static final String TAG = "Register";
-    private FirebaseAuth mAuth;
-    private FirebaseAuth.AuthStateListener mAuthListener;
-    private FirebaseDatabase database = FirebaseDatabase.getInstance();
     private DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
     private StorageReference mStorage = FirebaseStorage.getInstance().getReference();
     private User user;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
+        // Dropdown Menue
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.register_gender, R.layout.support_simple_spinner_dropdown_item);
         adapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
-        ((Spinner)findViewById(R.id.register_gender)).setAdapter(adapter);
-
-        // Firebase Authentication Listener
-        mAuth = FirebaseAuth.getInstance();
-        mAuthListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                FirebaseUser fireUser = firebaseAuth.getCurrentUser();
-                if (fireUser != null) {
-                    // User is signed in
-                    Log.d(TAG, "onAuthStateChanged:signed_in:" + fireUser.getUid());
-                    mDatabase.child("users").child(fireUser.getUid()).setValue(user);
-
-                    Bitmap bm = BitmapFactory.decodeResource(getResources(),R.drawable.contacts);
-                    ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-                    bm.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-                    byte [] ba = bytes.toByteArray();
-                    UploadTask uT = mStorage.child("images/"+fireUser.getUid()+".jpg").putBytes(ba);
-
-                    Intent myProfile = new Intent(getApplicationContext(), MainActivityTabHost.class);
-                    startActivity(myProfile);
-                } else {
-                    // User is signed out
-                    Log.d(TAG, "onAuthStateChanged:signed_out");
-                }
-                // ...
-            }
-        };
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        mAuth.addAuthStateListener(mAuthListener);
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        if (mAuthListener != null) {
-            mAuth.removeAuthStateListener(mAuthListener);
-        }
+        ((Spinner) findViewById(R.id.register_gender)).setAdapter(adapter);
     }
 
     @Override
@@ -133,43 +83,42 @@ public class Register extends AppCompatActivity {
         }
         else {
             //Create a User class with attributes
-            user = new User(firstname,lastname,gender,birthdate,location);
+            user = new User(firstname,lastname,gender,birthdate,location, new ArrayList<String>(0), new ArrayList<HashMap<String, String>>(0));
             // Create an Account via Firebase Authentication
-            mAuth.createUserWithEmailAndPassword(email, password)
+            FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password)
                     .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
-                            Log.d(TAG, "createUserWithEmail:onComplete:" + task.isSuccessful());
+                            if (task.isSuccessful()) {
+                                mDatabase.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(user);
 
-                            // If sign in fails, display a message to the user. If sign in succeeds
-                            // the auth state listener will be notified and logic to handle the
-                            // signed in user can be handled in the listener.
-                            if (!task.isSuccessful()) {
-                                Toast.makeText(getApplicationContext(), "Authentication failed.",
-                                        Toast.LENGTH_SHORT).show();
+                                //TODO: Change R.drawable.contacts in correct image
+                                Bitmap bm = BitmapFactory.decodeResource(getResources(), R.drawable.contacts);
+                                ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+                                bm.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+                                byte[] ba = bytes.toByteArray();
+                                mStorage.child("images/" + FirebaseAuth.getInstance().getCurrentUser().getUid() + ".jpg").putBytes(ba);
+                            } else {
+                                Toast.makeText(getApplicationContext(), "User creation failed!", Toast.LENGTH_SHORT).show();
                             }
-
-                            // ...
                         }
                     });
-
-
         }
     }
 
-
+    // Check Internet Status
     private boolean isNetworkConnected() {
         ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         return cm.getActiveNetworkInfo() != null;
     }
 
+    // Birthday Date Picker
     public void register_birthdate(View view) {
         RegisterBirthdateDialog rbd = new RegisterBirthdateDialog();
         rbd.show(getFragmentManager(), "rbd");
     }
 
     public static class RegisterBirthdateDialog extends DialogFragment implements DatePickerDialog.OnDateSetListener {
-
 
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState){
@@ -188,24 +137,4 @@ public class Register extends AppCompatActivity {
             ((TextView)getActivity().findViewById(R.id.register_birthdate)).setText(date);
         }
     }
-
-    /*public static class RegisterBirthdateDialog extends DialogFragment {
-        public Dialog onCreateDialog (Bundle savedInstanceState){
-            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-            LayoutInflater inflater = getActivity().getLayoutInflater();
-            builder.setView(inflater.inflate(R.layout.dialog_birthdate, null));
-            builder.setPositiveButton("Select", new DialogInterface.OnClickListener(){
-                public void onClick(DialogInterface dialog, int id ){
-                    ((DatePicker)getActivity().findViewById(R.id.register_birthdate_datePicker)).getCalendarView().getDate();
-                    ((TextView)getActivity().findViewById(R.id.register_birthdate)).setText(date);
-                }
-            });
-            builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener(){
-                public void onClick(DialogInterface dialog, int id ){
-                    //dialog.cancel();
-                }
-            });
-            return builder.create();
-        }
-    }*/
 }

@@ -3,12 +3,9 @@ package de.ticket_match.ticketmatch;
 import android.app.LocalActivityManager;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.provider.MediaStore;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.Layout;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,23 +14,15 @@ import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TabHost;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
-
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 public class MainActivityTabHost extends AppCompatActivity {
     Bundle baseBundle = new Bundle();
     private StorageReference mStorage = FirebaseStorage.getInstance().getReference();
-    int REQUEST_CAMERA = 1;
-    int REQUEST_GALLERY = 2;
     TabHost th;
 
     @Override
@@ -64,7 +53,6 @@ public class MainActivityTabHost extends AppCompatActivity {
         ts6.setContent(new Intent(this, MyProfileRatings.class));
 
         // Tab "Messages"
-
         TabHost.TabSpec ts2 = th.newTabSpec("messages");
         View ts2Ind = getLayoutInflater().inflate(R.layout.activity_main_activity_tab_indicator, th.getTabWidget(), false);
         ((TextView) ts2Ind.findViewById(android.R.id.title)).setText("Messages");
@@ -195,19 +183,6 @@ public class MainActivityTabHost extends AppCompatActivity {
         th.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
             @Override
             public void onTabChanged(String tabId) {
-                /*if(tabId.equals("myprofile")) {
-                    ((TextView)findViewById(R.id.headerTitle)).setText("My Profile");
-                } else if(tabId.equals("messages")) {
-                    ((TextView)findViewById(R.id.headerTitle)).setText("Messages");
-                } else if(tabId.equals("tickets")) {
-                    ((TextView)findViewById(R.id.headerTitle)).setText("Tickets");
-                } else if(tabId.equals("search")) {
-                    ((TextView)findViewById(R.id.headerTitle)).setText("Search");
-                } else if(tabId.equals("makeadate")) {
-                    ((TextView)findViewById(R.id.headerTitle)).setText("Make a date");
-                } else {
-                    ((TextView)findViewById(R.id.headerTitle)).setText("TicketMatch");
-                }*/
                 if(tabId.equals("myprofile")) {
                     ((TextView)findViewById(R.id.headerTitle)).setText("My Profile");
                 } else if(tabId.equals("messages")) {
@@ -249,47 +224,37 @@ public class MainActivityTabHost extends AppCompatActivity {
         });
     }
 
+    //Catch MyProfile Take Photo and Upload Photo --> set photo on screen, compress and upload to database
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(requestCode==REQUEST_CAMERA & resultCode==RESULT_OK){
-
+        if(requestCode==1 & resultCode==RESULT_OK){
             if (data != null) {
                 Bitmap bm_camera = (Bitmap)data.getExtras().get("data");
+                ((ImageButton)th.getCurrentView().findViewById(R.id.myprofile_image)).setImageBitmap(bm_camera);
+
                 ByteArrayOutputStream bytes = new ByteArrayOutputStream();
                 bm_camera.compress(Bitmap.CompressFormat.JPEG, 50, bytes);
                 byte [] ba = bytes.toByteArray();
-
-                UploadTask uT = mStorage.child("images/"+FirebaseAuth.getInstance().getCurrentUser().getUid()+".jpg").putBytes(ba);
-                ((ImageButton)th.getCurrentView().findViewById(R.id.myprofile_image)).setImageBitmap(bm_camera);
+                mStorage.child("images/"+FirebaseAuth.getInstance().getCurrentUser().getUid()+".jpg").putBytes(ba);
             }
-
-        } else if(requestCode==REQUEST_GALLERY & resultCode==RESULT_OK){
-
+        } else if(requestCode==2 & resultCode==RESULT_OK){
             if (data != null) {
                 try {
                     Bitmap bm_upload = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), data.getData());
+                    ((ImageButton)th.getCurrentView().findViewById(R.id.myprofile_image)).setImageBitmap(bm_upload);
 
                     ByteArrayOutputStream bytes = new ByteArrayOutputStream();
                     bm_upload.compress(Bitmap.CompressFormat.JPEG, 50, bytes);
                     byte [] ba = bytes.toByteArray();
-                    bm_upload = BitmapFactory.decodeByteArray(ba, 0, ba.length);
-
-                    UploadTask uT = mStorage.child("images/"+FirebaseAuth.getInstance().getCurrentUser().getUid()+".jpg").putBytes(ba);
-                    ((ImageButton)th.getCurrentView().findViewById(R.id.myprofile_image)).setImageBitmap(bm_upload);
-
-                    /*ExifInterface exif = new ExifInterface(data.getData().getPath());
-                    int degree = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
-                    Toast.makeText(getApplicationContext(), Integer.toString(degree),Toast.LENGTH_SHORT).show();*/
-
+                    mStorage.child("images/"+FirebaseAuth.getInstance().getCurrentUser().getUid()+".jpg").putBytes(ba);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
             }
-
         }
     }
 
+    //method for header menu button
     public void btn_tm_logo(View view) {
-
         PopupMenu popup = new PopupMenu(this, view);
         MenuInflater inflater = popup.getMenuInflater();
         inflater.inflate(R.menu.popup_menu, popup.getMenu());
@@ -314,6 +279,5 @@ public class MainActivityTabHost extends AppCompatActivity {
         });
 
         popup.show();
-
     }
 }
