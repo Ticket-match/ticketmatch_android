@@ -1,132 +1,47 @@
 package de.ticket_match.ticketmatch;
 
 import android.content.Context;
-import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
-import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.PopupMenu;
-import android.widget.TabHost;
 import android.widget.TextView;
-import android.widget.Toast;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Message_Overview extends AppCompatActivity {
 
-    ArrayList<Bitmap> images = new ArrayList<Bitmap>(0);
-    ArrayList<String> result = new ArrayList<String>(0);
+    private DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
+    private ArrayList<Chat> chats = new ArrayList<Chat>(0);
+    private ArrayList<String> chats_keys = new ArrayList<String>(0);
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_message__overview);
-
-        Bitmap bm = BitmapFactory.decodeResource(getResources(), R.drawable.contacts);
-
-        result.add("Nils Z.|Pick Nick am Neckar|12.05.2016");
-        images.add(bm);
-        ((ListView) findViewById(R.id.messages_list)).setAdapter(new CustomAdapter(this, images, result));
-        ((ListView) findViewById(R.id.messages_list)).setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String message_name = result.get(position);
-                message_name = message_name.substring(0, message_name.indexOf("|"));
-
-                Bundle bund = ((MainActivityTabHost)getParent()).baseBundle;
-                bund.putString("message_name", message_name);
-                //Intent message_chat = new Intent(getApplicationContext(), Message_Chat.class);
-                //message_chat.putExtras(bund);
-                //startActivity(message_chat);
-                ((TabHost)getParent().findViewById(R.id.tabHost)).setCurrentTabByTag("messages_chat");
-            }
-        });
-
-    }
-
-    /*
-    public void btn_tm_logo(View view) {
-
-        PopupMenu popup = new PopupMenu(this, view);
-        MenuInflater inflater = popup.getMenuInflater();
-        inflater.inflate(R.menu.popup_menu, popup.getMenu());
-
-        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                switch (item.getItemId()){
-                    case R.id.change_password:
-                        //ChangePasswordDialog cdp = new ChangePasswordDialog();
-                        //cdp.show(getFragmentManager(), "cdp");
-                        Intent changepassword =  new Intent(getApplicationContext(), ChangePassword.class);
-                        startActivity(changepassword);
-                        return true;
-                    case R.id.logout:
-                        Toast.makeText(getApplicationContext(),"logout",Toast.LENGTH_SHORT).show();
-                        return true;
-                    default:
-                        return false;
-                }
-            }
-        });
-
-        popup.show();
-
-    }
-
-    public void btn_profile(View view) {
-        Intent myprofile = new Intent(this, MyProfile.class);
-        startActivity(myprofile);
-    }
-
-    public void btn_message(View view) {
-
-    }
-
-    public void btn_ticketoffer(View view) {
-        Intent offeroverview = new Intent(this, Offer_Overview.class);
-        startActivity(offeroverview);
-    }
-
-    public void btn_search(View view) {
-        Intent find = new Intent(this, Find.class);
-        startActivity(find);
-    }
-
-    public void btn_makematch(View view) {
-        Intent makeadate = new Intent(this, MakeADate.class);
-        startActivity(makeadate);
-    }
-    */
-
-    public static class CustomAdapter extends BaseAdapter {
-        ArrayList<Bitmap> images;
-        ArrayList<String> result;
-
+    public static class ChatListAdapter extends BaseAdapter {
+        ArrayList<Chat> chats;
         Context context;
         private static LayoutInflater inflater=null;
 
-        public CustomAdapter(Message_Overview mainActivity, ArrayList<Bitmap> images, ArrayList<String>  prgmNameList) {
-            this.images=images;
-            result=prgmNameList;
+        public ChatListAdapter(Message_Overview mainActivity, ArrayList<Chat> chats) {
+            this.chats = chats;
             context=mainActivity;
             inflater = ( LayoutInflater )context.
                     getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         }
         @Override
         public int getCount() {
-            return result.size();
+            return chats.size();
         }
 
         @Override
@@ -143,16 +58,71 @@ public class Message_Overview extends AppCompatActivity {
         public View getView(final int position, View convertView, ViewGroup parent) {
             // TODO Auto-generated method stub
             View rowView = inflater.inflate(R.layout.listitem_messages, null);
-            String text = result.get(position);
-            String date;
-            String name;
-            name = text.substring(0, text.indexOf("|")) + "\n" + text.substring(text.indexOf("|")+1,text.indexOf("|",text.indexOf("|")+1));
-            date = text.substring(text.indexOf("|",text.indexOf("|")+1)+1,text.length());
-            ((ImageView) rowView.findViewById(R.id.listitem_message_image)).setImageBitmap(images.get(position));
-            ((TextView) rowView.findViewById(R.id.listitem_messages_name_subject)).setText(name);
-            ((TextView) rowView.findViewById(R.id.listitem_messages_date)).setText(date);
+
+            Chat chat = chats.get(position);
+            ArrayList<HashMap<String,String>> messages = chat.getMessages();
+            HashMap<String, String> message = messages.get(messages.size()-1);
+            int text_length = 25;
+
+            if(message.get("text").length() < text_length) {
+                text_length = message.get("text").length();
+            }
+            String date_time = message.get("date") + "\n" + message.get("timestamp");
+            String name_text = message.get("author") + "\n" + message.get("text").substring(0,text_length) + "...";
+
+            ((TextView) rowView.findViewById(R.id.listitem_messages_name_text)).setText(name_text);
+            ((TextView) rowView.findViewById(R.id.listitem_messages_date_time)).setText(date_time);
+            System.out.println("Test");
             return rowView;
         }
 
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_message__overview);
+
+        mDatabase.child("chats").orderByChild("participant1").equalTo(FirebaseAuth.getInstance().getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot d:dataSnapshot.getChildren()) {
+                    Chat chat = d.getValue(Chat.class);
+                    chats.add(chat);
+                    chats_keys.add((String)d.getKey());
+                    ((ChatListAdapter)((ListView)findViewById(R.id.messages_list)).getAdapter()).notifyDataSetChanged();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        mDatabase.child("chats").orderByChild("participant2").equalTo(FirebaseAuth.getInstance().getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot d:dataSnapshot.getChildren()) {
+                    Chat chat = d.getValue(Chat.class);
+                    chats.add(chat);
+                    chats_keys.add((String)d.getKey());
+                    ((ChatListAdapter)((ListView)findViewById(R.id.messages_list)).getAdapter()).notifyDataSetChanged();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        ((ListView) findViewById(R.id.messages_list)).setAdapter(new ChatListAdapter(this, chats));
+        ((ListView) findViewById(R.id.messages_list)).setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                //((TabHost)getParent().findViewById(R.id.tabHost)).setCurrentTabByTag("messages_chat");
+            }
+        });
     }
 }
