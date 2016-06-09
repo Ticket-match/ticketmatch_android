@@ -64,7 +64,6 @@
             android:layout_width="293dp"
             android:layout_height="wrap_content"
             android:id="@+id/date"
-            android:onClick="newoffer_date"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             android:layout_marginBottom="5dp"
             android:layout_marginTop="5dp"

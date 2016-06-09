@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
@@ -37,6 +38,22 @@ public class NewOffer extends AppCompatActivity {
         ArrayAdapter<CharSequence> adapter_currency = ArrayAdapter.createFromResource(this, R.array.currency, R.layout.support_simple_spinner_dropdown_item);
         adapter_currency.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
         ((Spinner)findViewById(R.id.currency)).setAdapter(adapter_currency);
+
+        ((TextView)findViewById(R.id.date)).setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                Calendar c = Calendar.getInstance();
+                DatePickerDialog dpd = new DatePickerDialog(getParent(), new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                        String date = dayOfMonth + "." + (monthOfYear+1) + "." + year;
+                        ((TextView)((TabHost)((MainActivityTabHost)getParent()).findViewById(R.id.tabHost)).getCurrentView().findViewById(R.id.date)).setText(date);
+                    }
+                }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH));
+                dpd.show();
+                return false;
+            }
+        });
     }
 
     //if ticket is for free price enter field is hided
@@ -81,7 +98,7 @@ public class NewOffer extends AppCompatActivity {
             ((EditText)findViewById(R.id.eventname)).setText("");
             ((EditText)findViewById(R.id.eventlocation)).setText("");
             ((EditText)findViewById(R.id.numberoftickets)).setText("");
-            ((TextView)findViewById(R.id.date)).setText("");
+            ((TextView)findViewById(R.id.date)).setText("Date");
             ((EditText)findViewById(R.id.price)).setText("");
             ((CheckBox)findViewById(R.id.checkbox_price)).setChecked(false);
             ((Spinner)findViewById(R.id.event_type)).setSelection(0);
@@ -90,33 +107,6 @@ public class NewOffer extends AppCompatActivity {
             Toast.makeText(getApplicationContext(),"Your ticket is registered!",Toast.LENGTH_SHORT).show();
             ((TabHost)getParent().findViewById(R.id.tabHost)).setCurrentTabByTag("tickets");
             ((Offer_Overview.MyTicketAdapter)((HeaderViewListAdapter)((ListView)((TabHost)getParent().findViewById(R.id.tabHost)).getCurrentView().findViewById(R.id.offeroverview_list)).getAdapter()).getWrappedAdapter()).notifyDataSetChanged();
-        }
-    }
-
-    //TODO: After calling the screen a second time the textview date disapears
-    //Datepicker for input field date
-    public void newoffer_date(View view) {
-        NewOfferDate datepicker = new NewOfferDate();
-        datepicker.show(getFragmentManager(), "datepicker");
-    }
-
-    public static class NewOfferDate extends DialogFragment implements DatePickerDialog.OnDateSetListener {
-
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState){
-            //Use the current date as the default date in the date picker
-            final Calendar c = Calendar.getInstance();
-            int year = c.get(Calendar.YEAR);
-            int month = c.get(Calendar.MONTH);
-            int day = c.get(Calendar.DAY_OF_MONTH);
-
-
-            return new DatePickerDialog(getActivity(), this, year, month, day);
-        }
-        public void onDateSet(DatePicker view, int year, int month, int day) {
-            //month+1: array starts at 0
-            String date = day + "." + (month+1) + "." + year;
-            ((TextView)getActivity().findViewById(R.id.date)).setText(date);
         }
     }
 }
