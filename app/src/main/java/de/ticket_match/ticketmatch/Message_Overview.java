@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
+import android.widget.TabHost;
 import android.widget.TextView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -16,8 +17,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,7 +25,6 @@ public class Message_Overview extends AppCompatActivity {
 
     private DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
     private ArrayList<Chat> chats = new ArrayList<Chat>(0);
-    private ArrayList<String> chats_keys = new ArrayList<String>(0);
 
     public static class ChatListAdapter extends BaseAdapter {
         ArrayList<Chat> chats;
@@ -89,7 +87,6 @@ public class Message_Overview extends AppCompatActivity {
                 for (DataSnapshot d:dataSnapshot.getChildren()) {
                     Chat chat = d.getValue(Chat.class);
                     chats.add(chat);
-                    chats_keys.add((String)d.getKey());
                     ((ChatListAdapter)((ListView)findViewById(R.id.messages_list)).getAdapter()).notifyDataSetChanged();
                 }
             }
@@ -106,7 +103,6 @@ public class Message_Overview extends AppCompatActivity {
                 for (DataSnapshot d:dataSnapshot.getChildren()) {
                     Chat chat = d.getValue(Chat.class);
                     chats.add(chat);
-                    chats_keys.add((String)d.getKey());
                     ((ChatListAdapter)((ListView)findViewById(R.id.messages_list)).getAdapter()).notifyDataSetChanged();
                 }
             }
@@ -121,7 +117,8 @@ public class Message_Overview extends AppCompatActivity {
         ((ListView) findViewById(R.id.messages_list)).setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                //((TabHost)getParent().findViewById(R.id.tabHost)).setCurrentTabByTag("messages_chat");
+                ((MainActivityTabHost) getParent()).baseBundle.putSerializable("messages_chat", chats.get(position).getMessages());
+                ((TabHost)getParent().findViewById(R.id.tabHost)).setCurrentTabByTag("messages_chat");
             }
         });
     }
