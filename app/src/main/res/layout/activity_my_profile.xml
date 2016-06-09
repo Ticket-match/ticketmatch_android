@@ -176,7 +176,7 @@
 
                 <ImageButton
                     android:id="@+id/myprofile_image"
-                    android:scaleType="fitXY"
+                    android:scaleType="fitCenter"
                     android:layout_width="100dp"
                     android:layout_height="100dp"
                     android:layout_row="0"
