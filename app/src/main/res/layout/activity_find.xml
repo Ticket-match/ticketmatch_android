@@ -161,66 +161,6 @@
             android:layout_width="match_parent"
             android:layout_height="10dp"/>
 
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-            <TextView
-                android:text="Date"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/search_date"
-                android:onClick="find_date"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:layout_marginBottom="10dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginLeft="10dp"
-                android:alpha="0.38"/>
-
-            <EditText
-                android:hint="Event Location"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/find_eventlocation"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:layout_marginBottom="10dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginLeft="10dp"
-                android:alpha="0.38"/>
-
-            </LinearLayout>
-
-
-                <ImageButton
-                    android:id="@+id/find_button"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/search_filled"
-                    android:onClick="btn_find"
-                    android:layout_gravity="center"
-                    android:layout_marginLeft="30dp"
-                    android:alpha="0.54"
-                    />
-
-        </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="#aaaaaa"
-            android:layout_gravity="center"
-            android:alpha="0.12"/>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="10dp"/>
-
         <ListView
             android:layout_width="match_parent"
             android:layout_height="0dp"

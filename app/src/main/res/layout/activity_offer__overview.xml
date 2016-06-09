@@ -30,14 +30,25 @@
             android:layout_width="match_parent"
             android:layout_height="20dp"/>
 
-        <!--<ImageButton
-            android:id="@+id/offeroverview_button"
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="right"
+        android:layout_gravity="right"
+        >
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab_search_ticket"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/ticket_filled"
-            android:onClick="btn_newoffer"
-            android:layout_gravity="center"
-            android:alpha="0.54"/>-->
+            android:layout_gravity="bottom|right"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="10dp"
+            android:src="@drawable/search"
+            app:elevation="3dp"
+            android:onClick="btn_search_ticket"
+            app:backgroundTint="#FFAB00"
+            android:clickable="true" />
 
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/fab_offer"
@@ -51,6 +62,7 @@
             android:onClick="btn_newoffer"
             app:backgroundTint="#FFAB00"
             android:clickable="true" />
+        </LinearLayout>
 
         </LinearLayout>
 

@@ -82,17 +82,23 @@ public class MainActivityTabHost extends AppCompatActivity {
         ts8.setIndicator(ts8Ind);
         ts8.setContent(new Intent(this, NewOffer.class));
 
-        // Tab "Tickets Offer Detail"
+        /*// Tab "Tickets Offer Detail"
         TabHost.TabSpec ts9 = th.newTabSpec("tickets_offerdetail");
         View ts9Ind = getLayoutInflater().inflate(R.layout.activity_main_activity_tab_indicator_inv, th.getTabWidget(), false);
         ts9.setIndicator(ts9Ind);
-        ts9.setContent(new Intent(this, Offer_Detail.class));
+        ts9.setContent(new Intent(this, Offer_Detail.class));*/
+
+        // Tab "Tickets Search"
+        TabHost.TabSpec ts9 = th.newTabSpec("tickets_search");
+        View ts9Ind = getLayoutInflater().inflate(R.layout.activity_main_activity_tab_indicator_inv, th.getTabWidget(), false);
+        ts9.setIndicator(ts9Ind);
+        ts9.setContent(new Intent(this, Ticket_Search.class));
 
         // Tab "Search"
         TabHost.TabSpec ts4 = th.newTabSpec("search");
-        View ts4Ind = getLayoutInflater().inflate(R.layout.activity_main_activity_tab_indicator, th.getTabWidget(), false);
-        ((TextView) ts4Ind.findViewById(android.R.id.title)).setText("Search");
-        ((ImageView) ts4Ind.findViewById(android.R.id.icon)).setImageResource(R.drawable.search);
+        View ts4Ind = getLayoutInflater().inflate(R.layout.activity_main_activity_tab_indicator_inv, th.getTabWidget(), false);
+       // ((TextView) ts4Ind.findViewById(android.R.id.title)).setText("Search");
+        //((ImageView) ts4Ind.findViewById(android.R.id.icon)).setImageResource(R.drawable.search);
         ts4.setIndicator(ts4Ind);
         ts4.setContent(new Intent(this, Find.class));
 
@@ -190,7 +196,7 @@ public class MainActivityTabHost extends AppCompatActivity {
                 } else if(tabId.equals("tickets")) {
                     ((TextView)findViewById(R.id.headerTitle)).setText("Tickets");
                 } else if(tabId.equals("search")) {
-                    ((TextView)findViewById(R.id.headerTitle)).setText("Search");
+                    ((TextView)findViewById(R.id.headerTitle)).setText("Search Results");
                 } else if(tabId.equals("makeadate")) {
                     ((TextView)findViewById(R.id.headerTitle)).setText("Make a date");
                 } else if(tabId.equals("myprofile_ratings")) {
@@ -202,7 +208,7 @@ public class MainActivityTabHost extends AppCompatActivity {
                 } else if(tabId.equals("tickets_offerdetail")) {
                     ((TextView)findViewById(R.id.headerTitle)).setText("Offer details");
                 } else if(tabId.equals("search_vendor_message")) {
-                    ((TextView)findViewById(R.id.headerTitle)).setText("Search Vendor Message");
+                    ((TextView)findViewById(R.id.headerTitle)).setText("Vendor Message");
                 } else if(tabId.equals("makeadate_detail")) {
                     ((TextView)findViewById(R.id.headerTitle)).setText("Date details");
                 } else if(tabId.equals("makeadate_new")) {
@@ -217,6 +223,8 @@ public class MainActivityTabHost extends AppCompatActivity {
                     ((TextView)findViewById(R.id.headerTitle)).setText("Profile");
                 } else if(tabId.equals("foreign_profile_ratings")) {
                     ((TextView)findViewById(R.id.headerTitle)).setText("Ratings");
+                } else if (tabId.equals("tickets_search")) {
+                    ((TextView)findViewById(R.id.headerTitle)).setText("Search Tickets");
                 } else {
                     ((TextView)findViewById(R.id.headerTitle)).setText("TicketMatch");
                 }
@@ -279,5 +287,10 @@ public class MainActivityTabHost extends AppCompatActivity {
         });
 
         popup.show();
+    }
+
+    @Override
+    public void onBackPressed() {
+        //super.onBackPressed();
     }
 }

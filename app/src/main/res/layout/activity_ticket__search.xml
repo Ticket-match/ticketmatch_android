@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="de.ticket_match.ticketmatch.Ticket_Search">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_above="@+id/footer"
+        android:layout_below="@+id/header">
+
+
+        <Spinner
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/event_type"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_gravity="center"
+            android:alpha="0.54"/>
+
+
+        <EditText
+            android:hint="Event Location"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/eventlocation"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="5dp"
+            android:layout_gravity="center"
+            android:alpha="0.54"/>
+
+
+
+        <TextView
+            android:text="Date"
+            android:layout_width="293dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/date"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="10dp"
+            android:layout_gravity="center"
+            android:alpha="0.54"/>
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fab_submit_offer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|right"
+            android:gravity="bottom|right"
+            android:layout_marginRight="20dp"
+            android:src="@drawable/search"
+            app:elevation="3dp"
+            android:onClick="btn_newoffer"
+            app:backgroundTint="#FFAB00"
+            android:clickable="true" />
+
+    </LinearLayout>
+
+</RelativeLayout>

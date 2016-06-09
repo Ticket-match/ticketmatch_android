@@ -31,7 +31,7 @@ import java.util.Calendar;
 
 public class Find extends AppCompatActivity {
 
-    ArrayList<String> listitems_find= new ArrayList<String>(0);
+    ArrayList<Ticket> listitems_find;
 
     ListView listview;
 
@@ -42,58 +42,35 @@ public class Find extends AppCompatActivity {
         setContentView(R.layout.activity_find);
 
         listview = (ListView) findViewById(R.id.find_results);
-        ViewGroup header = (ViewGroup) getLayoutInflater().inflate(R.layout.find_headerlayout, listview, false);
-        listview.addHeaderView(header);
+        //ViewGroup header = (ViewGroup) getLayoutInflater().inflate(R.layout.find_headerlayout, listview, false);
+        //listview.addHeaderView(header);
 
+        listitems_find = (ArrayList<Ticket>)((MainActivityTabHost) getParent()).baseBundle.getSerializable("tickets_search_result");
+        listview.setAdapter(new CustomAdapter(this, listitems_find));
+        listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-    }
+                Ticket text = listitems_find.get(position);
 
-    public void btn_find (View view){
+                String message = "Hello, " + "\n" + "I am interested in your tickets: " + "\n" + text.getName() + "\n" + text.getType() + "\n" + text.getDate() + " | " + text.getTime() + "\n" + text.getQuantity() + " pc. | " + text.getPrice().get("value") + " " + text.getPrice().get("currency");
 
-        listitems_find.removeAll(listitems_find);
+                ((MainActivityTabHost) getParent()).baseBundle.putString("tickets_search_message", message);
 
-        View keyboard = this.getCurrentFocus();
-        if (keyboard != null) {
-            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(keyboard.getWindowToken(), 0);
-        }
-
-        TextView date = (TextView)findViewById(R.id.search_date);
-        EditText location = (EditText)findViewById(R.id.find_eventlocation);
-
-        String dates = date.getText().toString();
-        String locations = location.getText().toString();
-
-        if (dates.equals("Date") | locations.equals("")){
-            Toast.makeText(getApplicationContext(),"Please fill in all information!",Toast.LENGTH_SHORT).show();
-        }else {
-
-            listitems_find.add("Cinema|Star Wars|2");
-            listitems_find.add("Cinema&Picnic|Late Night|5");
-            listview.setAdapter(new CustomAdapter(this, listitems_find));
-
-            listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    String find_ticket = listitems_find.get(position-1);
-
-                    Bundle values = ((MainActivityTabHost)getParent()).baseBundle; //new Bundle();
-                    values.putString("find", find_ticket);
-                    //Intent find_vendor = new Intent(getApplicationContext(), Find_Vendor.class);
-                    //find_vendor.putExtras(values);
-                    //startActivity(find_vendor);
-                    ((TabHost)getParent().findViewById(R.id.tabHost)).setCurrentTabByTag("search_vendor");
-                }
-            });
-        }
+                //Intent find_vendor = new Intent(getApplicationContext(), Find_Vendor.class);
+                //find_vendor.putExtras(values);
+                //startActivity(find_vendor);
+                ((TabHost)getParent().findViewById(R.id.tabHost)).setCurrentTabByTag("search_vendor_message");
+            }
+        });
     }
 
     public static class CustomAdapter extends BaseAdapter {
-        ArrayList<String> result;
+        ArrayList<Ticket> result;
         Context context;
         private static LayoutInflater inflater=null;
 
-        public CustomAdapter(Find mainActivity, ArrayList<String>  findlist) {
+        public CustomAdapter(Find mainActivity, ArrayList<Ticket>  findlist) {
             result=findlist;
             context=mainActivity;
             inflater = ( LayoutInflater )context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -117,97 +94,14 @@ public class Find extends AppCompatActivity {
         @Override
         public View getView(final int position, View convertView, ViewGroup parent) {
 
-            String text = result.get(position);
-            String type = text.substring(0, text.indexOf("|"));
-            String eventname = text.substring(text.indexOf("|")+1,text.indexOf("|",text.indexOf("|")+1));
-            String count = text.substring(text.indexOf("|",text.indexOf("|")+1)+1,text.length());
+            Ticket text = result.get(position);
 
             View rowView = inflater.inflate(R.layout.listitem_find, null);
 
-            ((TextView) rowView.findViewById(R.id.row_type)).setText(type);
-            ((TextView) rowView.findViewById(R.id.row_date)).setText(eventname);
-            ((TextView) rowView.findViewById(R.id.row_time)).setText(count);
+            ((TextView) rowView.findViewById(R.id.row_type)).setText(text.getName() + "\n" + text.getType());
+            ((TextView) rowView.findViewById(R.id.row_date)).setText(text.getDate() + "\n" + text.getLocation());
+            ((TextView) rowView.findViewById(R.id.row_time)).setText(text.getTime() + "\n" + text.getQuantity() + "pc. | " + text.getPrice().get("value") + " " + text.getPrice().get("currency"));
             return rowView;
         }
-
     }
-
-    public void find_date(View view) {
-        NewFindDate rbd = new NewFindDate();
-        rbd.show(getFragmentManager(), "rbd");
-    }
-
-    public static class NewFindDate extends DialogFragment implements DatePickerDialog.OnDateSetListener {
-
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState){
-            //Use the current date as the default date in the date picker
-            final Calendar c = Calendar.getInstance();
-            int year = c.get(Calendar.YEAR);
-            int month = c.get(Calendar.MONTH);
-            int day = c.get(Calendar.DAY_OF_MONTH);
-
-
-            return new DatePickerDialog(getActivity(), this, year, month, day);
-        }
-        public void onDateSet(DatePicker view, int year, int month, int day) {
-            //month+1: array starts at 0
-            String date = day + "." + (month+1) + "." + year;
-            ((TextView)getActivity().findViewById(R.id.search_date)).setText(date);
-        }
-    }
-
-    /*
-    public void btn_tm_logo(View view) {
-
-        PopupMenu popup = new PopupMenu(this, view);
-        MenuInflater inflater = popup.getMenuInflater();
-        inflater.inflate(R.menu.popup_menu, popup.getMenu());
-
-        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                switch (item.getItemId()){
-                    case R.id.change_password:
-                        Intent changepassword =  new Intent(getApplicationContext(), ChangePassword.class);
-                        startActivity(changepassword);
-                        return true;
-                    case R.id.logout:
-                        Toast.makeText(getApplicationContext(),"logout",Toast.LENGTH_SHORT).show();
-                        return true;
-                    default:
-                        return false;
-                }
-            }
-        });
-
-        popup.show();
-
-    }
-
-
-    public void btn_profile(View view) {
-        Intent myprofile = new Intent(this, MyProfile.class);
-        startActivity(myprofile);
-    }
-
-    public void btn_message(View view) {
-        Intent message = new Intent(this, Message_Overview.class);
-        startActivity(message);
-    }
-
-    public void btn_ticketoffer(View view) {
-        Intent offeroverview = new Intent(this, Offer_Overview.class);
-        startActivity(offeroverview);
-    }
-
-    public void btn_search(View view) {
-
-    }
-
-    public void btn_makematch(View view) {
-        Intent makeadate = new Intent(this, MakeADate.class);
-        startActivity(makeadate);
-    }
-    */
 }

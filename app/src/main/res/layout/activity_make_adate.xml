@@ -61,17 +61,6 @@
                     app:backgroundTint="#FFAB00"
                     android:clickable="true" />
 
-                <!--<ImageButton
-                    android:id="@+id/btn_meetup"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/group"
-                    android:onClick="btn_find_makeadate"
-                    android:layout_gravity="center"
-                    android:layout_marginLeft="30dp"
-                    android:alpha="0.54"
-                    />-->
-
                 <android.support.design.widget.FloatingActionButton
                     android:id="@+id/fab_makeadate"
                     android:layout_width="wrap_content"

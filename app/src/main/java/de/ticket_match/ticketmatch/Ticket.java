@@ -11,12 +11,13 @@ public class Ticket {
     private String location;
     private String date;
     private String user;
+    private String time;
 
     public Ticket(){
         // Default constructor required for calls to DataSnapshot.getValue(User.class)
     }
 
-    public Ticket(String name, String type, HashMap<String, String> price, String quantity, String location, String date, String user){
+    public Ticket(String name, String type, HashMap<String, String> price, String quantity, String location, String date, String user, String time){
         this.setName(name);
         this.setType(type);
         this.setPrice(price);
@@ -24,7 +25,16 @@ public class Ticket {
         this.setLocation(location);
         this.setDate(date);
         this.setUser(user);
+        this.setTime(time);
 
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
     }
 
     public String getName() {

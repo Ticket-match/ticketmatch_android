@@ -64,9 +64,9 @@ public class Offer_Overview extends AppCompatActivity {
 
             View rowView = inflater.inflate(R.layout.listitem_offeroverview, null);
 
-            ((TextView) rowView.findViewById(R.id.row_type)).setText(type);
-            ((TextView) rowView.findViewById(R.id.row_name)).setText(name);
-            ((TextView) rowView.findViewById(R.id.row_date)).setText(date);
+            ((TextView) rowView.findViewById(R.id.row_type)).setText(ticket.getName() + "\n" + ticket.getType());
+            ((TextView) rowView.findViewById(R.id.row_name)).setText(ticket.getDate() + "\n" + ticket.getLocation());
+            ((TextView) rowView.findViewById(R.id.row_date)).setText(ticket.getTime() + "\n" + ticket.getQuantity() + "pc. | " + ticket.getPrice().get("value") + " " + ticket.getPrice().get("currency"));
             return rowView;
         }
     }
@@ -81,8 +81,8 @@ public class Offer_Overview extends AppCompatActivity {
 
         ListView listview = (ListView) findViewById(R.id.offeroverview_list);
 
-        ViewGroup header = (ViewGroup)getLayoutInflater().inflate(R.layout.offeroverview_headerlayout, listview, false);
-        listview.addHeaderView(header);
+        //ViewGroup header = (ViewGroup)getLayoutInflater().inflate(R.layout.offeroverview_headerlayout, listview, false);
+        //listview.addHeaderView(header);
 
         listview.setAdapter(new MyTicketAdapter(this, tickets));
 
@@ -93,7 +93,9 @@ public class Offer_Overview extends AppCompatActivity {
                     Ticket ticket = d.getValue(Ticket.class);
                     tickets.add(ticket);
                     tickets_keys.add((String)d.getKey());
-                    ((MyTicketAdapter)((HeaderViewListAdapter)((ListView)findViewById(R.id.offeroverview_list)).getAdapter()).getWrappedAdapter()).notifyDataSetChanged();
+                    //((MyTicketAdapter)((HeaderViewListAdapter)((ListView)findViewById(R.id.offeroverview_list)).getAdapter()).getWrappedAdapter()).notifyDataSetChanged();
+                    ((MyTicketAdapter)(((ListView)findViewById(R.id.offeroverview_list)).getAdapter())).notifyDataSetChanged();
+
                 }
             }
 
@@ -114,5 +116,9 @@ public class Offer_Overview extends AppCompatActivity {
 
     public void btn_newoffer (View view){
         ((TabHost)getParent().findViewById(R.id.tabHost)).setCurrentTabByTag("tickets_newoffer");
+    }
+
+    public void btn_search_ticket (View view){
+        ((TabHost)getParent().findViewById(R.id.tabHost)).setCurrentTabByTag("tickets_search");
     }
 }

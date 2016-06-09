@@ -3,6 +3,7 @@ package de.ticket_match.ticketmatch;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.app.TimePickerDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MotionEvent;
@@ -16,6 +17,7 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TabHost;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
@@ -54,6 +56,29 @@ public class NewOffer extends AppCompatActivity {
                 return false;
             }
         });
+
+        ((TextView)findViewById(R.id.time)).setOnTouchListener(new View.OnTouchListener(){
+            String time = "";
+            @Override
+            public boolean onTouch(View v, MotionEvent event){
+                Calendar c = Calendar.getInstance();
+                TimePickerDialog tpd = new TimePickerDialog(getParent(), new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                        //The starting null is not shown. Therefore we have added the null in the string variable
+                        if(minute<10){
+                            time = hourOfDay + ":0" + minute;
+                        }else{
+                            time = hourOfDay + ":" + minute;
+                        }
+
+                        ((TextView)((TabHost)((MainActivityTabHost)getParent()).findViewById(R.id.tabHost)).getCurrentView().findViewById(R.id.time)).setText(time);
+                    }
+                }, c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE), true);
+                tpd.show();
+                return false;
+            }
+        });
     }
 
     //if ticket is for free price enter field is hided
@@ -75,6 +100,7 @@ public class NewOffer extends AppCompatActivity {
         String eventlocation = ((EditText)findViewById(R.id.eventlocation)).getText().toString();
         String numberoftickets = ((EditText)findViewById(R.id.numberoftickets)).getText().toString();
         String date = ((TextView)findViewById(R.id.date)).getText().toString();
+        String time = ((TextView)findViewById(R.id.time)).getText().toString();
         String price = ((EditText)findViewById(R.id.price)).getText().toString();
         boolean free = ((CheckBox)findViewById(R.id.checkbox_price)).isChecked();
         String type = ((Spinner)findViewById(R.id.event_type)).getSelectedItem().toString();
@@ -84,11 +110,11 @@ public class NewOffer extends AppCompatActivity {
         price_currency.put("value", price);
         price_currency.put("currency", currency);
 
-        if(eventname.equals("") | eventlocation.equals("") | numberoftickets.equals("") | date.equals("Date") | (price.equals("") & free)){
+        if(eventname.equals("") | eventlocation.equals("") | numberoftickets.equals("") | date.equals("Date") | (price.equals("") & free | time.equals("Time"))){
             Toast.makeText(getApplicationContext(),"Please fill out the requiered information!",Toast.LENGTH_SHORT).show();
         } else {
             // Create ticket in database
-            Ticket newticket = new Ticket(eventname, type, price_currency, numberoftickets, eventlocation, date, FirebaseAuth.getInstance().getCurrentUser().getUid());
+            Ticket newticket = new Ticket(eventname, type, price_currency, numberoftickets, eventlocation, date, FirebaseAuth.getInstance().getCurrentUser().getUid(), time);
             ((ArrayList<Ticket>)((MainActivityTabHost) getParent()).baseBundle.getSerializable("tickets_offerdetail")).add(newticket);
             String key = FirebaseDatabase.getInstance().getReference().child("tickets").push().getKey();
             ((ArrayList<String>)((MainActivityTabHost) getParent()).baseBundle.getSerializable("tickets_offerdetail_keys")).add(key);
@@ -101,12 +127,15 @@ public class NewOffer extends AppCompatActivity {
             ((TextView)findViewById(R.id.date)).setText("Date");
             ((EditText)findViewById(R.id.price)).setText("");
             ((CheckBox)findViewById(R.id.checkbox_price)).setChecked(false);
+            cb_clicked(findViewById(R.id.checkbox_price));
             ((Spinner)findViewById(R.id.event_type)).setSelection(0);
             ((Spinner)findViewById(R.id.currency)).setSelection(0);
+            ((TextView)findViewById(R.id.time)).setText("Time");
 
             Toast.makeText(getApplicationContext(),"Your ticket is registered!",Toast.LENGTH_SHORT).show();
             ((TabHost)getParent().findViewById(R.id.tabHost)).setCurrentTabByTag("tickets");
-            ((Offer_Overview.MyTicketAdapter)((HeaderViewListAdapter)((ListView)((TabHost)getParent().findViewById(R.id.tabHost)).getCurrentView().findViewById(R.id.offeroverview_list)).getAdapter()).getWrappedAdapter()).notifyDataSetChanged();
+//            ((Offer_Overview.MyTicketAdapter)((HeaderViewListAdapter)((ListView)((TabHost)getParent().findViewById(R.id.tabHost)).getCurrentView().findViewById(R.id.offeroverview_list)).getAdapter()).getWrappedAdapter()).notifyDataSetChanged();
+            ((Offer_Overview.MyTicketAdapter)(((ListView)((TabHost)getParent().findViewById(R.id.tabHost)).getCurrentView().findViewById(R.id.offeroverview_list)).getAdapter())).notifyDataSetChanged();
         }
     }
 }
