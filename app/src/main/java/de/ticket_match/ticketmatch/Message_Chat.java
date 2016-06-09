@@ -26,8 +26,7 @@ import java.util.Map;
 
 import com.firebase.client.Firebase;
 
-public class Message_Chat extends AppCompatActivity implements View.OnClickListener,
-        MessageDataSource.MessagesCallbacks{
+public class Message_Chat extends AppCompatActivity implements View.OnClickListener, MessageDataSource.MessagesCallbacks{
 
     public static final String USER_EXTRA = "USER";
 
