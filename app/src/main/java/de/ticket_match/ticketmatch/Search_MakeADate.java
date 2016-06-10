@@ -3,16 +3,22 @@ package de.ticket_match.ticketmatch;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TabHost;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import java.util.Calendar;
@@ -24,9 +30,51 @@ public class Search_MakeADate extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search__make_adate);
 
+        //Dropdown Event Type
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.event_type, R.layout.support_simple_spinner_dropdown_item);
         adapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
         ((Spinner)findViewById(R.id.search_makeadate_eventtype)).setAdapter(adapter);
+
+        //Datepicker
+        ((TextView)findViewById(R.id.search_makeadate_date)).setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                Calendar c = Calendar.getInstance();
+                DatePickerDialog dpd = new DatePickerDialog(getParent(), new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                        String date = dayOfMonth + "." + (monthOfYear+1) + "." + year;
+                        ((TextView)((TabHost)((MainActivityTabHost)getParent()).findViewById(R.id.tabHost)).getCurrentView().findViewById(R.id.search_makeadate_date)).setText(date);
+                    }
+                }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH));
+                dpd.show();
+                return false;
+            }
+        });
+
+        //Timepicker
+        ((TextView)findViewById(R.id.search_makeadate_time)).setOnTouchListener(new View.OnTouchListener(){
+            String time = "";
+            @Override
+            public boolean onTouch(View v, MotionEvent event){
+                Calendar c = Calendar.getInstance();
+                TimePickerDialog tpd = new TimePickerDialog(getParent(), new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                        //The starting null is not shown. Therefore we have added the null in the string variable
+                        if(minute<10){
+                            time = hourOfDay + ":0" + minute;
+                        }else{
+                            time = hourOfDay + ":" + minute;
+                        }
+
+                        ((TextView)((TabHost)((MainActivityTabHost)getParent()).findViewById(R.id.tabHost)).getCurrentView().findViewById(R.id.search_makeadate_time)).setText(time);
+                    }
+                }, c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE), true);
+                tpd.show();
+                return false;
+            }
+        });
 
     }
 
@@ -42,38 +90,30 @@ public class Search_MakeADate extends AppCompatActivity {
 
     }
 
-    public void search_makeadate_date(View view){
-
-        Search_MakeADate.SearchMakeADate rbd = new Search_MakeADate.SearchMakeADate();
-        rbd.show(getFragmentManager(), "rbd");
-    }
-
     public void btn_search_makeadate(View view){
 
         // Get data out of input screen and save in Backend. With Strings or Array?
 
-        //Intent makeadateresults = new Intent(getApplicationContext(), MakeADate_SearchResults.class);
-        //startActivity(makeadateresults);
+
+        //delete input fields
+        ((TextView)findViewById(R.id.search_makeadate_date)).setText("Date");
+        ((TextView)findViewById(R.id.search_makeadate_time)).setText("Time");
+        ((EditText)findViewById(R.id.search_makeadate_eventname)).setText("");
+        ((EditText)findViewById(R.id.search_makeadate_eventlocation)).setText("");
+        ((Spinner)findViewById(R.id.search_makeadate_eventtype)).setSelection(0);
+        ((CheckBox)findViewById(R.id.search_makeadate_withman)).setChecked(false);
+        ((CheckBox)findViewById(R.id.search_makeadate_withwoman)).setChecked(false);
+
+        // hide keyboard
+        View aview = this.getCurrentFocus();
+        if (aview != null) {
+            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(aview.getWindowToken(), 0);
+        }
+
+
         ((TabHost)getParent().findViewById(R.id.tabHost)).setCurrentTabByTag("makeadate_search_result");
 
     }
 
-    public static class SearchMakeADate extends DialogFragment implements DatePickerDialog.OnDateSetListener {
-
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState){
-            //Use the current date as the default date in the date picker
-            final Calendar c = Calendar.getInstance();
-            int year = c.get(Calendar.YEAR);
-            int month = c.get(Calendar.MONTH);
-            int day = c.get(Calendar.DAY_OF_MONTH);
-
-            return new DatePickerDialog(getActivity(), this, year, month, day);
-        }
-        public void onDateSet(DatePicker view, int year, int month, int day) {
-            //month+1: array starts at 0
-            String date = day + "." + (month+1) + "." + year;
-            ((TextView)getActivity().findViewById(R.id.search_makeadate_date)).setText(date);
-        }
-    }
 }
