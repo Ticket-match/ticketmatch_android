@@ -30,11 +30,13 @@ public class Offer_Overview extends AppCompatActivity {
 
     public static class MyTicketAdapter extends BaseAdapter {
         ArrayList<Ticket> result;
+        ArrayList<String> ticket_keys;
         Context context;
         private static LayoutInflater inflater=null;
 
-        public MyTicketAdapter(Offer_Overview mainActivity, ArrayList<Ticket>  tickets) {
+        public MyTicketAdapter(Offer_Overview mainActivity, ArrayList<Ticket>  tickets, ArrayList<String> ticket_keys) {
             result=tickets;
+            this.ticket_keys = ticket_keys;
             context=mainActivity;
             inflater = ( LayoutInflater )context.
                     getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -58,6 +60,7 @@ public class Offer_Overview extends AppCompatActivity {
         public View getView(final int position, View convertView, ViewGroup parent) {
 
             Ticket ticket = result.get(position);
+            String ticket_key = ticket_keys.get(position);
             String type = ticket.getType();
             String name = ticket.getName();
             String date = ticket.getDate();
@@ -67,6 +70,7 @@ public class Offer_Overview extends AppCompatActivity {
             ((TextView) rowView.findViewById(R.id.row_type)).setText(ticket.getName() + "\n" + ticket.getType());
             ((TextView) rowView.findViewById(R.id.row_name)).setText(ticket.getDate() + "\n" + ticket.getLocation());
             ((TextView) rowView.findViewById(R.id.row_date)).setText(ticket.getTime() + "\n" + ticket.getQuantity() + "pc. | " + ticket.getPrice().get("value") + " " + ticket.getPrice().get("currency"));
+            ((TextView) rowView.findViewById(R.id.row_key)).setText(ticket_key);
             return rowView;
         }
     }
@@ -84,7 +88,7 @@ public class Offer_Overview extends AppCompatActivity {
         //ViewGroup header = (ViewGroup)getLayoutInflater().inflate(R.layout.offeroverview_headerlayout, listview, false);
         //listview.addHeaderView(header);
 
-        listview.setAdapter(new MyTicketAdapter(this, tickets));
+        listview.setAdapter(new MyTicketAdapter(this, tickets, tickets_keys));
 
         mDatabase.child("tickets").orderByChild("user").equalTo(FirebaseAuth.getInstance().getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -93,10 +97,9 @@ public class Offer_Overview extends AppCompatActivity {
                     Ticket ticket = d.getValue(Ticket.class);
                     tickets.add(ticket);
                     tickets_keys.add((String)d.getKey());
-                    //((MyTicketAdapter)((HeaderViewListAdapter)((ListView)findViewById(R.id.offeroverview_list)).getAdapter()).getWrappedAdapter()).notifyDataSetChanged();
-                    ((MyTicketAdapter)(((ListView)findViewById(R.id.offeroverview_list)).getAdapter())).notifyDataSetChanged();
-
+                    //((MyTicketAdapter)((HeaderViewListAdapter)((ListView)findViewById(R.id.offeroverview_list)).getAdapter()).getWrappedAdapter()).notifyDataSetChanged()
                 }
+                ((MyTicketAdapter)(((ListView)findViewById(R.id.offeroverview_list)).getAdapter())).notifyDataSetChanged();
             }
 
             @Override
@@ -121,4 +124,15 @@ public class Offer_Overview extends AppCompatActivity {
     public void btn_search_ticket (View view){
         ((TabHost)getParent().findViewById(R.id.tabHost)).setCurrentTabByTag("tickets_search");
     }
+
+    public void btn_ticket_delete (View view) {
+        String ticket_key = ((TextView)((View)view.getParent()).findViewById(R.id.row_key)).getText().toString();
+        int ticket_position = tickets_keys.indexOf(ticket_key);
+        tickets_keys.remove(ticket_position);
+        tickets.remove(ticket_position);
+        ((MyTicketAdapter)((ListView) findViewById(R.id.offeroverview_list)).getAdapter()).notifyDataSetChanged();
+        mDatabase.child("tickets").child(ticket_key).removeValue();
+    }
+
+
 }

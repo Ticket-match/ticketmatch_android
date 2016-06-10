@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/listitem_offeroverview"
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:stretchColumns="*"
-    >
+    android:stretchColumns="*">
 
     <TableRow
         android:layout_height="wrap_content"
@@ -40,7 +39,24 @@
             android:layout_weight="1.5"
             android:gravity="left" />
 
+        <TextView
+            android:layout_width="0dp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:id="@+id/row_key"
+            android:layout_column="3"
+            android:layout_weight="0"
+            android:gravity="left"
+            android:visibility="invisible"
+            android:layout_height="0dp" />
+
+        <ImageButton
+            android:src="@android:drawable/ic_delete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="btn_ticket_delete"
+            android:layout_column="4" />
+
 
     </TableRow>
 
-</TableLayout>
+</LinearLayout>
