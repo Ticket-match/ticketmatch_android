@@ -80,8 +80,8 @@ public class Offer_Overview extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_offer__overview);
 
-        //((MainActivityTabHost) getParent()).baseBundle.putSerializable("tickets_offerdetail", tickets);
-        //((MainActivityTabHost) getParent()).baseBundle.putSerializable("tickets_offerdetail_keys", tickets_keys);
+        ((MainActivityTabHost) getParent()).baseBundle.putSerializable("tickets_offerdetail", tickets);
+        ((MainActivityTabHost) getParent()).baseBundle.putSerializable("tickets_offerdetail_keys", tickets_keys);
 
         ListView listview = (ListView) findViewById(R.id.offeroverview_list);
 

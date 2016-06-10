@@ -41,13 +41,13 @@
 
         <TextView
             android:layout_width="0dp"
-            android:layout_margin="10dp"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             android:id="@+id/row_key"
             android:layout_column="3"
             android:layout_weight="0"
             android:gravity="left"
-            android:visibility="invisible" />
+            android:visibility="invisible"
+            android:layout_height="0dp" />
 
         <ImageButton
             android:src="@android:drawable/ic_delete"
