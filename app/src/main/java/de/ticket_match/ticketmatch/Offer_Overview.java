@@ -85,9 +85,6 @@ public class Offer_Overview extends AppCompatActivity {
 
         ListView listview = (ListView) findViewById(R.id.offeroverview_list);
 
-        //ViewGroup header = (ViewGroup)getLayoutInflater().inflate(R.layout.offeroverview_headerlayout, listview, false);
-        //listview.addHeaderView(header);
-
         listview.setAdapter(new MyTicketAdapter(this, tickets, tickets_keys));
 
         mDatabase.child("tickets").orderByChild("user").equalTo(FirebaseAuth.getInstance().getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
