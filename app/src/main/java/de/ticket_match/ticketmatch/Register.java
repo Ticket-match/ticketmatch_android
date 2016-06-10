@@ -115,6 +115,7 @@ public class Register extends AppCompatActivity {
     // Birthday Date Picker
     public void register_birthdate(View view) {
         RegisterBirthdateDialog rbd = new RegisterBirthdateDialog();
+
         rbd.show(getFragmentManager(), "rbd");
     }
 
@@ -127,8 +128,9 @@ public class Register extends AppCompatActivity {
             int year = c.get(Calendar.YEAR);
             int month = c.get(Calendar.MONTH);
             int day = c.get(Calendar.DAY_OF_MONTH);
-
-            return new DatePickerDialog(getActivity(), this, year, month, day);
+            DatePickerDialog dpd = new DatePickerDialog(getActivity(), this, year, month, day);
+            dpd.getDatePicker().setMaxDate(System.currentTimeMillis());
+            return dpd;
 
         }
         public void onDateSet(DatePicker view, int year, int month, int day) {
