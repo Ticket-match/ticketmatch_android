@@ -113,6 +113,7 @@ public class MyProfile extends AppCompatActivity {
                         } else {
                             user.setRatings(new ArrayList<HashMap<String, String>>(0));
                         }
+                        ((MainActivityTabHost)getParent()).baseBundle.putString("myprofile_name", user.getFirstName() + " " + user.getLastName());
                     }
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
