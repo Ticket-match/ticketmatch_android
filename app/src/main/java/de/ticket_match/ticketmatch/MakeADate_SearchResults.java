@@ -241,9 +241,9 @@ public class MakeADate_SearchResults extends AppCompatActivity {
             View rowView = inflater.inflate(R.layout.listitem_find, null);
 
             String gender = "";
-            if(text.isWithman().equals("true")){
+            if(text.isWithman().equals("true") & text.isWithwoman().equals("false")){
                 gender = "man";
-            }else if (text.isWithwoman().equals("true")){
+            }else if (text.isWithwoman().equals("true") & text.isWithman().equals("false")){
                 gender = "woman";
             }else gender = "man | woman";
 

@@ -97,7 +97,7 @@ public class New_MakeAdate extends AppCompatActivity {
         boolean withwoman = ((CheckBox)findViewById(R.id.new_makeadate_withwoman)).isChecked();
 
         String swithman = (withman?"true": "false");
-        String swithwoman = (withman?"true": "false");
+        String swithwoman = (withwoman?"true": "false");
 
         if(date.equals("Date") | time.equals("Time") | name.equals("") | location.equals("")){
             Toast.makeText(getApplicationContext(),"Please fill out the requiered information!",Toast.LENGTH_SHORT).show();

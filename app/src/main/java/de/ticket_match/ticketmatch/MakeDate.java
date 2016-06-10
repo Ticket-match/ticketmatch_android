@@ -23,6 +23,7 @@ public class MakeDate {
         this.setLocation(location);
         this.setName(name);
         this.setTime(time);
+        this.setType(type);
         this.setUser(user);
         this.setWithman(withman);
         this.setWithwoman(withwoman);
