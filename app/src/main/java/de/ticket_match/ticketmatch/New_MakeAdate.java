@@ -24,6 +24,10 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.ArrayList;
 import java.util.Calendar;
 
 public class New_MakeAdate extends AppCompatActivity {
@@ -81,41 +85,51 @@ public class New_MakeAdate extends AppCompatActivity {
 
     }
 
-    public void new_makeadate_withman(View view){
-
-        boolean checked = ((CheckBox)view).isChecked();
-
-    }
-
-    public void new_makeadate_withwoman(View view){
-
-        boolean checked = ((CheckBox)view).isChecked();
-
-    }
-
     public void btn_new_makeadate(View view){
 
-        // Get data out of input screen and save in Backend. With Strings or Array?
+        //check if all values are entered, if yes save data in database and delete input fields
+        String date = ((TextView)findViewById(R.id.new_makeadate_date)).getText().toString();
+        String time = ((TextView)findViewById(R.id.new_makeadate_time)).getText().toString();
+        String name = ((EditText)findViewById(R.id.new_makeadate_eventname)).getText().toString();
+        String location = ((EditText)findViewById(R.id.new_makeadate_eventlocation)).getText().toString();
+        String type = ((Spinner)findViewById(R.id.new_makeadate_eventtype)).getSelectedItem().toString();
+        boolean withman = ((CheckBox)findViewById(R.id.new_makeadate_withman)).isChecked();
+        boolean withwoman = ((CheckBox)findViewById(R.id.new_makeadate_withwoman)).isChecked();
 
-        //delete input fields
-        ((TextView)findViewById(R.id.new_makeadate_date)).setText("Date");
-        ((TextView)findViewById(R.id.new_makeadate_time)).setText("Time");
-        ((EditText)findViewById(R.id.new_makeadate_eventname)).setText("");
-        ((EditText)findViewById(R.id.new_makeadate_eventlocation)).setText("");
-        ((Spinner)findViewById(R.id.new_makeadate_eventtype)).setSelection(0);
-        ((CheckBox)findViewById(R.id.new_makeadate_withman)).setChecked(false);
-        ((CheckBox)findViewById(R.id.new_makeadate_withwoman)).setChecked(false);
+        String swithman = (withman?"true": "false");
+        String swithwoman = (withman?"true": "false");
 
-        // hide keyboard
-        View aview = this.getCurrentFocus();
-        if (aview != null) {
-            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(aview.getWindowToken(), 0);
+        if(date.equals("Date") | time.equals("Time") | name.equals("") | location.equals("")){
+            Toast.makeText(getApplicationContext(),"Please fill out the requiered information!",Toast.LENGTH_SHORT).show();
         }
+        else {
+            // Create ticket in database
+            MakeDate new_date = new MakeDate(date, location, name, time, type, FirebaseAuth.getInstance().getCurrentUser().getUid(), swithman, swithwoman);
+            ((ArrayList<MakeDate>) ((MainActivityTabHost) getParent()).baseBundle.getSerializable("makeadate_list")).add(new_date);
+            String key = FirebaseDatabase.getInstance().getReference().child("makedates").push().getKey();
+            ((ArrayList<String>) ((MainActivityTabHost) getParent()).baseBundle.getSerializable("makeadate_list_keys")).add(key);
+            FirebaseDatabase.getInstance().getReference().child("makedates").child(key).setValue(new_date);
 
-        Toast.makeText(getApplicationContext(),"Your date is registered!",Toast.LENGTH_SHORT).show();
+            //delete input fields
+            ((TextView) findViewById(R.id.new_makeadate_date)).setText("Date");
+            ((TextView) findViewById(R.id.new_makeadate_time)).setText("Time");
+            ((EditText) findViewById(R.id.new_makeadate_eventname)).setText("");
+            ((EditText) findViewById(R.id.new_makeadate_eventlocation)).setText("");
+            ((Spinner) findViewById(R.id.new_makeadate_eventtype)).setSelection(0);
+            ((CheckBox) findViewById(R.id.new_makeadate_withman)).setChecked(false);
+            ((CheckBox) findViewById(R.id.new_makeadate_withwoman)).setChecked(false);
 
-        ((TabHost)getParent().findViewById(R.id.tabHost)).setCurrentTabByTag("makeadate");
+            // hide keyboard
+            View aview = this.getCurrentFocus();
+            if (aview != null) {
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(aview.getWindowToken(), 0);
+            }
+
+            Toast.makeText(getApplicationContext(), "Your date is registered!", Toast.LENGTH_SHORT).show();
+
+            ((TabHost) getParent().findViewById(R.id.tabHost)).setCurrentTabByTag("makeadate");
+        }
 
     }
 

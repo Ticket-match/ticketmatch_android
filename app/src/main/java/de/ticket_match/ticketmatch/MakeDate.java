@@ -17,7 +17,7 @@ public class MakeDate {
     MakeDate(){
 
     }
-    MakeDate(String date, String location, String name, String time, String type, String user,  String withman, String withwoman){
+    MakeDate(String date, String location, String name, String time, String type, String user, String withman, String withwoman){
 
         this.setDate(date);
         this.setLocation(location);

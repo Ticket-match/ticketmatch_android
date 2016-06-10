@@ -92,6 +92,9 @@ public class MakeADate extends AppCompatActivity {
         ListView listview = (ListView) findViewById(R.id.listview_makeadate);
 
         listview.setAdapter(new DateListAdapter(this, dates, dates_keys));
+        ((MainActivityTabHost) getParent()).baseBundle.putSerializable("makeadate_list", dates);
+        ((MainActivityTabHost) getParent()).baseBundle.putSerializable("makeadate_list_keys", dates_keys);
+
 
         mDatabase.child("makedates").orderByChild("user").equalTo(FirebaseAuth.getInstance().getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
