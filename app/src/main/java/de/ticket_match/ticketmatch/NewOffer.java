@@ -26,9 +26,13 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 
 public class NewOffer extends AppCompatActivity {
+
+    private Calendar ticketDate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,8 +57,10 @@ public class NewOffer extends AppCompatActivity {
                     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                         String date = dayOfMonth + "." + (monthOfYear+1) + "." + year;
                         ((TextView)((TabHost)((MainActivityTabHost)getParent()).findViewById(R.id.tabHost)).getCurrentView().findViewById(R.id.date)).setText(date);
+                        ticketDate = new GregorianCalendar(year, monthOfYear, dayOfMonth-1);
                     }
                 }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH));
+                dpd.getDatePicker().setMinDate(System.currentTimeMillis());
                 dpd.show();
                 return false;
             }
@@ -118,7 +124,8 @@ public class NewOffer extends AppCompatActivity {
 
         if(eventname.equals("") | eventlocation.equals("") | numberoftickets.equals("") | date.equals("Date") | (price.equals("") & free | time.equals("Time"))){
             Toast.makeText(getApplicationContext(),"Please fill out the requiered information!",Toast.LENGTH_SHORT).show();
-        } else {
+        }
+        else {
             // Create ticket in database
             Ticket newticket = new Ticket(eventname, type, price_currency, numberoftickets, eventlocation, date, FirebaseAuth.getInstance().getCurrentUser().getUid(), time);
             ((ArrayList<Ticket>)((MainActivityTabHost) getParent()).baseBundle.getSerializable("tickets_offerdetail")).add(newticket);

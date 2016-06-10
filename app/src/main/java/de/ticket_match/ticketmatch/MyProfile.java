@@ -173,7 +173,7 @@ public class MyProfile extends AppCompatActivity {
         String interest_text = ((EditText)findViewById(R.id.newinterest_text)).getText().toString();
         if(interest_text.equals("")) {
             Toast.makeText(getApplicationContext(), "Please insert an interest!", Toast.LENGTH_SHORT).show();
-        } else if(user.getInterests().contains(interest_text)) {
+        } else if(containsIgnoreCase(user.getInterests(), interest_text)) {
             ((EditText)findViewById(R.id.newinterest_text)).setText("");
             Toast.makeText(getApplicationContext(), "Interest already exists!", Toast.LENGTH_SHORT).show();
         } else {
@@ -183,6 +183,13 @@ public class MyProfile extends AppCompatActivity {
             mDatabase.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("interests").setValue(user.getInterests());
         }
     }
+
+        public boolean containsIgnoreCase (ArrayList<String> list, String string) {
+            for (String s : list) {
+                if (string.equalsIgnoreCase(s)) return true;
+            }
+            return false;
+        }
 
     //method for image button
     public void btn_myprofile_image (View view) {
