@@ -93,8 +93,10 @@ public class NewOffer extends AppCompatActivity {
         if(checked){
             ((EditText)findViewById(R.id.price)).setVisibility(View.INVISIBLE);
             ((EditText)findViewById(R.id.price)).setText("0");
+            findViewById(R.id.currency).setVisibility(View.INVISIBLE);
         } else{
             ((EditText)findViewById(R.id.price)).setVisibility(View.VISIBLE);
+            findViewById(R.id.currency).setVisibility(View.VISIBLE);
         }
     }
 
