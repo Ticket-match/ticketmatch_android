@@ -8,8 +8,8 @@ public class MakeDate {
     private String date;
     private String location;
     private String name;
-    private boolean withwoman;
-    private boolean withman;
+    private String withwoman;
+    private String withman;
     private String time;
     private String type;
     private String user;
@@ -17,7 +17,7 @@ public class MakeDate {
     MakeDate(){
 
     }
-    MakeDate(String date, String location, String name, String time, String type, String user,  boolean withman, boolean withwoman){
+    MakeDate(String date, String location, String name, String time, String type, String user,  String withman, String withwoman){
 
         this.setDate(date);
         this.setLocation(location);
@@ -52,19 +52,19 @@ public class MakeDate {
         this.name = name;
     }
 
-    public boolean isWithwoman() {
+    public String isWithwoman() {
         return withwoman;
     }
 
-    public void setWithwoman(boolean withwoman) {
+    public void setWithwoman(String withwoman) {
         this.withwoman = withwoman;
     }
 
-    public boolean isWithman() {
+    public String isWithman() {
         return withman;
     }
 
-    public void setWithman(boolean withman) {
+    public void setWithman(String withman) {
         this.withman = withman;
     }
 

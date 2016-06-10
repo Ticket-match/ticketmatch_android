@@ -68,9 +68,9 @@ public class MakeADate extends AppCompatActivity {
             View rowView = inflater.inflate(R.layout.listitem_makeadate, null);
             String gender = "";
 
-            if(date.isWithman()){
+            if(date.isWithman().equals("true")){
                 gender = "man";
-            }else if(date.isWithwoman()){
+            }else if(date.isWithwoman().equals("true")){
                 gender = "woman";
             }else {
                 gender = "man | woman";

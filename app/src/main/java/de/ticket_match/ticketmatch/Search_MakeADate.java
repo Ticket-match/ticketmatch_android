@@ -15,15 +15,27 @@ import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
 import java.util.Calendar;
 
 public class Search_MakeADate extends AppCompatActivity {
+
+    private DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
+    private ArrayList<MakeDate> dates = new ArrayList<MakeDate>(0);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,7 +43,7 @@ public class Search_MakeADate extends AppCompatActivity {
         setContentView(R.layout.activity_search__make_adate);
 
         //Dropdown Event Type
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.event_type, R.layout.support_simple_spinner_dropdown_item);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.event_type_search, R.layout.support_simple_spinner_dropdown_item);
         adapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
         ((Spinner)findViewById(R.id.search_makeadate_eventtype)).setAdapter(adapter);
 
@@ -51,69 +63,110 @@ public class Search_MakeADate extends AppCompatActivity {
                 return false;
             }
         });
-
-        //Timepicker
-        ((TextView)findViewById(R.id.search_makeadate_time)).setOnTouchListener(new View.OnTouchListener(){
-            String time = "";
-            @Override
-            public boolean onTouch(View v, MotionEvent event){
-                Calendar c = Calendar.getInstance();
-                TimePickerDialog tpd = new TimePickerDialog(getParent(), new TimePickerDialog.OnTimeSetListener() {
-                    @Override
-                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                        //The starting null is not shown. Therefore we have added the null in the string variable
-                        if(minute<10){
-                            time = hourOfDay + ":0" + minute;
-                        }else{
-                            time = hourOfDay + ":" + minute;
-                        }
-
-                        ((TextView)((TabHost)((MainActivityTabHost)getParent()).findViewById(R.id.tabHost)).getCurrentView().findViewById(R.id.search_makeadate_time)).setText(time);
-                    }
-                }, c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE), true);
-                tpd.show();
-                return false;
-            }
-        });
-
-    }
-
-    public void search_makeadate_withman(View view){
-
-        boolean checked = ((CheckBox)view).isChecked();
-
-    }
-
-    public void search_makeadate_withwoman(View view){
-
-        boolean checked = ((CheckBox)view).isChecked();
-
-    }
+        }
 
     public void btn_search_makeadate(View view){
 
-        // Get data out of input screen and save in Backend. With Strings or Array?
+        //check if all values are entered, if yes save data in database and delete input fields
+            dates.clear();
+            final String date = ((TextView)findViewById(R.id.search_makeadate_date)).getText().toString();
+            final String location = ((EditText)findViewById(R.id.search_makeadate_eventlocation)).getText().toString();
+            final String type = ((Spinner)findViewById(R.id.search_makeadate_eventtype)).getSelectedItem().toString();
 
+            final ArrayList<String[]> command = new ArrayList<String[]>(0);
 
-        //delete input fields
-        ((TextView)findViewById(R.id.search_makeadate_date)).setText("Date");
-        ((TextView)findViewById(R.id.search_makeadate_time)).setText("Time");
-        ((EditText)findViewById(R.id.search_makeadate_eventname)).setText("");
-        ((EditText)findViewById(R.id.search_makeadate_eventlocation)).setText("");
-        ((Spinner)findViewById(R.id.search_makeadate_eventtype)).setSelection(0);
-        ((CheckBox)findViewById(R.id.search_makeadate_withman)).setChecked(false);
-        ((CheckBox)findViewById(R.id.search_makeadate_withwoman)).setChecked(false);
+            if(!date.equals("Date")){
+                command.add(new String []{"date", date});
+            }
+            if(!location.equals("")){
+                command.add(new String []{"location", location});
+            }
+            if(!type.equals("")){
+                command.add(new String []{"type", type});
+            }
+            if(command.size()==0){
+                Toast.makeText(getApplicationContext(),"You have to enter at least one search condition",Toast.LENGTH_SHORT).show();
+            } else {
+                mDatabase.child("makedates").orderByChild(command.get(0)[0]).equalTo(command.get(0)[1]).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        for (DataSnapshot d : dataSnapshot.getChildren()) {
+                            MakeDate date = d.getValue(MakeDate.class);
+                            if (!date.getUser().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
+                                if(command.size() == 1){
+                                    dates.add(date);
+                                } else if (command.size()==2){
+                                    if(command.get(1)[0].equals("date")){
+                                        if (date.getDate().equals(command.get(1)[1])){
+                                            dates.add(date);
+                                        }
+                                    } else if(command.get(1)[0].equals("location")) {
+                                        if (date.getLocation().equals(command.get(1)[1])){
+                                            dates.add(date);
+                                        }
+                                    } else if(command.get(1)[0].equals("type")) {
+                                        if (date.getType().equals(command.get(1)[1])){
+                                            dates.add(date);
+                                        }
+                                    }
+                                } else if (command.size() == 3) {
+                                    if(command.get(1)[0].equals("date") & command.get(2)[0].equals("type")){
+                                        if (date.getDate().equals(command.get(1)[1]) & date.getType().equals(command.get(2)[1])){
+                                            dates.add(date);
+                                        }
+                                    }
+                                    else if(command.get(1)[0].equals("type") & command.get(2)[0].equals("date")){
+                                        if (date.getType().equals(command.get(1)[1]) & date.getDate().equals(command.get(2)[1])){
+                                            dates.add(date);
+                                        }
+                                    }
+                                    else if(command.get(1)[0].equals("location") & command.get(2)[0].equals("type")){
+                                        if (date.getLocation().equals(command.get(1)[1]) & date.getType().equals(command.get(2)[1])){
+                                            dates.add(date);
+                                        }
+                                    }
+                                    else if(command.get(1)[0].equals("type") & command.get(2)[0].equals("location")){
+                                        if (date.getType().equals(command.get(1)[1]) & date.getLocation().equals(command.get(2)[1])){
+                                            dates.add(date);
+                                        }
+                                    }
+                                    else if(command.get(1)[0].equals("location") & command.get(2)[0].equals("date")){
+                                        if (date.getLocation().equals(command.get(1)[1]) & date.getDate().equals(command.get(2)[1])){
+                                            dates.add(date);
+                                        }
+                                    }
+                                    else if(command.get(1)[0].equals("date") & command.get(2)[0].equals("location")){
+                                        if (date.getDate().equals(command.get(1)[1]) & date.getLocation().equals(command.get(2)[1])){
+                                            dates.add(date);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        ((MakeADate_SearchResults.CustomAdapter) ((ListView) ((TabHost) getParent().findViewById(R.id.tabHost)).getCurrentView().findViewById(R.id.listview_makeadate_results)).getAdapter()).notifyDataSetChanged();
+                    }
 
-        // hide keyboard
-        View aview = this.getCurrentFocus();
-        if (aview != null) {
-            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(aview.getWindowToken(), 0);
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
+                // delete input fields
+                ((TextView)findViewById(R.id.search_makeadate_date)).setText("Date");
+                ((EditText)findViewById(R.id.search_makeadate_eventlocation)).setText("");
+                ((Spinner)findViewById(R.id.search_makeadate_eventtype)).setSelection(0);
+
+                // hide keyboard
+                View aview = this.getCurrentFocus();
+                if (aview != null) {
+                    InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(aview.getWindowToken(), 0);
+                }
+
+                //set dates in a bundle to push it to the next activity (Find)
+                ((MainActivityTabHost) getParent()).baseBundle.putSerializable("makeadate_search_result", dates);
+                ((TabHost)getParent().findViewById(R.id.tabHost)).setCurrentTabByTag("makeadate_search_result");
         }
-
-
-        ((TabHost)getParent().findViewById(R.id.tabHost)).setCurrentTabByTag("makeadate_search_result");
-
     }
-
 }

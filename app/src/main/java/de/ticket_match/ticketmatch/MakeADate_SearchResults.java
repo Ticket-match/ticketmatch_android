@@ -1,7 +1,9 @@
 package de.ticket_match.ticketmatch;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -17,12 +19,24 @@ import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Set;
 
 public class MakeADate_SearchResults extends AppCompatActivity {
 
     ListView listview;
-    ArrayList<String> listitems_makeadate_results= new ArrayList<String>(0);
+    ArrayList<MakeDate> listitems_makeadate_results= new ArrayList<MakeDate>(0);
+    private DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,12 +44,7 @@ public class MakeADate_SearchResults extends AppCompatActivity {
         setContentView(R.layout.activity_make_adate__search_results);
 
         listview = (ListView) findViewById(R.id.listview_makeadate_results);
-        ViewGroup header = (ViewGroup) getLayoutInflater().inflate(R.layout.makeadate_results_headerlayout, listview, false);
-        listview.addHeaderView(header);
-
-        listitems_makeadate_results.add("Max Müller|25");
-        listitems_makeadate_results.add("Klaus Kleber|55");
-        listitems_makeadate_results.add("Lisa Lustig|35");
+        listitems_makeadate_results = (ArrayList<MakeDate>)((MainActivityTabHost) getParent()).baseBundle.getSerializable("makeadate_search_result");
         listview.setAdapter(new CustomAdapter(this, listitems_makeadate_results));
 
 
@@ -43,23 +52,168 @@ public class MakeADate_SearchResults extends AppCompatActivity {
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String makeadate_searchresults = listitems_makeadate_results.get(position-1);
+                final MakeDate text = listitems_makeadate_results.get(position);
 
-                //Intent makeadateresults_message = new Intent(getApplicationContext(), MakeADateResults_Message.class);
-                //startActivity(makeadateresults_message);
-                ((TabHost)getParent().findViewById(R.id.tabHost)).setCurrentTabByTag("makeadate_search_result_message");
+                final String message = "Hello, " + "\n" + "I am interested to meet you in " + text.getLocation()+ " on " + text.getDate() + " at " + text.getTime();
+
+
+                //create Dialog for asking if the vendor should be contacted
+                AlertDialog.Builder builder = new AlertDialog.Builder(getParent());
+                builder.setMessage("Do you want to join the date?").setTitle("Join Date");
+                builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // User clicked OK button
+                        final ArrayList<HashMap<String,Chat>> chats = new ArrayList<HashMap<String,Chat>>(0);
+
+                        //Database Call if there is a chat with the participants vendor and user of app
+                        //Database Call if there is a chat with the app user as a participant
+                        mDatabase.child("chats").orderByChild("participant1").equalTo(FirebaseAuth.getInstance().getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                for (DataSnapshot d : dataSnapshot.getChildren()) {
+                                    Chat chat = d.getValue(Chat.class);
+                                    if(chat.getParticipant2().equals(text.getUser())){
+                                        //get Message key if there is a chat with both participants
+                                        HashMap<String, Chat> key = new HashMap<String, Chat>(0);
+                                        key.put((String)d.getKey(), chat);
+                                        chats.add(key);
+                                    }
+                                }
+                                //if there is no chat with the app user, it will be asked if there is a chat with the ticket vendor
+                                if (chats.size()==0){
+                                    mDatabase.child("chats").orderByChild("participant2").equalTo(FirebaseAuth.getInstance().getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(DataSnapshot dataSnapshot) {
+                                            for (DataSnapshot d : dataSnapshot.getChildren()) {
+                                                Chat chat = d.getValue(Chat.class);
+                                                if(chat.getParticipant1().equals(text.getUser())){
+                                                    //get Message key if there is a chat with both participants
+                                                    HashMap<String, Chat> key = new HashMap<String, Chat>(0);
+                                                    key.put((String)d.getKey(), chat);
+                                                    chats.add(key);
+                                                }
+                                            }
+                                            //if there is neither a chat with the ticket vendor nor with the app user, a new chat will be created in the database
+                                            if(chats.size()==0){
+                                                ArrayList<HashMap<String, String>> a = new ArrayList<HashMap<String, String>>(0);
+                                                HashMap<String, String> hm = new HashMap<String, String>(0);
+                                                hm.put("author", ((MainActivityTabHost)getParent()).baseBundle.getString("myprofile_name"));
+
+                                                //get actual Date
+                                                final Calendar c = Calendar.getInstance();
+                                                String date = "" + c.get(Calendar.DAY_OF_MONTH) + "." + c.get(Calendar.MONTH) + "." + c.get(Calendar.YEAR);
+
+                                                //get actual Time, if hours are less than 10 a zero will be added
+                                                final String time;
+                                                if(c.get(Calendar.MINUTE) < 10){
+                                                    time = "" + c.get(Calendar.HOUR_OF_DAY) + ":0" + c.get(Calendar.MINUTE);
+                                                }else{
+                                                    time = "" + c.get(Calendar.HOUR_OF_DAY) + ":" + c.get(Calendar.MINUTE);
+                                                }
+
+                                                hm.put("date", date);
+                                                hm.put("text", message);
+                                                hm.put("timestamp", time);
+
+                                                a.add(hm);
+
+                                                Chat chat = new Chat(FirebaseAuth.getInstance().getCurrentUser().getUid(), text.getUser(), a);
+                                                mDatabase.child("chats").push().setValue(chat);
+                                            } else{
+
+                                                HashMap<String, String> hm = new HashMap<String, String>(0);
+                                                hm.put("author", ((MainActivityTabHost)getParent()).baseBundle.getString("myprofile_name"));
+
+                                                //get actual Date
+                                                final Calendar c = Calendar.getInstance();
+                                                String date = "" + c.get(Calendar.DAY_OF_MONTH) + "." + c.get(Calendar.MONTH) + "." + c.get(Calendar.YEAR);
+
+                                                //get actual Time, if hours are less than 10 a zero will be added
+                                                final String time;
+                                                if(c.get(Calendar.MINUTE) < 10){
+                                                    time = "" + c.get(Calendar.HOUR_OF_DAY) + ":0" + c.get(Calendar.MINUTE);
+                                                }else{
+                                                    time = "" + c.get(Calendar.HOUR_OF_DAY) + ":" + c.get(Calendar.MINUTE);
+                                                }
+
+                                                hm.put("date", date);
+                                                hm.put("text", message);
+                                                hm.put("timestamp", time);
+
+                                                HashMap<String, Chat> key = chats.get(0);
+                                                Set<String> keys = key.keySet();
+                                                Chat chat = key.get(keys.toArray()[0]);
+                                                ArrayList<HashMap<String, String>> messages = chat.getMessages();
+                                                messages.add(hm);
+                                                mDatabase.child("chats").child((String)keys.toArray()[0]).child("messages").setValue(messages);
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onCancelled(DatabaseError databaseError) {
+
+                                        }
+                                    });
+                                }else{
+
+                                    HashMap<String, String> hm = new HashMap<String, String>(0);
+                                    hm.put("author", ((MainActivityTabHost)getParent()).baseBundle.getString("myprofile_name"));
+
+                                    //get actual Date
+                                    final Calendar c = Calendar.getInstance();
+                                    String date = "" + c.get(Calendar.DAY_OF_MONTH) + "." + c.get(Calendar.MONTH) + "." + c.get(Calendar.YEAR);
+
+                                    //get actual Time, if hours are less than 10 a zero will be added
+                                    final String time;
+                                    if(c.get(Calendar.MINUTE) < 10){
+                                        time = "" + c.get(Calendar.HOUR_OF_DAY) + ":0" + c.get(Calendar.MINUTE);
+                                    }else{
+                                        time = "" + c.get(Calendar.HOUR_OF_DAY) + ":" + c.get(Calendar.MINUTE);
+                                    }
+
+                                    hm.put("date", date);
+                                    hm.put("text", message);
+                                    hm.put("timestamp", time);
+
+                                    HashMap<String, Chat> key = chats.get(0);
+                                    Set<String> keys = key.keySet();
+                                    Chat chat = key.get(keys.toArray()[0]);
+                                    ArrayList<HashMap<String, String>> messages = chat.getMessages();
+                                    messages.add(hm);
+                                    mDatabase.child("chats").child((String)keys.toArray()[0]).child("messages").setValue(messages);
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+                                System.out.println("Cancel");
+                            }
+                        });
+
+                    }
+                });
+                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        // User cancelled the dialog
+                        dialog.dismiss();
+                    }
+                });
+                AlertDialog dialog = builder.create();
+
+                dialog.show();
+                //builder.create().show();
             }
         });
 
     }
 
     public static class CustomAdapter extends BaseAdapter {
-        ArrayList<String> result;
+        ArrayList<MakeDate> result;
         Context context;
         private static LayoutInflater inflater=null;
 
-        public CustomAdapter(MakeADate_SearchResults mainActivity, ArrayList<String>  makeadate_results) {
-            result=makeadate_results;
+        public CustomAdapter(MakeADate_SearchResults mainActivity, ArrayList<MakeDate>  findlist) {
+            result=findlist;
             context=mainActivity;
             inflater = ( LayoutInflater )context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         }
@@ -82,74 +236,21 @@ public class MakeADate_SearchResults extends AppCompatActivity {
         @Override
         public View getView(final int position, View convertView, ViewGroup parent) {
 
-            String text = result.get(position);
-            String name = text.substring(0, text.indexOf("|"));
-            String age = text.substring(text.indexOf("|")+1,text.length());
+            MakeDate text = result.get(position);
 
+            View rowView = inflater.inflate(R.layout.listitem_find, null);
 
-            View rowView = inflater.inflate(R.layout.listitem_makeadate_results, null);
+            String gender = "";
+            if(text.isWithman().equals("true")){
+                gender = "man";
+            }else if (text.isWithwoman().equals("true")){
+                gender = "woman";
+            }else gender = "man | woman";
 
-            ((TextView) rowView.findViewById(R.id.makeadate_results_row_name)).setText(name);
-            ((TextView) rowView.findViewById(R.id.makeadate_results_row_age)).setText(age);
+            ((TextView) rowView.findViewById(R.id.row_type)).setText(text.getName() + "\n" + text.getType());
+            ((TextView) rowView.findViewById(R.id.row_date)).setText(text.getDate() + "\n" + text.getLocation());
+            ((TextView) rowView.findViewById(R.id.row_time)).setText(text.getTime() + "\n" + gender);
             return rowView;
         }
-
     }
-
-    /*
-    public void btn_tm_logo(View view) {
-
-        PopupMenu popup = new PopupMenu(this, view);
-        MenuInflater inflater = popup.getMenuInflater();
-        inflater.inflate(R.menu.popup_menu, popup.getMenu());
-
-        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                switch (item.getItemId()){
-                    case R.id.change_password:
-                        //ChangePasswordDialog cdp = new ChangePasswordDialog();
-                        //cdp.show(getFragmentManager(), "cdp");
-                        Intent changepassword =  new Intent(getApplicationContext(), ChangePassword.class);
-                        startActivity(changepassword);
-                        return true;
-                    case R.id.logout:
-                        Toast.makeText(getApplicationContext(),"logout",Toast.LENGTH_SHORT).show();
-                        return true;
-                    default:
-                        return false;
-                }
-            }
-        });
-
-        popup.show();
-
-    }
-
-    public void btn_profile(View view) {
-        Intent myprofile = new Intent(this, MyProfile.class);
-        startActivity(myprofile);
-    }
-
-    public void btn_message(View view) {
-        Intent message = new Intent(this, Message_Overview.class);
-        startActivity(message);
-    }
-
-    public void btn_ticketoffer(View view) {
-        Intent offeroverview = new Intent(this, Offer_Overview.class);
-        startActivity(offeroverview);
-    }
-
-    public void btn_search(View view) {
-        Intent find = new Intent(this, Find.class);
-        startActivity(find);
-    }
-
-    public void btn_makematch(View view) {
-        Intent makeadate = new Intent(this, MakeADate.class);
-        startActivity(makeadate);
-    }
-    */
-
 }

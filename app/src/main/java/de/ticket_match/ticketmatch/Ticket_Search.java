@@ -64,7 +64,7 @@ public class Ticket_Search extends AppCompatActivity {
     }
 
     //check if all values are entered, if yes save data in database and delete input fields
-    public void btn_newoffer(View view){
+    public void btn_searchticket(View view){
         tickets.clear();
         final String location = ((EditText)findViewById(R.id.eventlocation)).getText().toString();
         final String date = ((TextView)findViewById(R.id.date)).getText().toString();
@@ -90,19 +90,53 @@ public class Ticket_Search extends AppCompatActivity {
                     for (DataSnapshot d : dataSnapshot.getChildren()) {
                         Ticket ticket = d.getValue(Ticket.class);
                         if (!ticket.getUser().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
-                            if (command.size() > 1) {
-                                if (command.get(1)[0].equals("location") & ticket.getLocation().equals(location)) {
-                                    tickets.add(ticket);
-                                } else if (command.get(1)[0].equals("type") & ticket.getType().equals(type)) {
-                                    tickets.add(ticket);
-                                }
-                                if (command.size() > 2) {
-                                    if (command.get(2)[0].equals("type") & ticket.getType().equals(type)) {
+                            if(command.size() == 1){
+                                tickets.add(ticket);
+                            } else if (command.size()==2){
+                                if(command.get(1)[0].equals("date")){
+                                    if (ticket.getDate().equals(command.get(1)[1])){
+                                        tickets.add(ticket);
+                                    }
+                                } else if(command.get(1)[0].equals("location")) {
+                                    if (ticket.getLocation().equals(command.get(1)[1])){
+                                        tickets.add(ticket);
+                                    }
+                                } else if(command.get(1)[0].equals("type")) {
+                                    if (ticket.getType().equals(command.get(1)[1])){
                                         tickets.add(ticket);
                                     }
                                 }
-                            } else {
-                                tickets.add(ticket);
+                            } else if (command.size() == 3) {
+                                if(command.get(1)[0].equals("date") & command.get(2)[0].equals("type")){
+                                    if (ticket.getDate().equals(command.get(1)[1]) & ticket.getType().equals(command.get(2)[1])){
+                                        tickets.add(ticket);
+                                    }
+                                }
+                                else if(command.get(1)[0].equals("type") & command.get(2)[0].equals("date")){
+                                    if (ticket.getType().equals(command.get(1)[1]) & ticket.getDate().equals(command.get(2)[1])){
+                                        tickets.add(ticket);
+                                    }
+                                }
+                                else if(command.get(1)[0].equals("location") & command.get(2)[0].equals("type")){
+                                    if (ticket.getLocation().equals(command.get(1)[1]) & ticket.getType().equals(command.get(2)[1])){
+                                        tickets.add(ticket);
+                                    }
+                                }
+                                else if(command.get(1)[0].equals("type") & command.get(2)[0].equals("location")){
+                                    if (ticket.getType().equals(command.get(1)[1]) & ticket.getLocation().equals(command.get(2)[1])){
+                                        tickets.add(ticket);
+                                    }
+                                }
+                                else if(command.get(1)[0].equals("location") & command.get(2)[0].equals("date")){
+                                    if (ticket.getLocation().equals(command.get(1)[1]) & ticket.getDate().equals(command.get(2)[1])){
+                                        tickets.add(ticket);
+                                    }
+                                }
+                                else if(command.get(1)[0].equals("date") & command.get(2)[0].equals("location")){
+                                    if (ticket.getDate().equals(command.get(1)[1]) & ticket.getLocation().equals(command.get(2)[1])){
+                                        tickets.add(ticket);
+                                    }
+                                }
                             }
                         }
                     }
