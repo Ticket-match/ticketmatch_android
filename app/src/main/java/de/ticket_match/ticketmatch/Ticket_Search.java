@@ -115,15 +115,14 @@ public class Ticket_Search extends AppCompatActivity {
                 }
             });
 
-            //set tickets in a bundle to push it to the next activity (Find)
-            ((MainActivityTabHost) getParent()).baseBundle.putSerializable("tickets_search_result", tickets);
-            ((TabHost) getParent().findViewById(R.id.tabHost)).setCurrentTabByTag("search");
-
             // delete input fields
             ((EditText) findViewById(R.id.eventlocation)).setText("");
             ((TextView) findViewById(R.id.date)).setText("Date");
             ((Spinner) findViewById(R.id.event_type)).setSelection(0);
-        }
 
+            //set tickets in a bundle to push it to the next activity (Find)
+            ((MainActivityTabHost) getParent()).baseBundle.putSerializable("tickets_search_result", tickets);
+            ((TabHost) getParent().findViewById(R.id.tabHost)).setCurrentTabByTag("search");
+        }
     }
 }

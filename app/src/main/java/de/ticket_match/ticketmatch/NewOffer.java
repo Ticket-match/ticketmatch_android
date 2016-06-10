@@ -4,10 +4,12 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
@@ -41,6 +43,7 @@ public class NewOffer extends AppCompatActivity {
         adapter_currency.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
         ((Spinner)findViewById(R.id.currency)).setAdapter(adapter_currency);
 
+        //Datepicker
         ((TextView)findViewById(R.id.date)).setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -57,6 +60,7 @@ public class NewOffer extends AppCompatActivity {
             }
         });
 
+        //Timepicker
         ((TextView)findViewById(R.id.time)).setOnTouchListener(new View.OnTouchListener(){
             String time = "";
             @Override
@@ -131,6 +135,13 @@ public class NewOffer extends AppCompatActivity {
             ((Spinner)findViewById(R.id.event_type)).setSelection(0);
             ((Spinner)findViewById(R.id.currency)).setSelection(0);
             ((TextView)findViewById(R.id.time)).setText("Time");
+
+            // hide keyboard
+            View aview = this.getCurrentFocus();
+            if (aview != null) {
+                InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(aview.getWindowToken(), 0);
+            }
 
             Toast.makeText(getApplicationContext(),"Your ticket is registered!",Toast.LENGTH_SHORT).show();
             ((TabHost)getParent().findViewById(R.id.tabHost)).setCurrentTabByTag("tickets");
