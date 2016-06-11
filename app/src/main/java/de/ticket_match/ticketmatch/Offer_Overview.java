@@ -123,6 +123,7 @@ public class Offer_Overview extends AppCompatActivity {
     }
 
     public void btn_ticket_delete (View view) {
+        //We have an invisible Textfield in the style file to delete the ticket.
         String ticket_key = ((TextView)((View)view.getParent()).findViewById(R.id.row_key)).getText().toString();
         int ticket_position = tickets_keys.indexOf(ticket_key);
         tickets_keys.remove(ticket_position);
