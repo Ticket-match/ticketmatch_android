@@ -3,6 +3,7 @@ package de.ticket_match.ticketmatch;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -38,12 +39,13 @@ public class Register extends AppCompatActivity {
     private StorageReference mStorage = FirebaseStorage.getInstance().getReference();
     private User user;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        // Dropdown Menue
+        // Dropdown Menu
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.register_gender, R.layout.support_simple_spinner_dropdown_item);
         adapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
         ((Spinner) findViewById(R.id.register_gender)).setAdapter(adapter);
@@ -63,7 +65,7 @@ public class Register extends AppCompatActivity {
     }
 
     public void btn_register (View view){
-
+        final ProgressDialog progressDialog;
         String firstname = ((EditText)findViewById(R.id.register_firstname)).getText().toString();
         String lastname = ((EditText)findViewById(R.id.register_lastname)).getText().toString();
         String email = ((EditText)findViewById(R.id.register_email)).getText().toString();
@@ -73,7 +75,7 @@ public class Register extends AppCompatActivity {
         String gender = ((Spinner)findViewById(R.id.register_gender)).getSelectedItem().toString();
 
         if(firstname.equals("") | lastname.equals("") | email.equals("") | password.equals("") | location.equals("") | birthdate.equals("Birthday")){
-            Toast.makeText(getApplicationContext(),"Please fill out the requiered information!",Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(),"Please fill out the required information!",Toast.LENGTH_SHORT).show();
         } else if(!email.contains("@")) {
             Toast.makeText(getApplicationContext(), "Please provide a valid email address!", Toast.LENGTH_SHORT).show();
         } else if(password.length()<6){
@@ -82,6 +84,9 @@ public class Register extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), "No internet connection. Registration failed.", Toast.LENGTH_SHORT).show();
         }
         else {
+            progressDialog = ProgressDialog.show(Register.this, "Please wait ...",  "Registering ...", true);
+            progressDialog.setCancelable(true);
+
             //Create a User class with attributes
             user = new User(firstname,lastname,gender,birthdate,location, new ArrayList<String>(0), new ArrayList<HashMap<String, String>>(0));
             // Create an Account via Firebase Authentication
@@ -99,7 +104,8 @@ public class Register extends AppCompatActivity {
                                 byte[] ba = bytes.toByteArray();
                                 mStorage.child("images/" + FirebaseAuth.getInstance().getCurrentUser().getUid() + ".jpg").putBytes(ba);
                             } else {
-                                Toast.makeText(getApplicationContext(), "User creation failed!", Toast.LENGTH_SHORT).show();
+                                progressDialog.dismiss();
+                                Toast.makeText(getApplicationContext(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                             }
                         }
                     });

@@ -1,5 +1,6 @@
 package de.ticket_match.ticketmatch;
 
+import android.app.ProgressDialog;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -45,6 +46,10 @@ public class ChangePassword extends AppCompatActivity {
             Toast.makeText(getApplicationContext(),"New Passwords do not match. Please retype it.",Toast.LENGTH_SHORT).show();
         }
         else {
+            final ProgressDialog progressDialog;
+
+            progressDialog = ProgressDialog.show(ChangePassword.this, "Please wait ...",  "Password is changing ...", true);
+            progressDialog.setCancelable(true);
             //Re-authenticate User (Requirement from Firebase) For more information see: https://firebase.google.com/docs/auth/android/manage-users#re-authenticate_a_user
 
             AuthCredential credential = EmailAuthProvider.getCredential(email, currentPassword);
@@ -63,6 +68,7 @@ public class ChangePassword extends AppCompatActivity {
                                             Toast.makeText(getApplicationContext(), "Password change was successful!", Toast.LENGTH_SHORT).show();
                                         }
                                         else {
+                                            progressDialog.dismiss();
                                             Toast.makeText(getApplicationContext(), task.getException().getMessage(), Toast.LENGTH_LONG).show();
                                         }
                                     }
@@ -70,6 +76,7 @@ public class ChangePassword extends AppCompatActivity {
                             }
                             else{
                                 //Show the user the error message, if re-authentication failed
+                                progressDialog.dismiss();
                                 Toast.makeText(getApplicationContext(), task.getException().getMessage(), Toast.LENGTH_LONG).show();
                             }
                         }

@@ -1,11 +1,13 @@
 package de.ticket_match.ticketmatch;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.EditText;
 import android.view.View;
 import android.widget.Toast;
@@ -16,6 +18,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 public class MainActivity extends AppCompatActivity {
+    private final String TAG = "MainActivity";
     FirebaseAuth mAuth;
 
     @Override
@@ -48,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
     public void btn_login (View view){
         String email = ((EditText)findViewById(R.id.login_mail)).getText().toString();
         String password = ((EditText)findViewById(R.id.login_password)).getText().toString();
+        final ProgressDialog progressDialog;
 
         if(email.equals("") | password.equals("")){
             Toast.makeText(getApplicationContext(),"Please fill out the required information!",Toast.LENGTH_SHORT).show();
@@ -56,14 +60,18 @@ public class MainActivity extends AppCompatActivity {
         } else if (!isNetworkConnected()){
             Toast.makeText(getApplicationContext(), "No internet connection. Login failed.", Toast.LENGTH_SHORT).show();
         } else {
+            progressDialog = ProgressDialog.show(MainActivity.this, "Please wait ...",  "Logging in ...", true);
+            progressDialog.setCancelable(true);
             mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if (!task.isSuccessful()) {
                         Toast.makeText(MainActivity.this, "Authentication failed!", Toast.LENGTH_SHORT).show();
+                        progressDialog.dismiss();
                     }
                 }
             });
+
         }
     }
 
