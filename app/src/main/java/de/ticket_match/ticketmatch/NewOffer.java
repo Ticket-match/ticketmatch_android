@@ -1,8 +1,6 @@
 package de.ticket_match.ticketmatch;
 
 import android.app.DatePickerDialog;
-import android.app.Dialog;
-import android.app.DialogFragment;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
@@ -14,7 +12,6 @@ import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.HeaderViewListAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TabHost;
@@ -26,9 +23,10 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+
+import de.ticket_match.ticketmatch.entities.Ticket;
 
 public class NewOffer extends AppCompatActivity {
 

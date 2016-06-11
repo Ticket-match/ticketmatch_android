@@ -36,6 +36,8 @@ import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import de.ticket_match.ticketmatch.entities.User;
+
 public class MyProfile extends AppCompatActivity {
 
     private User user = null;

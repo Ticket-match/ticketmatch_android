@@ -1,13 +1,8 @@
 package de.ticket_match.ticketmatch;
 
-import android.graphics.Color;
-import android.graphics.ColorFilter;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,10 +16,8 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
-import com.firebase.client.Firebase;
+import de.ticket_match.ticketmatch.entities.Message;
 
 public class Message_Chat extends AppCompatActivity implements View.OnClickListener, MessageDataSource.MessagesCallbacks{
 

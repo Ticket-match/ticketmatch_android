@@ -1,4 +1,4 @@
-package de.ticket_match.ticketmatch;
+package de.ticket_match.ticketmatch.entities;
 
 /**
  * Created by D060194 on 10.06.2016.
@@ -14,10 +14,10 @@ public class MakeDate {
     private String type;
     private String user;
 
-    MakeDate(){
+    public MakeDate(){
 
     }
-    MakeDate(String date, String location, String name, String time, String type, String user, String withman, String withwoman){
+    public MakeDate(String date, String location, String name, String time, String type, String user, String withman, String withwoman){
 
         this.setDate(date);
         this.setLocation(location);

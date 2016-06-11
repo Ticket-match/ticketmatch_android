@@ -33,6 +33,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 
+import de.ticket_match.ticketmatch.entities.User;
+
 public class Register extends AppCompatActivity {
 
     private DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();

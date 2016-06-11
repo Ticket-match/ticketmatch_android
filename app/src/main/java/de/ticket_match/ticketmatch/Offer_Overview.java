@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
-import android.widget.HeaderViewListAdapter;
 import android.widget.ListView;
 import android.widget.TabHost;
 import android.widget.TextView;
@@ -21,6 +20,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+
+import de.ticket_match.ticketmatch.entities.Ticket;
 
 public class Offer_Overview extends AppCompatActivity {
 

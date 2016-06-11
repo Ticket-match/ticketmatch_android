@@ -11,6 +11,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 
+import de.ticket_match.ticketmatch.entities.Message;
+
 public class MessageDataSource {
     private static final Firebase sRef = new Firebase("https://project-6427965941977376836.firebaseio.com/");
     private static SimpleDateFormat sDateFormat = new SimpleDateFormat("yyyyMMddmmss");

@@ -1,15 +1,10 @@
 package de.ticket_match.ticketmatch;
 
 import android.app.DatePickerDialog;
-import android.app.Dialog;
-import android.app.DialogFragment;
 import android.app.TimePickerDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -17,7 +12,6 @@ import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.PopupMenu;
 import android.widget.Spinner;
 import android.widget.TabHost;
 import android.widget.TextView;
@@ -29,6 +23,8 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+
+import de.ticket_match.ticketmatch.entities.MakeDate;
 
 public class New_MakeAdate extends AppCompatActivity {
 

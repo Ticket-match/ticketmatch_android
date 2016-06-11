@@ -1,4 +1,4 @@
-package de.ticket_match.ticketmatch;
+package de.ticket_match.ticketmatch.entities;
 
 import java.util.Date;
 

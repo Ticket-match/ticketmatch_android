@@ -21,6 +21,8 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import de.ticket_match.ticketmatch.entities.Chat;
+
 public class Message_Overview extends AppCompatActivity {
 
     private DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();

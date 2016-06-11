@@ -1,32 +1,17 @@
 package de.ticket_match.ticketmatch;
 
-import android.app.DatePickerDialog;
-import android.app.Dialog;
-import android.app.DialogFragment;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
-import android.widget.DatePicker;
-import android.widget.EditText;
-import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.PopupMenu;
-import android.widget.TabHost;
-import android.widget.TabWidget;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -35,11 +20,13 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Set;
+
+import de.ticket_match.ticketmatch.entities.Chat;
+import de.ticket_match.ticketmatch.entities.Ticket;
 
 public class Find extends AppCompatActivity {
 
