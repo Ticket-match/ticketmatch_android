@@ -193,7 +193,7 @@ public class MyProfile extends AppCompatActivity {
             return false;
         }
 
-    //method for image button
+    //Method for image button
     public void btn_myprofile_image (View view) {
         PopupMenu popup = new PopupMenu(this, view);
         MenuInflater inflater = popup.getMenuInflater();
