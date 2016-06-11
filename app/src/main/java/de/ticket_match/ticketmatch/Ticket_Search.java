@@ -48,6 +48,7 @@ public class Ticket_Search extends AppCompatActivity {
         ((TextView)findViewById(R.id.date)).setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
+                ((TicketMatch)getApplication()).minimizeKeyboard(v);
                 Calendar c = Calendar.getInstance();
                 DatePickerDialog dpd = new DatePickerDialog(getParent(), new DatePickerDialog.OnDateSetListener() {
                     @Override

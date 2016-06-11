@@ -113,13 +113,14 @@ public class Register extends AppCompatActivity {
     }
 
     // Check Internet Status
-    private boolean isNetworkConnected() {
+    public boolean isNetworkConnected() {
         ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         return cm.getActiveNetworkInfo() != null;
     }
 
     // Birthday Date Picker
     public void register_birthdate(View view) {
+        ((TicketMatch)getApplication()).minimizeKeyboard(view);
         RegisterBirthdateDialog rbd = new RegisterBirthdateDialog();
 
         rbd.show(getFragmentManager(), "rbd");

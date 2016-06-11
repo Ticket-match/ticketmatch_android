@@ -51,6 +51,7 @@ public class NewOffer extends AppCompatActivity {
         ((TextView)findViewById(R.id.date)).setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
+                ((TicketMatch)getApplication()).minimizeKeyboard(v);
                 Calendar c = Calendar.getInstance();
                 DatePickerDialog dpd = new DatePickerDialog(getParent(), new DatePickerDialog.OnDateSetListener() {
                     @Override
@@ -71,6 +72,7 @@ public class NewOffer extends AppCompatActivity {
             String time = "";
             @Override
             public boolean onTouch(View v, MotionEvent event){
+                ((TicketMatch)getApplication()).minimizeKeyboard(v);
                 Calendar c = Calendar.getInstance();
                 TimePickerDialog tpd = new TimePickerDialog(getParent(), new TimePickerDialog.OnTimeSetListener() {
                     @Override

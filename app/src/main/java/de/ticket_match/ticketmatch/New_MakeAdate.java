@@ -46,6 +46,7 @@ public class New_MakeAdate extends AppCompatActivity {
         ((TextView)findViewById(R.id.new_makeadate_date)).setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
+                ((TicketMatch)getApplication()).minimizeKeyboard(v);
                 Calendar c = Calendar.getInstance();
                 DatePickerDialog dpd = new DatePickerDialog(getParent(), new DatePickerDialog.OnDateSetListener() {
                     @Override
@@ -64,6 +65,7 @@ public class New_MakeAdate extends AppCompatActivity {
             String time = "";
             @Override
             public boolean onTouch(View v, MotionEvent event){
+                ((TicketMatch)getApplication()).minimizeKeyboard(v);
                 Calendar c = Calendar.getInstance();
                 TimePickerDialog tpd = new TimePickerDialog(getParent(), new TimePickerDialog.OnTimeSetListener() {
                     @Override
