@@ -1,10 +1,16 @@
 package de.ticket_match.ticketmatch;
 
+import android.*;
+import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.provider.MediaStore;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -40,6 +46,7 @@ import de.ticket_match.ticketmatch.entities.User;
 
 public class MyProfile extends AppCompatActivity {
 
+    private final static String TAG = "MyProfile";
     private User user = null;
     private DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
     private StorageReference mStorage = FirebaseStorage.getInstance().getReference();
@@ -204,14 +211,31 @@ public class MyProfile extends AppCompatActivity {
             public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()){
                     case R.id.take_photo:
-                        Intent intent_camera = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                        getParent().startActivityForResult(intent_camera, 1);
+                        //Check if the app has permissions to use the Camera
+                        int permissionCheckCamera = ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.CAMERA);
+                        if(permissionCheckCamera != PackageManager.PERMISSION_GRANTED){
+                            //After the permission request, the onRequestPermissionsResult method is called (asynchronous call)
+                            ActivityCompat.requestPermissions(getParent(),
+                                    new String[]{Manifest.permission.CAMERA},
+                                    TicketMatch.MY_PERMISSIONS_REQUEST_CAMERA);
+                        }
+                        else {
+                            //Permissions are already granted - taking a photo is possible
+                            takePhoto();
+                        }
                         return true;
                     case R.id.upload_photo:
-                        Intent intent_upload = new Intent();
-                        intent_upload.setType("image/*");
-                        intent_upload.setAction(Intent.ACTION_GET_CONTENT);
-                        getParent().startActivityForResult(Intent.createChooser(intent_upload, "Select file to upload"), 2);
+                        int permissionCheckStorage = ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.READ_EXTERNAL_STORAGE);
+                        if(permissionCheckStorage != PackageManager.PERMISSION_GRANTED){
+                            //After the permission request, the onRequestPermissionsResult method is called (asynchronous call)
+                            ActivityCompat.requestPermissions(getParent(),
+                                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                                    TicketMatch.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
+                        }
+                        else {
+                            //Permissions are already granted - uploading a photo is possible
+                            uploadPhoto();
+                        }
                         return true;
                     case R.id.delete_photo:
                         //TODO: Change R.drawable.contacts in correct image
@@ -230,4 +254,52 @@ public class MyProfile extends AppCompatActivity {
 
         popup.show();
     }
+
+    //FIXME: The ActivityCompat.requestPermissions is not jumping in this method. Do not know why...
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case TicketMatch.MY_PERMISSIONS_REQUEST_CAMERA: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // permission was granted
+                    Toast.makeText(getApplicationContext(),"Camera permissions are granted", Toast.LENGTH_SHORT);
+                    takePhoto();
+                } else {
+                    // permission was denied
+                    Toast.makeText(getApplicationContext(),"Cannot take photo without permissions", Toast.LENGTH_SHORT);
+                }
+                return;
+            }
+            case TicketMatch.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE:{
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // permission was granted
+                    Toast.makeText(getApplicationContext(),"Storage permissions are granted", Toast.LENGTH_SHORT);
+                    uploadPhoto();
+                } else {
+                    // permission was denied
+                    Toast.makeText(getApplicationContext(),"Cannot get photo without permissions", Toast.LENGTH_SHORT);
+                }
+                return;
+            }
+        }
+    }
+
+
+
+    public void takePhoto(){
+        Intent intent_camera = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        getParent().startActivityForResult(intent_camera, 1);
+    }
+
+    public void uploadPhoto(){
+        Intent intent_upload = new Intent();
+        intent_upload.setType("image/*");
+        intent_upload.setAction(Intent.ACTION_GET_CONTENT);
+        getParent().startActivityForResult(Intent.createChooser(intent_upload, "Select file to upload"), 2);
+    }
+
+
 }
