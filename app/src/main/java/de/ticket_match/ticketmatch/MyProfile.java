@@ -214,27 +214,27 @@ public class MyProfile extends AppCompatActivity {
                         //Check if the app has permissions to use the Camera
                         int permissionCheckCamera = ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.CAMERA);
                         if(permissionCheckCamera != PackageManager.PERMISSION_GRANTED){
-                            //After the permission request, the onRequestPermissionsResult method is called (asynchronous call)
+                            //After the permission request, the onRequestPermissionsResult method in the MainActivityTabHost class is called (asynchronous call)
                             ActivityCompat.requestPermissions(getParent(),
                                     new String[]{Manifest.permission.CAMERA},
                                     TicketMatch.MY_PERMISSIONS_REQUEST_CAMERA);
                         }
                         else {
                             //Permissions are already granted - taking a photo is possible
-                            takePhoto();
+                            TicketMatch.takePhoto(getParent());
                         }
                         return true;
                     case R.id.upload_photo:
                         int permissionCheckStorage = ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.READ_EXTERNAL_STORAGE);
                         if(permissionCheckStorage != PackageManager.PERMISSION_GRANTED){
-                            //After the permission request, the onRequestPermissionsResult method is called (asynchronous call)
+                            //After the permission request, the onRequestPermissionsResult method in the MainActivityTabHost class is called (asynchronous call)
                             ActivityCompat.requestPermissions(getParent(),
                                     new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
                                     TicketMatch.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
                         }
                         else {
                             //Permissions are already granted - uploading a photo is possible
-                            uploadPhoto();
+                            TicketMatch.uploadPhoto(getParent());
                         }
                         return true;
                     case R.id.delete_photo:
@@ -255,51 +255,6 @@ public class MyProfile extends AppCompatActivity {
         popup.show();
     }
 
-    //FIXME: The ActivityCompat.requestPermissions is not jumping in this method. Do not know why...
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
-        switch (requestCode) {
-            case TicketMatch.MY_PERMISSIONS_REQUEST_CAMERA: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    // permission was granted
-                    Toast.makeText(getApplicationContext(),"Camera permissions are granted", Toast.LENGTH_SHORT);
-                    takePhoto();
-                } else {
-                    // permission was denied
-                    Toast.makeText(getApplicationContext(),"Cannot take photo without permissions", Toast.LENGTH_SHORT);
-                }
-                return;
-            }
-            case TicketMatch.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE:{
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    // permission was granted
-                    Toast.makeText(getApplicationContext(),"Storage permissions are granted", Toast.LENGTH_SHORT);
-                    uploadPhoto();
-                } else {
-                    // permission was denied
-                    Toast.makeText(getApplicationContext(),"Cannot get photo without permissions", Toast.LENGTH_SHORT);
-                }
-                return;
-            }
-        }
-    }
-
-
-
-    public void takePhoto(){
-        Intent intent_camera = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        getParent().startActivityForResult(intent_camera, 1);
-    }
-
-    public void uploadPhoto(){
-        Intent intent_upload = new Intent();
-        intent_upload.setType("image/*");
-        intent_upload.setAction(Intent.ACTION_GET_CONTENT);
-        getParent().startActivityForResult(Intent.createChooser(intent_upload, "Select file to upload"), 2);
-    }
 
 
 }

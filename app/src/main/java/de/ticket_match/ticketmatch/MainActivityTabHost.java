@@ -2,6 +2,7 @@ package de.ticket_match.ticketmatch;
 
 import android.app.LocalActivityManager;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
@@ -14,6 +15,8 @@ import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TabHost;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -260,6 +263,41 @@ public class MainActivityTabHost extends AppCompatActivity {
             }
         }
     }
+
+    //Catch the permission request for taking or uploading a photo
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case TicketMatch.MY_PERMISSIONS_REQUEST_CAMERA: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // permission was granted
+                    TicketMatch.takePhoto(this);
+                } else {
+                    // permission was denied
+                    Toast.makeText(getApplicationContext(),"Cannot take photo without permissions", Toast.LENGTH_SHORT).show();
+                }
+                return;
+            }
+            case TicketMatch.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE:{
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // permission was granted
+                    TicketMatch.uploadPhoto(this);
+                } else {
+                    // permission was denied
+                    Toast.makeText(getApplicationContext(),"Cannot upload photo without permissions", Toast.LENGTH_SHORT).show();
+                }
+                return;
+            }
+        }
+    }
+
+
+
+
+
 
     //method for header menu button
     public void btn_tm_logo(View view) {
