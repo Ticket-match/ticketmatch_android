@@ -97,7 +97,7 @@ public class ForeignProfileRating extends AppCompatActivity {
             SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
             String timestamp = timeDateFormat.format(dDate);
             String sDate = dateFormat.format(dDate);
-            String author = "Test12345"; //TODO: Use the real name
+            String author = TicketMatch.getCurrentUser().getFirstName() + " " + TicketMatch.getCurrentUser().getLastName();
 
             HashMap<String, String> hm = new HashMap<String, String>();
             hm.put("author", author);

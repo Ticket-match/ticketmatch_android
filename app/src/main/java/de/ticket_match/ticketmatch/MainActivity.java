@@ -32,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
+                    // User is signed in
                     Intent maintab = new Intent(getApplicationContext(), MainActivityTabHost.class);
                     startActivity(maintab);
                 }

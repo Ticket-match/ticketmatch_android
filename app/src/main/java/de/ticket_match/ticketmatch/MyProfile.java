@@ -98,6 +98,7 @@ public class MyProfile extends AppCompatActivity {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         user = dataSnapshot.getValue(User.class);
+                        TicketMatch.setCurrentUser(user);
                         ((TextView) findViewById(R.id.myprofile_name)).setText(user.getFirstName() + " " + user.getLastName());
                         ((TextView) findViewById(R.id.myprofile_gender_age)).setText(user.getGender() + " " + user.getBirthday());
                         ((TextView) findViewById(R.id.myprofile_location)).setText(user.getLocation());

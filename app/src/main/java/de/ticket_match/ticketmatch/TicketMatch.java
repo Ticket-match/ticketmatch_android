@@ -37,8 +37,9 @@ public class TicketMatch extends Application{
     //Bundle Keys
     public final static String FOREIGN_PROFILE_UID = "foreign_profile_uid";
 
-    //Firebase directory keys
-    public final static String DIRECTORY_USERS = "users";
+    //
+    private static User currentUser;
+
 
     public void onCreate() {
         super.onCreate();
@@ -60,6 +61,16 @@ public class TicketMatch extends Application{
         intent_upload.setType("image/*");
         intent_upload.setAction(Intent.ACTION_GET_CONTENT);
         activity.startActivityForResult(Intent.createChooser(intent_upload, "Select file to upload"), 2);
+    }
+
+
+    //Getter and Setter Methods
+    public static User getCurrentUser() {
+        return currentUser;
+    }
+
+    public static void setCurrentUser(User currentUser) {
+        TicketMatch.currentUser = currentUser;
     }
 
 }
