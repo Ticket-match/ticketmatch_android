@@ -5,21 +5,40 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import com.firebase.client.Firebase;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+
+import de.ticket_match.ticketmatch.entities.User;
 
 /**
  * Created by alexa on 11.06.2016.
  */
 public class TicketMatch extends Application{
 
+    //Read/Write Permissions
     public final static int  MY_PERMISSIONS_REQUEST_CAMERA = 1;
     public final static int  MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 2;
+
+    //Bundle Keys
+    public final static String FOREIGN_PROFILE_UID = "foreign_profile_uid";
+
+    //Firebase directory keys
+    public final static String DIRECTORY_USERS = "users";
 
     public void onCreate() {
         super.onCreate();
@@ -43,5 +62,10 @@ public class TicketMatch extends Application{
         activity.startActivityForResult(Intent.createChooser(intent_upload, "Select file to upload"), 2);
     }
 
-
 }
+
+
+
+
+
+

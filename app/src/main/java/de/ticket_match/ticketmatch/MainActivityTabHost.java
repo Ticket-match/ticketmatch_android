@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -24,6 +25,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 public class MainActivityTabHost extends AppCompatActivity {
+    private static final String TAG = "MainActivityTabHost";
     Bundle baseBundle = new Bundle();
     private StorageReference mStorage = FirebaseStorage.getInstance().getReference();
     TabHost th;
@@ -317,6 +319,11 @@ public class MainActivityTabHost extends AppCompatActivity {
                         FirebaseAuth.getInstance().signOut();
                         Intent mainActivity = new Intent(getApplicationContext(), MainActivity.class);
                         startActivity(mainActivity);
+                        return true;
+                    case R.id.foreign_profile_debug:
+                        String userId = "ZfuToL1AvPgua2cbtauwnArEJ0t1"; //HansMuller Uid from firebase for testing purpose
+                        baseBundle.putString(TicketMatch.FOREIGN_PROFILE_UID, userId);
+                        ((TabHost)findViewById(R.id.tabHost)).setCurrentTabByTag("foreign_profile");
                         return true;
                     default:
                         return false;
