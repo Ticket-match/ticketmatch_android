@@ -47,8 +47,6 @@ public class Message_Chat extends ListActivity {
         // Make sure we have a mUsername
         setupUsername();
 
-        setTitle("Chatting as " + mUsername);
-
         // Setup our Firebase mFirebaseRef
         mFirebaseRef = new Firebase(FIREBASE_URL).child("chats");
 
@@ -57,8 +55,13 @@ public class Message_Chat extends ListActivity {
         mFirebaseRef.child("-KJpH3kvrIchLgS9IVB7").child("messages").orderByKey().limitToLast(1).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                System.out.println(dataSnapshot.getKey());
-                int keyInt = Integer.parseInt(dataSnapshot.getKey()) + 1;
+                int keyInt;
+                if(dataSnapshot.exists()) {
+                    keyInt = Integer.parseInt(dataSnapshot.getKey()) + 1;
+                } else {
+                    keyInt = 0;
+                }
+
                 currentKey = String.valueOf(keyInt);
             }
 
@@ -151,10 +154,11 @@ public class Message_Chat extends ListActivity {
     private void setupUsername() {
         SharedPreferences prefs = getApplication().getSharedPreferences("ChatPrefs", 0);
         mUsername = prefs.getString("username", null);
+        mUsername = "Smux";
         if (mUsername == null) {
             Random r = new Random();
             // Assign a random user name if we don't have one saved.
-            mUsername = "JavaUser" + r.nextInt(100000);
+            mUsername = "Anonym" + r.nextInt(100000);
             prefs.edit().putString("username", mUsername).commit();
         }
     }
