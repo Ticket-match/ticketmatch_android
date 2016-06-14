@@ -24,7 +24,8 @@
             android:layout_width="match_parent"
             android:layout_height="30dp"
             android:orientation="horizontal"
-            android:background="#64B5F6">
+            android:background="#64B5F6"
+            android:onClick="btn_go_foreign">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -54,7 +55,6 @@
                     android:layout_gravity="center_vertical"
                     android:layout_marginLeft="5dp"
                     android:background="@drawable/ic_forward_white_24dp"
-                    android:onClick="btn_go_foreign"
                     android:layout_marginRight="10dp"/>
 
             </LinearLayout>

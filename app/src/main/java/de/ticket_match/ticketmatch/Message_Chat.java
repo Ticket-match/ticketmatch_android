@@ -141,4 +141,9 @@ public class Message_Chat extends ListActivity {
         }
     }
 
+    public void btn_go_foreign(View view) {
+        Toast.makeText(getApplicationContext(),"Navigate to foreign profile should be implemented.",Toast.LENGTH_SHORT).show();
+
+    }
+
 }
