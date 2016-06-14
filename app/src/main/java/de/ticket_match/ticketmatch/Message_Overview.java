@@ -1,6 +1,7 @@
 package de.ticket_match.ticketmatch;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -86,13 +87,13 @@ public class Message_Overview extends AppCompatActivity {
         mDatabase.child("chats").orderByChild("participant1").equalTo(FirebaseAuth.getInstance().getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                chats.clear();
+                chats_keys.clear();
+
                 for (DataSnapshot d:dataSnapshot.getChildren()) {
                     Chat chat = d.getValue(Chat.class);
-
-                    if (!chats.contains(chat)) {
-                        chats.add(chat);
-                        chats_keys.add(d.getKey());
-                    }
+                    chats.add(chat);
+                    chats_keys.add(d.getKey());
                 }
 
                 mDatabase.child("chats").orderByChild("participant2").equalTo(FirebaseAuth.getInstance().getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -100,11 +101,8 @@ public class Message_Overview extends AppCompatActivity {
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         for (DataSnapshot d:dataSnapshot.getChildren()) {
                             Chat chat = d.getValue(Chat.class);
-
-                            if (!chats.contains(chat)) {
-                                chats.add(chat);
-                                chats_keys.add(d.getKey());
-                            }
+                            chats.add(chat);
+                            chats_keys.add(d.getKey());
                         }
 
                         ((ChatListAdapter)((ListView)findViewById(R.id.messages_list)).getAdapter()).notifyDataSetChanged();
@@ -127,10 +125,9 @@ public class Message_Overview extends AppCompatActivity {
         ((ListView) findViewById(R.id.messages_list)).setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                ((MainActivityTabHost) getParent()).baseBundle.putSerializable("messages_chat_messages", chats.get(position).getMessages());
-                ((MainActivityTabHost) getParent()).baseBundle.putSerializable("messages_chat_key", chats_keys.get(position));
+                ((MainActivityTabHost) getParent()).baseBundle.putString("messages_chat_key", chats_keys.get(position));
                 ((TabHost)getParent().findViewById(R.id.tabHost)).setCurrentTabByTag("messages_chat");
-                // notify on list in chat
+                ((Message_Chat)((TabHost)getParent().findViewById(R.id.tabHost)).getCurrentView().getContext()).createChatList();
             }
         });
     }
