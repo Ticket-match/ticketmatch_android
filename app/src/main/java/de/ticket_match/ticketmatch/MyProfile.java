@@ -1,10 +1,16 @@
 package de.ticket_match.ticketmatch;
 
+import android.*;
+import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.provider.MediaStore;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -36,8 +42,11 @@ import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import de.ticket_match.ticketmatch.entities.User;
+
 public class MyProfile extends AppCompatActivity {
 
+    private final static String TAG = "MyProfile";
     private User user = null;
     private DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
     private StorageReference mStorage = FirebaseStorage.getInstance().getReference();
@@ -89,6 +98,7 @@ public class MyProfile extends AppCompatActivity {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         user = dataSnapshot.getValue(User.class);
+                        TicketMatch.setCurrentUser(user);
                         ((TextView) findViewById(R.id.myprofile_name)).setText(user.getFirstName() + " " + user.getLastName());
                         ((TextView) findViewById(R.id.myprofile_gender_age)).setText(user.getGender() + " " + user.getBirthday());
                         ((TextView) findViewById(R.id.myprofile_location)).setText(user.getLocation());
@@ -113,6 +123,7 @@ public class MyProfile extends AppCompatActivity {
                         } else {
                             user.setRatings(new ArrayList<HashMap<String, String>>(0));
                         }
+                        ((MainActivityTabHost)getParent()).baseBundle.putString("myprofile_name", user.getFirstName() + " " + user.getLastName());
                     }
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
@@ -172,7 +183,7 @@ public class MyProfile extends AppCompatActivity {
         String interest_text = ((EditText)findViewById(R.id.newinterest_text)).getText().toString();
         if(interest_text.equals("")) {
             Toast.makeText(getApplicationContext(), "Please insert an interest!", Toast.LENGTH_SHORT).show();
-        } else if(user.getInterests().contains(interest_text)) {
+        } else if(containsIgnoreCase(user.getInterests(), interest_text)) {
             ((EditText)findViewById(R.id.newinterest_text)).setText("");
             Toast.makeText(getApplicationContext(), "Interest already exists!", Toast.LENGTH_SHORT).show();
         } else {
@@ -182,6 +193,13 @@ public class MyProfile extends AppCompatActivity {
             mDatabase.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("interests").setValue(user.getInterests());
         }
     }
+
+        public boolean containsIgnoreCase (ArrayList<String> list, String string) {
+            for (String s : list) {
+                if (string.equalsIgnoreCase(s)) return true;
+            }
+            return false;
+        }
 
     //method for image button
     public void btn_myprofile_image (View view) {
@@ -194,14 +212,31 @@ public class MyProfile extends AppCompatActivity {
             public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()){
                     case R.id.take_photo:
-                        Intent intent_camera = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                        getParent().startActivityForResult(intent_camera, 1);
+                        //Check if the app has permissions to use the Camera
+                        int permissionCheckCamera = ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.CAMERA);
+                        if(permissionCheckCamera != PackageManager.PERMISSION_GRANTED){
+                            //After the permission request, the onRequestPermissionsResult method in the MainActivityTabHost class is called (asynchronous call)
+                            ActivityCompat.requestPermissions(getParent(),
+                                    new String[]{Manifest.permission.CAMERA},
+                                    TicketMatch.MY_PERMISSIONS_REQUEST_CAMERA);
+                        }
+                        else {
+                            //Permissions are already granted - taking a photo is possible
+                            TicketMatch.takePhoto(getParent());
+                        }
                         return true;
                     case R.id.upload_photo:
-                        Intent intent_upload = new Intent();
-                        intent_upload.setType("image/*");
-                        intent_upload.setAction(Intent.ACTION_GET_CONTENT);
-                        getParent().startActivityForResult(Intent.createChooser(intent_upload, "Select file to upload"), 2);
+                        int permissionCheckStorage = ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.READ_EXTERNAL_STORAGE);
+                        if(permissionCheckStorage != PackageManager.PERMISSION_GRANTED){
+                            //After the permission request, the onRequestPermissionsResult method in the MainActivityTabHost class is called (asynchronous call)
+                            ActivityCompat.requestPermissions(getParent(),
+                                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                                    TicketMatch.MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
+                        }
+                        else {
+                            //Permissions are already granted - uploading a photo is possible
+                            TicketMatch.uploadPhoto(getParent());
+                        }
                         return true;
                     case R.id.delete_photo:
                         //TODO: Change R.drawable.contacts in correct image
@@ -220,4 +255,7 @@ public class MyProfile extends AppCompatActivity {
 
         popup.show();
     }
+
+
+
 }

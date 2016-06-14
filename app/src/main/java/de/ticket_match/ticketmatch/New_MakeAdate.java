@@ -1,24 +1,30 @@
 package de.ticket_match.ticketmatch;
 
 import android.app.DatePickerDialog;
-import android.app.Dialog;
-import android.app.DialogFragment;
-import android.content.Intent;
+import android.app.TimePickerDialog;
+import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.MenuInflater;
-import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
-import android.widget.PopupMenu;
+import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TabHost;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.ArrayList;
 import java.util.Calendar;
+
+import de.ticket_match.ticketmatch.entities.MakeDate;
 
 public class New_MakeAdate extends AppCompatActivity {
 
@@ -31,110 +37,98 @@ public class New_MakeAdate extends AppCompatActivity {
         adapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
         ((Spinner)findViewById(R.id.new_makeadate_eventtype)).setAdapter(adapter);
 
-    }
 
-    public void new_makeadate_withman(View view){
+        //Datepicker
+        ((TextView)findViewById(R.id.new_makeadate_date)).setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                ((TicketMatch)getApplication()).minimizeKeyboard(v);
+                Calendar c = Calendar.getInstance();
+                DatePickerDialog dpd = new DatePickerDialog(getParent(), new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                        String date = dayOfMonth + "." + (monthOfYear+1) + "." + year;
+                        ((TextView)((TabHost)((MainActivityTabHost)getParent()).findViewById(R.id.tabHost)).getCurrentView().findViewById(R.id.new_makeadate_date)).setText(date);
+                    }
+                }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH));
+                dpd.show();
+                return false;
+            }
+        });
 
-        boolean checked = ((CheckBox)view).isChecked();
+        //Timepicker
+        ((TextView)findViewById(R.id.new_makeadate_time)).setOnTouchListener(new View.OnTouchListener(){
+            String time = "";
+            @Override
+            public boolean onTouch(View v, MotionEvent event){
+                ((TicketMatch)getApplication()).minimizeKeyboard(v);
+                Calendar c = Calendar.getInstance();
+                TimePickerDialog tpd = new TimePickerDialog(getParent(), new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                        //The starting null is not shown. Therefore we have added the null in the string variable
+                        if(minute<10){
+                            time = hourOfDay + ":0" + minute;
+                        }else{
+                            time = hourOfDay + ":" + minute;
+                        }
 
-    }
+                        ((TextView)((TabHost)((MainActivityTabHost)getParent()).findViewById(R.id.tabHost)).getCurrentView().findViewById(R.id.new_makeadate_time)).setText(time);
+                    }
+                }, c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE), true);
+                tpd.show();
+                return false;
+            }
+        });
 
-    public void new_makeadate_withwoman(View view){
-
-        boolean checked = ((CheckBox)view).isChecked();
-
-    }
-
-    public void new_makeadate_date(View view){
-
-        New_MakeAdate.NewMakeADate rbd = new New_MakeAdate.NewMakeADate();
-        rbd.show(getFragmentManager(), "rbd");
     }
 
     public void btn_new_makeadate(View view){
 
-        // Get data out of input screen and save in Backend. With Strings or Array?
+        //check if all values are entered, if yes save data in database and delete input fields
+        String date = ((TextView)findViewById(R.id.new_makeadate_date)).getText().toString();
+        String time = ((TextView)findViewById(R.id.new_makeadate_time)).getText().toString();
+        String name = ((EditText)findViewById(R.id.new_makeadate_eventname)).getText().toString();
+        String location = ((EditText)findViewById(R.id.new_makeadate_eventlocation)).getText().toString();
+        String type = ((Spinner)findViewById(R.id.new_makeadate_eventtype)).getSelectedItem().toString();
+        boolean withman = ((CheckBox)findViewById(R.id.new_makeadate_withman)).isChecked();
+        boolean withwoman = ((CheckBox)findViewById(R.id.new_makeadate_withwoman)).isChecked();
 
-        Toast.makeText(getApplicationContext(),"Your date is registered!",Toast.LENGTH_SHORT).show();
+        String swithman = (withman?"true": "false");
+        String swithwoman = (withwoman?"true": "false");
 
-        //Intent makeadate = new Intent(getApplicationContext(), MakeADate.class);
-        //startActivity(makeadate);
-        ((TabHost)getParent().findViewById(R.id.tabHost)).setCurrentTabByTag("makeadate");
-
-    }
-
-    public static class NewMakeADate extends DialogFragment implements DatePickerDialog.OnDateSetListener {
-
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState){
-            //Use the current date as the default date in the date picker
-            final Calendar c = Calendar.getInstance();
-            int year = c.get(Calendar.YEAR);
-            int month = c.get(Calendar.MONTH);
-            int day = c.get(Calendar.DAY_OF_MONTH);
-
-            return new DatePickerDialog(getActivity(), this, year, month, day);
+        if(date.equals("Date") | time.equals("Time") | name.equals("") | location.equals("")){
+            Toast.makeText(getApplicationContext(),"Please fill out the requiered information!",Toast.LENGTH_SHORT).show();
         }
-        public void onDateSet(DatePicker view, int year, int month, int day) {
-            //month+1: array starts at 0
-            String date = day + "." + (month+1) + "." + year;
-            ((TextView)getActivity().findViewById(R.id.new_makeadate_date)).setText(date);
-        }
-    }
+        else {
+            // Create ticket in database
+            MakeDate new_date = new MakeDate(date, location, name, time, type, FirebaseAuth.getInstance().getCurrentUser().getUid(), swithman, swithwoman);
+            ((ArrayList<MakeDate>) ((MainActivityTabHost) getParent()).baseBundle.getSerializable("makeadate_list")).add(new_date);
+            String key = FirebaseDatabase.getInstance().getReference().child("makedates").push().getKey();
+            ((ArrayList<String>) ((MainActivityTabHost) getParent()).baseBundle.getSerializable("makeadate_list_keys")).add(key);
+            FirebaseDatabase.getInstance().getReference().child("makedates").child(key).setValue(new_date);
 
-    /*
-    public void btn_tm_logo(View view) {
+            //delete input fields
+            ((TextView) findViewById(R.id.new_makeadate_date)).setText("Date");
+            ((TextView) findViewById(R.id.new_makeadate_time)).setText("Time");
+            ((EditText) findViewById(R.id.new_makeadate_eventname)).setText("");
+            ((EditText) findViewById(R.id.new_makeadate_eventlocation)).setText("");
+            ((Spinner) findViewById(R.id.new_makeadate_eventtype)).setSelection(0);
+            ((CheckBox) findViewById(R.id.new_makeadate_withman)).setChecked(false);
+            ((CheckBox) findViewById(R.id.new_makeadate_withwoman)).setChecked(false);
 
-        PopupMenu popup = new PopupMenu(this, view);
-        MenuInflater inflater = popup.getMenuInflater();
-        inflater.inflate(R.menu.popup_menu, popup.getMenu());
-
-        popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                switch (item.getItemId()){
-                    case R.id.change_password:
-                        //ChangePasswordDialog cdp = new ChangePasswordDialog();
-                        //cdp.show(getFragmentManager(), "cdp");
-                        Intent changepassword =  new Intent(getApplicationContext(), ChangePassword.class);
-                        startActivity(changepassword);
-                        return true;
-                    case R.id.logout:
-                        Toast.makeText(getApplicationContext(),"logout",Toast.LENGTH_SHORT).show();
-                        return true;
-                    default:
-                        return false;
-                }
+            // hide keyboard
+            View aview = this.getCurrentFocus();
+            if (aview != null) {
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(aview.getWindowToken(), 0);
             }
-        });
 
-        popup.show();
+            Toast.makeText(getApplicationContext(), "Your date is registered!", Toast.LENGTH_SHORT).show();
+
+            ((TabHost) getParent().findViewById(R.id.tabHost)).setCurrentTabByTag("makeadate");
+        }
 
     }
 
-    public void btn_profile(View view) {
-        Intent myprofile = new Intent(this, MyProfile.class);
-        startActivity(myprofile);
-    }
-
-    public void btn_message(View view) {
-        Intent message = new Intent(this, Message_Overview.class);
-        startActivity(message);
-    }
-
-    public void btn_ticketoffer(View view) {
-        Intent offeroverview = new Intent(this, Offer_Overview.class);
-        startActivity(offeroverview);
-    }
-
-    public void btn_search(View view) {
-        Intent find = new Intent(this, Find.class);
-        startActivity(find);
-    }
-
-    public void btn_makematch(View view) {
-        Intent makeadate = new Intent(this, MakeADate.class);
-        startActivity(makeadate);
-    }
-    */
 }

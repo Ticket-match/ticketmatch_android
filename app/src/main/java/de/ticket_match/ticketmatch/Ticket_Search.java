@@ -1,21 +1,17 @@
 package de.ticket_match.ticketmatch;
 
 import android.app.DatePickerDialog;
-import android.app.TimePickerDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ArrayAdapter;
-import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.HeaderViewListAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TabHost;
 import android.widget.TextView;
-import android.widget.TimePicker;
 import android.widget.Toast;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -26,7 +22,8 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashMap;
+
+import de.ticket_match.ticketmatch.entities.Ticket;
 
 public class Ticket_Search extends AppCompatActivity {
 
@@ -48,6 +45,7 @@ public class Ticket_Search extends AppCompatActivity {
         ((TextView)findViewById(R.id.date)).setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
+                ((TicketMatch)getApplication()).minimizeKeyboard(v);
                 Calendar c = Calendar.getInstance();
                 DatePickerDialog dpd = new DatePickerDialog(getParent(), new DatePickerDialog.OnDateSetListener() {
                     @Override
@@ -64,7 +62,7 @@ public class Ticket_Search extends AppCompatActivity {
     }
 
     //check if all values are entered, if yes save data in database and delete input fields
-    public void btn_newoffer(View view){
+    public void btn_searchticket(View view){
         tickets.clear();
         final String location = ((EditText)findViewById(R.id.eventlocation)).getText().toString();
         final String date = ((TextView)findViewById(R.id.date)).getText().toString();
@@ -90,19 +88,53 @@ public class Ticket_Search extends AppCompatActivity {
                     for (DataSnapshot d : dataSnapshot.getChildren()) {
                         Ticket ticket = d.getValue(Ticket.class);
                         if (!ticket.getUser().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
-                            if (command.size() > 1) {
-                                if (command.get(1)[0].equals("location") & ticket.getLocation().equals(location)) {
-                                    tickets.add(ticket);
-                                } else if (command.get(1)[0].equals("type") & ticket.getType().equals(type)) {
-                                    tickets.add(ticket);
-                                }
-                                if (command.size() > 2) {
-                                    if (command.get(2)[0].equals("type") & ticket.getType().equals(type)) {
+                            if(command.size() == 1){
+                                tickets.add(ticket);
+                            } else if (command.size()==2){
+                                if(command.get(1)[0].equals("date")){
+                                    if (ticket.getDate().equals(command.get(1)[1])){
+                                        tickets.add(ticket);
+                                    }
+                                } else if(command.get(1)[0].equals("location")) {
+                                    if (ticket.getLocation().equals(command.get(1)[1])){
+                                        tickets.add(ticket);
+                                    }
+                                } else if(command.get(1)[0].equals("type")) {
+                                    if (ticket.getType().equals(command.get(1)[1])){
                                         tickets.add(ticket);
                                     }
                                 }
-                            } else {
-                                tickets.add(ticket);
+                            } else if (command.size() == 3) {
+                                if(command.get(1)[0].equals("date") & command.get(2)[0].equals("type")){
+                                    if (ticket.getDate().equals(command.get(1)[1]) & ticket.getType().equals(command.get(2)[1])){
+                                        tickets.add(ticket);
+                                    }
+                                }
+                                else if(command.get(1)[0].equals("type") & command.get(2)[0].equals("date")){
+                                    if (ticket.getType().equals(command.get(1)[1]) & ticket.getDate().equals(command.get(2)[1])){
+                                        tickets.add(ticket);
+                                    }
+                                }
+                                else if(command.get(1)[0].equals("location") & command.get(2)[0].equals("type")){
+                                    if (ticket.getLocation().equals(command.get(1)[1]) & ticket.getType().equals(command.get(2)[1])){
+                                        tickets.add(ticket);
+                                    }
+                                }
+                                else if(command.get(1)[0].equals("type") & command.get(2)[0].equals("location")){
+                                    if (ticket.getType().equals(command.get(1)[1]) & ticket.getLocation().equals(command.get(2)[1])){
+                                        tickets.add(ticket);
+                                    }
+                                }
+                                else if(command.get(1)[0].equals("location") & command.get(2)[0].equals("date")){
+                                    if (ticket.getLocation().equals(command.get(1)[1]) & ticket.getDate().equals(command.get(2)[1])){
+                                        tickets.add(ticket);
+                                    }
+                                }
+                                else if(command.get(1)[0].equals("date") & command.get(2)[0].equals("location")){
+                                    if (ticket.getDate().equals(command.get(1)[1]) & ticket.getLocation().equals(command.get(2)[1])){
+                                        tickets.add(ticket);
+                                    }
+                                }
                             }
                         }
                     }
@@ -115,15 +147,14 @@ public class Ticket_Search extends AppCompatActivity {
                 }
             });
 
-            //set tickets in a bundle to push it to the next activity (Find)
-            ((MainActivityTabHost) getParent()).baseBundle.putSerializable("tickets_search_result", tickets);
-            ((TabHost) getParent().findViewById(R.id.tabHost)).setCurrentTabByTag("search");
-
             // delete input fields
             ((EditText) findViewById(R.id.eventlocation)).setText("");
             ((TextView) findViewById(R.id.date)).setText("Date");
             ((Spinner) findViewById(R.id.event_type)).setSelection(0);
-        }
 
+            //set tickets in a bundle to push it to the next activity (Find)
+            ((MainActivityTabHost) getParent()).baseBundle.putSerializable("tickets_search_result", tickets);
+            ((TabHost) getParent().findViewById(R.id.tabHost)).setCurrentTabByTag("search");
+        }
     }
 }

@@ -1,5 +1,6 @@
 package de.ticket_match.ticketmatch;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.support.annotation.NonNull;
@@ -28,6 +29,7 @@ public class ForgotAccount extends AppCompatActivity {
     }
 
     public void btn_forgotAccount(View view) {
+        final ProgressDialog progressDialog;
         String email = ((EditText)findViewById(R.id.forgotAccount_mail)).getText().toString();
 
         if(email.equals("")){
@@ -37,18 +39,23 @@ public class ForgotAccount extends AppCompatActivity {
         } else if (!isNetworkConnected()){
             Toast.makeText(getApplicationContext(), "No internet connection. Registration failed.", Toast.LENGTH_SHORT).show();
         } else {
+            progressDialog = ProgressDialog.show(ForgotAccount.this, "Please wait ...",  "Sending password email ...", true);
+            progressDialog.setCancelable(true);
             FirebaseAuth.getInstance().sendPasswordResetEmail(email)
                     .addOnCompleteListener(new OnCompleteListener<Void>() {
                         @Override
                         public void onComplete(@NonNull Task<Void> task) {
                             if (task.isSuccessful()) {
+                                progressDialog.dismiss();
                                 Toast.makeText(getApplicationContext(),"Password reset email is being sent",Toast.LENGTH_SHORT).show();
+                                onBackPressed();
                             } else {
-                                Toast.makeText(getApplicationContext(),"Password reset email has failed",Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getApplicationContext(),task.getException().getMessage(),Toast.LENGTH_SHORT).show();
+                                progressDialog.dismiss();
                             }
                         }
                     });
-            onBackPressed();
+
         }
     }
 

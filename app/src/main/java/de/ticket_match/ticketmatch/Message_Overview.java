@@ -21,6 +21,8 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import de.ticket_match.ticketmatch.entities.Chat;
+
 public class Message_Overview extends AppCompatActivity {
 
     private DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
@@ -70,7 +72,6 @@ public class Message_Overview extends AppCompatActivity {
 
             ((TextView) rowView.findViewById(R.id.listitem_messages_name_text)).setText(name_text);
             ((TextView) rowView.findViewById(R.id.listitem_messages_date_time)).setText(date_time);
-            System.out.println("Test");
             return rowView;
         }
 
@@ -87,24 +88,24 @@ public class Message_Overview extends AppCompatActivity {
                 for (DataSnapshot d:dataSnapshot.getChildren()) {
                     Chat chat = d.getValue(Chat.class);
                     chats.add(chat);
-                    ((ChatListAdapter)((ListView)findViewById(R.id.messages_list)).getAdapter()).notifyDataSetChanged();
                 }
-            }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
+                mDatabase.child("chats").orderByChild("participant2").equalTo(FirebaseAuth.getInstance().getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        for (DataSnapshot d:dataSnapshot.getChildren()) {
+                            Chat chat = d.getValue(Chat.class);
+                            chats.add(chat);
+                        }
 
-            }
-        });
+                        ((ChatListAdapter)((ListView)findViewById(R.id.messages_list)).getAdapter()).notifyDataSetChanged();
+                    }
 
-        mDatabase.child("chats").orderByChild("participant2").equalTo(FirebaseAuth.getInstance().getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot d:dataSnapshot.getChildren()) {
-                    Chat chat = d.getValue(Chat.class);
-                    chats.add(chat);
-                    ((ChatListAdapter)((ListView)findViewById(R.id.messages_list)).getAdapter()).notifyDataSetChanged();
-                }
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
             }
 
             @Override

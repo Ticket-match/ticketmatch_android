@@ -1,79 +1,169 @@
 package de.ticket_match.ticketmatch;
 
 import android.app.DatePickerDialog;
-import android.app.Dialog;
-import android.app.DialogFragment;
-import android.content.Intent;
+import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
-import android.widget.CheckBox;
 import android.widget.DatePicker;
+import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
 import java.util.Calendar;
 
+import de.ticket_match.ticketmatch.entities.MakeDate;
+
 public class Search_MakeADate extends AppCompatActivity {
+
+    private DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
+    private ArrayList<MakeDate> dates = new ArrayList<MakeDate>(0);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search__make_adate);
 
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.event_type, R.layout.support_simple_spinner_dropdown_item);
+        //Dropdown Event Type
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.event_type_search, R.layout.support_simple_spinner_dropdown_item);
         adapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
         ((Spinner)findViewById(R.id.search_makeadate_eventtype)).setAdapter(adapter);
 
-    }
-
-    public void search_makeadate_withman(View view){
-
-        boolean checked = ((CheckBox)view).isChecked();
-
-    }
-
-    public void search_makeadate_withwoman(View view){
-
-        boolean checked = ((CheckBox)view).isChecked();
-
-    }
-
-    public void search_makeadate_date(View view){
-
-        Search_MakeADate.SearchMakeADate rbd = new Search_MakeADate.SearchMakeADate();
-        rbd.show(getFragmentManager(), "rbd");
-    }
+        //Datepicker
+        ((TextView)findViewById(R.id.search_makeadate_date)).setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                ((TicketMatch)getApplication()).minimizeKeyboard(v);
+                Calendar c = Calendar.getInstance();
+                DatePickerDialog dpd = new DatePickerDialog(getParent(), new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                        String date = dayOfMonth + "." + (monthOfYear+1) + "." + year;
+                        ((TextView)((TabHost)((MainActivityTabHost)getParent()).findViewById(R.id.tabHost)).getCurrentView().findViewById(R.id.search_makeadate_date)).setText(date);
+                    }
+                }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH));
+                dpd.show();
+                return false;
+            }
+        });
+        }
 
     public void btn_search_makeadate(View view){
 
-        // Get data out of input screen and save in Backend. With Strings or Array?
+        //check if all values are entered, if yes save data in database and delete input fields
+            dates.clear();
+            final String date = ((TextView)findViewById(R.id.search_makeadate_date)).getText().toString();
+            final String location = ((EditText)findViewById(R.id.search_makeadate_eventlocation)).getText().toString();
+            final String type = ((Spinner)findViewById(R.id.search_makeadate_eventtype)).getSelectedItem().toString();
 
-        //Intent makeadateresults = new Intent(getApplicationContext(), MakeADate_SearchResults.class);
-        //startActivity(makeadateresults);
-        ((TabHost)getParent().findViewById(R.id.tabHost)).setCurrentTabByTag("makeadate_search_result");
+            final ArrayList<String[]> command = new ArrayList<String[]>(0);
 
-    }
+            if(!date.equals("Date")){
+                command.add(new String []{"date", date});
+            }
+            if(!location.equals("")){
+                command.add(new String []{"location", location});
+            }
+            if(!type.equals("")){
+                command.add(new String []{"type", type});
+            }
+            if(command.size()==0){
+                Toast.makeText(getApplicationContext(),"You have to enter at least one search condition",Toast.LENGTH_SHORT).show();
+            } else {
+                mDatabase.child("makedates").orderByChild(command.get(0)[0]).equalTo(command.get(0)[1]).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        for (DataSnapshot d : dataSnapshot.getChildren()) {
+                            MakeDate date = d.getValue(MakeDate.class);
+                            if (!date.getUser().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
+                                if(command.size() == 1){
+                                    dates.add(date);
+                                } else if (command.size()==2){
+                                    if(command.get(1)[0].equals("date")){
+                                        if (date.getDate().equals(command.get(1)[1])){
+                                            dates.add(date);
+                                        }
+                                    } else if(command.get(1)[0].equals("location")) {
+                                        if (date.getLocation().equals(command.get(1)[1])){
+                                            dates.add(date);
+                                        }
+                                    } else if(command.get(1)[0].equals("type")) {
+                                        if (date.getType().equals(command.get(1)[1])){
+                                            dates.add(date);
+                                        }
+                                    }
+                                } else if (command.size() == 3) {
+                                    if(command.get(1)[0].equals("date") & command.get(2)[0].equals("type")){
+                                        if (date.getDate().equals(command.get(1)[1]) & date.getType().equals(command.get(2)[1])){
+                                            dates.add(date);
+                                        }
+                                    }
+                                    else if(command.get(1)[0].equals("type") & command.get(2)[0].equals("date")){
+                                        if (date.getType().equals(command.get(1)[1]) & date.getDate().equals(command.get(2)[1])){
+                                            dates.add(date);
+                                        }
+                                    }
+                                    else if(command.get(1)[0].equals("location") & command.get(2)[0].equals("type")){
+                                        if (date.getLocation().equals(command.get(1)[1]) & date.getType().equals(command.get(2)[1])){
+                                            dates.add(date);
+                                        }
+                                    }
+                                    else if(command.get(1)[0].equals("type") & command.get(2)[0].equals("location")){
+                                        if (date.getType().equals(command.get(1)[1]) & date.getLocation().equals(command.get(2)[1])){
+                                            dates.add(date);
+                                        }
+                                    }
+                                    else if(command.get(1)[0].equals("location") & command.get(2)[0].equals("date")){
+                                        if (date.getLocation().equals(command.get(1)[1]) & date.getDate().equals(command.get(2)[1])){
+                                            dates.add(date);
+                                        }
+                                    }
+                                    else if(command.get(1)[0].equals("date") & command.get(2)[0].equals("location")){
+                                        if (date.getDate().equals(command.get(1)[1]) & date.getLocation().equals(command.get(2)[1])){
+                                            dates.add(date);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        ((MakeADate_SearchResults.CustomAdapter) ((ListView) ((TabHost) getParent().findViewById(R.id.tabHost)).getCurrentView().findViewById(R.id.listview_makeadate_results)).getAdapter()).notifyDataSetChanged();
+                    }
 
-    public static class SearchMakeADate extends DialogFragment implements DatePickerDialog.OnDateSetListener {
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
 
-        @Override
-        public Dialog onCreateDialog(Bundle savedInstanceState){
-            //Use the current date as the default date in the date picker
-            final Calendar c = Calendar.getInstance();
-            int year = c.get(Calendar.YEAR);
-            int month = c.get(Calendar.MONTH);
-            int day = c.get(Calendar.DAY_OF_MONTH);
+                    }
+                });
 
-            return new DatePickerDialog(getActivity(), this, year, month, day);
-        }
-        public void onDateSet(DatePicker view, int year, int month, int day) {
-            //month+1: array starts at 0
-            String date = day + "." + (month+1) + "." + year;
-            ((TextView)getActivity().findViewById(R.id.search_makeadate_date)).setText(date);
+                // delete input fields
+                ((TextView)findViewById(R.id.search_makeadate_date)).setText("Date");
+                ((EditText)findViewById(R.id.search_makeadate_eventlocation)).setText("");
+                ((Spinner)findViewById(R.id.search_makeadate_eventtype)).setSelection(0);
+
+                // hide keyboard
+                View aview = this.getCurrentFocus();
+                if (aview != null) {
+                    InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(aview.getWindowToken(), 0);
+                }
+
+                //set dates in a bundle to push it to the next activity (Find)
+                ((MainActivityTabHost) getParent()).baseBundle.putSerializable("makeadate_search_result", dates);
+                ((TabHost)getParent().findViewById(R.id.tabHost)).setCurrentTabByTag("makeadate_search_result");
         }
     }
 }

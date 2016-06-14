@@ -62,7 +62,7 @@
             android:layout_marginRight="20dp"
             android:src="@drawable/search"
             app:elevation="3dp"
-            android:onClick="btn_newoffer"
+            android:onClick="btn_searchticket"
             app:backgroundTint="#FFAB00"
             android:clickable="true" />
 

@@ -13,6 +13,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import de.ticket_match.ticketmatch.entities.Ticket;
+
 public class Offer_Detail extends AppCompatActivity {
 
     //ArrayList<Ticket> ticket_details;

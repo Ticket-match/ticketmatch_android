@@ -1,18 +1,17 @@
 package de.ticket_match.ticketmatch;
 
 import android.app.DatePickerDialog;
-import android.app.Dialog;
-import android.app.DialogFragment;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.HeaderViewListAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TabHost;
@@ -24,9 +23,14 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 
+import de.ticket_match.ticketmatch.entities.Ticket;
+
 public class NewOffer extends AppCompatActivity {
+
+    private Calendar ticketDate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,26 +45,32 @@ public class NewOffer extends AppCompatActivity {
         adapter_currency.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
         ((Spinner)findViewById(R.id.currency)).setAdapter(adapter_currency);
 
+        //Datepicker
         ((TextView)findViewById(R.id.date)).setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
+                ((TicketMatch)getApplication()).minimizeKeyboard(v);
                 Calendar c = Calendar.getInstance();
                 DatePickerDialog dpd = new DatePickerDialog(getParent(), new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                         String date = dayOfMonth + "." + (monthOfYear+1) + "." + year;
                         ((TextView)((TabHost)((MainActivityTabHost)getParent()).findViewById(R.id.tabHost)).getCurrentView().findViewById(R.id.date)).setText(date);
+                        ticketDate = new GregorianCalendar(year, monthOfYear, dayOfMonth-1);
                     }
                 }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH));
+                dpd.getDatePicker().setMinDate(System.currentTimeMillis());
                 dpd.show();
                 return false;
             }
         });
 
+        //Timepicker
         ((TextView)findViewById(R.id.time)).setOnTouchListener(new View.OnTouchListener(){
             String time = "";
             @Override
             public boolean onTouch(View v, MotionEvent event){
+                ((TicketMatch)getApplication()).minimizeKeyboard(v);
                 Calendar c = Calendar.getInstance();
                 TimePickerDialog tpd = new TimePickerDialog(getParent(), new TimePickerDialog.OnTimeSetListener() {
                     @Override
@@ -89,8 +99,10 @@ public class NewOffer extends AppCompatActivity {
         if(checked){
             ((EditText)findViewById(R.id.price)).setVisibility(View.INVISIBLE);
             ((EditText)findViewById(R.id.price)).setText("0");
+            findViewById(R.id.currency).setVisibility(View.INVISIBLE);
         } else{
             ((EditText)findViewById(R.id.price)).setVisibility(View.VISIBLE);
+            findViewById(R.id.currency).setVisibility(View.VISIBLE);
         }
     }
 
@@ -112,7 +124,8 @@ public class NewOffer extends AppCompatActivity {
 
         if(eventname.equals("") | eventlocation.equals("") | numberoftickets.equals("") | date.equals("Date") | (price.equals("") & free | time.equals("Time"))){
             Toast.makeText(getApplicationContext(),"Please fill out the requiered information!",Toast.LENGTH_SHORT).show();
-        } else {
+        }
+        else {
             // Create ticket in database
             Ticket newticket = new Ticket(eventname, type, price_currency, numberoftickets, eventlocation, date, FirebaseAuth.getInstance().getCurrentUser().getUid(), time);
             ((ArrayList<Ticket>)((MainActivityTabHost) getParent()).baseBundle.getSerializable("tickets_offerdetail")).add(newticket);
@@ -131,6 +144,13 @@ public class NewOffer extends AppCompatActivity {
             ((Spinner)findViewById(R.id.event_type)).setSelection(0);
             ((Spinner)findViewById(R.id.currency)).setSelection(0);
             ((TextView)findViewById(R.id.time)).setText("Time");
+
+            // hide keyboard
+            View aview = this.getCurrentFocus();
+            if (aview != null) {
+                InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(aview.getWindowToken(), 0);
+            }
 
             Toast.makeText(getApplicationContext(),"Your ticket is registered!",Toast.LENGTH_SHORT).show();
             ((TabHost)getParent().findViewById(R.id.tabHost)).setCurrentTabByTag("tickets");
