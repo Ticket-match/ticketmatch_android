@@ -1,7 +1,5 @@
 package de.ticket_match.ticketmatch;
 
-import android.graphics.Color;
-
 import android.app.ListActivity;
 import android.content.SharedPreferences;
 import android.database.DataSetObserver;
@@ -13,27 +11,22 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.firebase.client.ChildEventListener;
-import com.firebase.client.DataSnapshot;
-import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
-import com.firebase.client.Query;
-import com.firebase.client.ValueEventListener;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
-import java.security.Timestamp;
-import java.util.ArrayList;
-import java.util.Date;
+import java.util.Calendar;
 import java.util.Random;
-
 import de.ticket_match.ticketmatch.entities.Message;
 
 public class Message_Chat extends ListActivity {
-    // TODO: change this to your own Firebase URL
-    private static final String FIREBASE_URL = "https://project-6427965941977376836.firebaseio.com/";
 
     private String mUsername;
-    private Firebase mFirebaseRef;
+    private DatabaseReference mFirebaseRef = FirebaseDatabase.getInstance().getReference();;
     private ValueEventListener mConnectedListener;
     private ChatListAdapter mChatListAdapter;
 
@@ -45,14 +38,17 @@ public class Message_Chat extends ListActivity {
         setContentView(R.layout.activity_message__chat);
 
         // Make sure we have a mUsername
-        setupUsername();
+        mUsername = ((MainActivityTabHost)getParent()).baseBundle.getString("myprofile_name");
 
-        // Setup our Firebase mFirebaseRef
-        mFirebaseRef = new Firebase(FIREBASE_URL).child("chats");
+        //createChatList();
+    }
 
-        //Was in sendMessage before
-        //This part is to
-        mFirebaseRef.child("-KJpH3kvrIchLgS9IVB7").child("messages").orderByKey().limitToLast(1).addChildEventListener(new ChildEventListener() {
+
+
+    public void createChatList() {
+        mFirebaseRef = mFirebaseRef.child("chats");
+
+        mFirebaseRef.child(((MainActivityTabHost) getParent()).baseBundle.getString("messages_chat_key")).child("messages").orderByKey().limitToLast(1).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 int keyInt;
@@ -81,7 +77,7 @@ public class Message_Chat extends ListActivity {
             }
 
             @Override
-            public void onCancelled(FirebaseError firebaseError) {
+            public void onCancelled(DatabaseError databaseError) {
 
             }
         });
@@ -105,70 +101,41 @@ public class Message_Chat extends ListActivity {
             }
         });
 
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        // Setup our view and list adapter. Ensure it scrolls to the bottom as data changes
         final ListView listView = getListView();
         // Tell our list adapter that we only want 50 messages at a time
         //Was used before
         //mChatListAdapter = new ChatListAdapter(mFirebaseRef.limit(50), this, R.layout.message, mUsername);
-        mChatListAdapter = new ChatListAdapter(mFirebaseRef.child("-KJpH3kvrIchLgS9IVB7").child("messages"), this, R.layout.message, mUsername);
+        //parameter should be messages from base bundle !!!
+        mChatListAdapter = new ChatListAdapter(mFirebaseRef.child(((MainActivityTabHost) getParent()).baseBundle.getString("messages_chat_key")).child("messages"), this, R.layout.message, mUsername);
         listView.setAdapter(mChatListAdapter);
-        mChatListAdapter.registerDataSetObserver(new DataSetObserver() {
+        mChatListAdapter.notifyDataSetChanged();
+        /*mChatListAdapter.registerDataSetObserver(new DataSetObserver() {
             @Override
             public void onChanged() {
                 super.onChanged();
                 listView.setSelection(mChatListAdapter.getCount() - 1);
             }
-        });
-
-        // Finally, a little indication of connection status
-        mConnectedListener = mFirebaseRef.getRoot().child(".info/connected").addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                boolean connected = (Boolean) dataSnapshot.getValue();
-                if (connected) {
-                    Toast.makeText(Message_Chat.this, "Connected to Firebase", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(Message_Chat.this, "Disconnected from Firebase", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
-                // No-op
-            }
-        });
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        mFirebaseRef.getRoot().child(".info/connected").removeEventListener(mConnectedListener);
-        mChatListAdapter.cleanup();
-    }
-
-    private void setupUsername() {
-        SharedPreferences prefs = getApplication().getSharedPreferences("ChatPrefs", 0);
-        mUsername = prefs.getString("username", null);
-        mUsername = "Smux";
-        if (mUsername == null) {
-            Random r = new Random();
-            // Assign a random user name if we don't have one saved.
-            mUsername = "Anonym" + r.nextInt(100000);
-            prefs.edit().putString("username", mUsername).commit();
-        }
+        });*/
     }
 
     private void sendMessage() {
         EditText inputText = (EditText) findViewById(R.id.messageInput);
         String input = inputText.getText().toString();
         if (!input.equals("")) {
-            Message message = new Message(mUsername, "10.06.2016", "12:10",  input);
-            mFirebaseRef.child("-KJpH3kvrIchLgS9IVB7").child("messages").child(currentKey).setValue(message);
+            //get actual Date
+            final Calendar c = Calendar.getInstance();
+            String date = "" + c.get(Calendar.DAY_OF_MONTH) + "." + c.get(Calendar.MONTH) + "." + c.get(Calendar.YEAR);
+
+            //get actual Time, if hours are less than 10 a zero will be added
+            final String time;
+            if(c.get(Calendar.MINUTE) < 10){
+                time = "" + c.get(Calendar.HOUR_OF_DAY) + ":0" + c.get(Calendar.MINUTE);
+            }else{
+                time = "" + c.get(Calendar.HOUR_OF_DAY) + ":" + c.get(Calendar.MINUTE);
+            }
+
+            Message message = new Message(mUsername, date, time,  input);
+            mFirebaseRef.child(((MainActivityTabHost) getParent()).baseBundle.getString("messages_chat_key")).child("messages").child(currentKey).setValue(message);
 
             inputText.setText("");
         }

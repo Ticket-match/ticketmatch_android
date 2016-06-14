@@ -71,7 +71,7 @@ public class MainActivityTabHost extends AppCompatActivity {
         TabHost.TabSpec ts7 = th.newTabSpec("messages_chat");
         View ts7Ind = getLayoutInflater().inflate(R.layout.activity_main_activity_tab_indicator_inv, th.getTabWidget(), false);
         ts7.setIndicator(ts7Ind);
-        ts7.setContent(new Intent(this, Message_Chat.class));
+        ts7.setContent(new Intent(this,Message_Chat.class));
 
         // Tab "Tickets"
         TabHost.TabSpec ts3 = th.newTabSpec("tickets");

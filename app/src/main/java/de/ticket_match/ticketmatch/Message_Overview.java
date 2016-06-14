@@ -1,6 +1,7 @@
 package de.ticket_match.ticketmatch;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -27,6 +28,7 @@ public class Message_Overview extends AppCompatActivity {
 
     private DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
     private ArrayList<Chat> chats = new ArrayList<Chat>(0);
+    private ArrayList<String> chats_keys = new ArrayList<String>(0);
 
     public static class ChatListAdapter extends BaseAdapter {
         ArrayList<Chat> chats;
@@ -82,12 +84,16 @@ public class Message_Overview extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_message__overview);
 
-        mDatabase.child("chats").orderByChild("participant1").equalTo(FirebaseAuth.getInstance().getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+        mDatabase.child("chats").orderByChild("participant1").equalTo(FirebaseAuth.getInstance().getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                chats.clear();
+                chats_keys.clear();
+
                 for (DataSnapshot d:dataSnapshot.getChildren()) {
                     Chat chat = d.getValue(Chat.class);
                     chats.add(chat);
+                    chats_keys.add(d.getKey());
                 }
 
                 mDatabase.child("chats").orderByChild("participant2").equalTo(FirebaseAuth.getInstance().getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -96,6 +102,7 @@ public class Message_Overview extends AppCompatActivity {
                         for (DataSnapshot d:dataSnapshot.getChildren()) {
                             Chat chat = d.getValue(Chat.class);
                             chats.add(chat);
+                            chats_keys.add(d.getKey());
                         }
 
                         ((ChatListAdapter)((ListView)findViewById(R.id.messages_list)).getAdapter()).notifyDataSetChanged();
@@ -118,8 +125,9 @@ public class Message_Overview extends AppCompatActivity {
         ((ListView) findViewById(R.id.messages_list)).setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                ((MainActivityTabHost) getParent()).baseBundle.putSerializable("messages_chat", chats.get(position).getMessages());
+                ((MainActivityTabHost) getParent()).baseBundle.putString("messages_chat_key", chats_keys.get(position));
                 ((TabHost)getParent().findViewById(R.id.tabHost)).setCurrentTabByTag("messages_chat");
+                ((Message_Chat)((TabHost)getParent().findViewById(R.id.tabHost)).getCurrentView().getContext()).createChatList();
             }
         });
     }
