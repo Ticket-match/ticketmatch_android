@@ -99,7 +99,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:onClick="btn_login"
-                android:alpha="0.54"/>
+                android:alpha="0.54"
+                android:id="@+id/btn_login" />
 
             <View
                 android:layout_width="match_parent"

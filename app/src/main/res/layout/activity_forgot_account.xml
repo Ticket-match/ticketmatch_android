@@ -121,7 +121,8 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:onClick="btn_forgotAccount"
-                android:alpha="0.54"/>
+                android:alpha="0.54"
+                android:id="@+id/btn_submit" />
 
 
         </LinearLayout>
