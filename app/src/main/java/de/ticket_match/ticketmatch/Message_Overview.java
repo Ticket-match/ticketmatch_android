@@ -88,6 +88,7 @@ public class Message_Overview extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot d:dataSnapshot.getChildren()) {
                     Chat chat = d.getValue(Chat.class);
+
                     if (!chats.contains(chat)) {
                         chats.add(chat);
                         chats_keys.add(d.getKey());
@@ -99,6 +100,7 @@ public class Message_Overview extends AppCompatActivity {
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         for (DataSnapshot d:dataSnapshot.getChildren()) {
                             Chat chat = d.getValue(Chat.class);
+
                             if (!chats.contains(chat)) {
                                 chats.add(chat);
                                 chats_keys.add(d.getKey());

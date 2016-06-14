@@ -50,9 +50,7 @@ public class Message_Chat extends ListActivity {
         // Setup our Firebase mFirebaseRef
         mFirebaseRef = new Firebase(FIREBASE_URL).child("chats");
 
-        //Was in sendMessage before
-        //This part is to
-        mFirebaseRef.child("-KJpH3kvrIchLgS9IVB7").child("messages").orderByKey().limitToLast(1).addChildEventListener(new ChildEventListener() {
+        mFirebaseRef.child(((MainActivityTabHost) getParent()).baseBundle.getSerializable("messages_chat_key").toString()).child("messages").orderByKey().limitToLast(1).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 int keyInt;
@@ -116,7 +114,7 @@ public class Message_Chat extends ListActivity {
         //Was used before
         //mChatListAdapter = new ChatListAdapter(mFirebaseRef.limit(50), this, R.layout.message, mUsername);
         //parameter should be messages from base bundle !!!
-        mChatListAdapter = new ChatListAdapter(mFirebaseRef.child("-KJpH3kvrIchLgS9IVB7").child("messages"), this, R.layout.message, mUsername);
+        mChatListAdapter = new ChatListAdapter(mFirebaseRef.child(((MainActivityTabHost) getParent()).baseBundle.getSerializable("messages_chat_key").toString()).child("messages"), this, R.layout.message, mUsername);
         listView.setAdapter(mChatListAdapter);
         mChatListAdapter.registerDataSetObserver(new DataSetObserver() {
             @Override
@@ -143,6 +141,8 @@ public class Message_Chat extends ListActivity {
                 // No-op
             }
         });
+
+
     }
 
     @Override
@@ -169,7 +169,7 @@ public class Message_Chat extends ListActivity {
         String input = inputText.getText().toString();
         if (!input.equals("")) {
             Message message = new Message(mUsername, "10.06.2016", "12:10",  input);
-            mFirebaseRef.child("-KJpH3kvrIchLgS9IVB7").child("messages").child(currentKey).setValue(message);
+            mFirebaseRef.child(((MainActivityTabHost) getParent()).baseBundle.getSerializable("messages_chat_key").toString()).child("messages").child(currentKey).setValue(message);
 
             inputText.setText("");
         }
