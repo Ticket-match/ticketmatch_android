@@ -2,7 +2,11 @@ package de.ticket_match.ticketmatch;
 
 import android.app.Activity;
 import android.graphics.Color;
+import android.os.Build;
+import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.firebase.database.Query;
@@ -33,6 +37,22 @@ public class ChatListAdapter extends FirebaseListAdapter<Message> {
      */
     @Override
     protected void populateView(View view, Message message) {
+
+        TextView msgView = (TextView) view.findViewById(R.id.message);
+        msgView.setText(message.getText());
+
+        LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams)msgView.getLayoutParams();
+
+        if (message.getAuthor().equals(mUsername)){
+            msgView.setBackgroundResource(R.drawable.bubble_right_green);
+            layoutParams.gravity = Gravity.RIGHT;
+        }else{
+            msgView.setBackgroundResource(R.drawable.bubble_left_gray);
+            layoutParams.gravity = Gravity.LEFT;
+        }
+
+        msgView.setLayoutParams(layoutParams);
+        /*
         String author = message.getAuthor();
         TextView authorText = (TextView) view.findViewById(R.id.author);
         authorText.setText(author + ": ");
@@ -42,6 +62,6 @@ public class ChatListAdapter extends FirebaseListAdapter<Message> {
         } else {
             authorText.setTextColor(Color.parseColor("#FFAB00"));
         }
-        ((TextView) view.findViewById(R.id.message)).setText(message.getText());
+        ((TextView) view.findViewById(R.id.message)).setText(message.getText());*/
     }
 }
