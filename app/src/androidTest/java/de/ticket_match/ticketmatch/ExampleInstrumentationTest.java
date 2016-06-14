@@ -23,7 +23,6 @@ public class ExampleInstrumentationTest {
     public void useAppContext() throws Exception {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
-
-        assertEquals("de.ticket_match.ticketmatch", appContext.getPackageName());
-    }
-}
+    assertEquals("de.ticket_match.ticketmatch", appContext.getPackageName());
+        }
+        }
