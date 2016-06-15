@@ -1,13 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.widget.RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
+
     tools:context="de.ticket_match.ticketmatch.Ticket_Search">
 
 
@@ -26,7 +23,7 @@
             android:layout_marginBottom="5dp"
             android:layout_marginTop="5dp"
             android:layout_gravity="center"
-            android:alpha="0.54"/>
+            android:alpha="0.38"/>
 
 
         <EditText
@@ -44,28 +41,34 @@
 
         <TextView
             android:text="Date"
-            android:layout_width="293dp"
+            android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:id="@+id/date"
+            android:drawableRight="@android:drawable/ic_menu_today"
+            android:background="?attr/editTextBackground"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             android:layout_marginBottom="5dp"
             android:layout_marginTop="10dp"
             android:layout_gravity="center"
+            android:gravity="bottom"
             android:alpha="0.54"/>
 
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/fab_submit_offer"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|right"
-            android:gravity="bottom|right"
-            android:layout_marginRight="20dp"
-            android:src="@drawable/search"
-            app:elevation="3dp"
-            android:onClick="btn_searchticket"
-            app:backgroundTint="#FFAB00"
-            android:clickable="true" />
 
     </LinearLayout>
 
-</RelativeLayout>
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_submit_ticket_search"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_done_white_18dp"
+        app:elevation="3dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="10dp"
+        android:onClick="btn_searchticket"
+        app:backgroundTint="#FFAB00"
+        android:clickable="true"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true" />
+
+
+</android.widget.RelativeLayout>
