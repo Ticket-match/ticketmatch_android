@@ -9,9 +9,11 @@ import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.firebase.client.FirebaseError;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -21,6 +23,8 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.Calendar;
 import java.util.Random;
+
+import de.ticket_match.ticketmatch.entities.Chat;
 import de.ticket_match.ticketmatch.entities.Message;
 
 public class Message_Chat extends ListActivity {
@@ -142,8 +146,16 @@ public class Message_Chat extends ListActivity {
     }
 
     public void btn_go_foreign(View view) {
-        Toast.makeText(getApplicationContext(),"Navigate to foreign profile should be implemented.",Toast.LENGTH_SHORT).show();
-
+                String p1 = ((MainActivityTabHost) getParent()).baseBundle.getString("chat_p1");
+                String p2 = ((MainActivityTabHost) getParent()).baseBundle.getString("chat_p2");
+                String foreignUid = null;
+                if(p1.equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
+                    foreignUid = p2;
+                } else {
+                    foreignUid = p1;
+                }
+                ((MainActivityTabHost) getParent()).baseBundle.putString(TicketMatch.FOREIGN_PROFILE_UID, foreignUid);
+                ((TabHost)getParent().findViewById(R.id.tabHost)).setCurrentTabByTag("foreign_profile");
     }
 
 }

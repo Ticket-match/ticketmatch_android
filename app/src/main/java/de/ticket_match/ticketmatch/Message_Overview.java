@@ -126,6 +126,8 @@ public class Message_Overview extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 ((MainActivityTabHost) getParent()).baseBundle.putString("messages_chat_key", chats_keys.get(position));
+                ((MainActivityTabHost) getParent()).baseBundle.putString("chat_p1", chats.get(position).getParticipant1());
+                ((MainActivityTabHost) getParent()).baseBundle.putString("chat_p2", chats.get(position).getParticipant2());
                 ((TabHost)getParent().findViewById(R.id.tabHost)).setCurrentTabByTag("messages_chat");
                 ((Message_Chat)((TabHost)getParent().findViewById(R.id.tabHost)).getCurrentView().getContext()).createChatList();
             }
