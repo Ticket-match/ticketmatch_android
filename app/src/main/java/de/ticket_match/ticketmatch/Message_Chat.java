@@ -34,6 +34,8 @@ public class Message_Chat extends ListActivity {
     private ValueEventListener mConnectedListener;
     private ChatListAdapter mChatListAdapter;
 
+    private String foreignUid;
+
     private String currentKey;
 
     @Override
@@ -43,6 +45,18 @@ public class Message_Chat extends ListActivity {
 
         // Make sure we have a mUsername
         mUsername = ((MainActivityTabHost)getParent()).baseBundle.getString("myprofile_name");
+
+        String p1 = ((MainActivityTabHost) getParent()).baseBundle.getString("chat_p1");
+        String p2 = ((MainActivityTabHost) getParent()).baseBundle.getString("chat_p2");
+        foreignUid = null;
+        if(p1.equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
+            foreignUid = p2;
+        } else {
+            foreignUid = p1;
+        }
+        ((MainActivityTabHost) getParent()).baseBundle.putString(TicketMatch.FOREIGN_PROFILE_UID, foreignUid);
+
+
 
         //createChatList();
     }
@@ -147,15 +161,6 @@ public class Message_Chat extends ListActivity {
 
     //Navigate to foreign profile of chat partner
     public void btn_go_foreign(View view) {
-                String p1 = ((MainActivityTabHost) getParent()).baseBundle.getString("chat_p1");
-                String p2 = ((MainActivityTabHost) getParent()).baseBundle.getString("chat_p2");
-                String foreignUid = null;
-                if(p1.equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
-                    foreignUid = p2;
-                } else {
-                    foreignUid = p1;
-                }
-                ((MainActivityTabHost) getParent()).baseBundle.putString(TicketMatch.FOREIGN_PROFILE_UID, foreignUid);
                 ((TabHost)getParent().findViewById(R.id.tabHost)).setCurrentTabByTag("foreign_profile");
     }
 
