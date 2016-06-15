@@ -46,6 +46,7 @@ public class Message_Chat extends ListActivity {
         // Make sure we have a mUsername
         mUsername = ((MainActivityTabHost)getParent()).baseBundle.getString("myprofile_name");
 
+        //Find uid of chat partner and put it in the baseBundle
         String p1 = ((MainActivityTabHost) getParent()).baseBundle.getString("chat_p1");
         String p2 = ((MainActivityTabHost) getParent()).baseBundle.getString("chat_p2");
         foreignUid = null;
