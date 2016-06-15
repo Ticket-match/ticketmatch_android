@@ -237,6 +237,8 @@ public class MainActivityTabHost extends AppCompatActivity {
         });
     }
 
+
+
     //Catch MyProfile Take Photo and Upload Photo --> set photo on screen, compress and upload to database
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(requestCode==1 & resultCode==RESULT_OK){
@@ -320,11 +322,11 @@ public class MainActivityTabHost extends AppCompatActivity {
                         Intent mainActivity = new Intent(getApplicationContext(), MainActivity.class);
                         startActivity(mainActivity);
                         return true;
-                    case R.id.foreign_profile_debug:
+                    /*case R.id.foreign_profile_debug:
                         String userId = "ZfuToL1AvPgua2cbtauwnArEJ0t1"; //HansMuller Uid from firebase for testing purpose
                         baseBundle.putString(TicketMatch.FOREIGN_PROFILE_UID, userId);
                         ((TabHost)findViewById(R.id.tabHost)).setCurrentTabByTag("foreign_profile");
-                        return true;
+                        return true;*/
                     default:
                         return false;
                 }
@@ -337,5 +339,6 @@ public class MainActivityTabHost extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         //super.onBackPressed();
+        System.out.println("test tab");
     }
 }

@@ -30,7 +30,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="You currently chat with Smux"
+                android:text="You currently chat with ..."
                 android:layout_marginLeft="10dp"
                 android:id="@+id/chat_with_name"
                 android:layout_weight="1"
@@ -49,7 +49,7 @@
                     android:textColor="#FFFFFF"
                     android:layout_gravity="center_vertical"/>
 
-                <ImageButton
+                <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
@@ -67,7 +67,7 @@
         <ListView
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:id="@android:id/list"
+            android:id="@+id/message_chat_list"
             android:transcriptMode="alwaysScroll"
             android:stackFromBottom="true"
             android:dividerHeight="0dp"
@@ -102,6 +102,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/send_message"
                 android:alpha="0.54"
+                android:onClick="btn_send_message"
                 />
             <!--android:onClick="btn_sendMessage"-->
         </LinearLayout>

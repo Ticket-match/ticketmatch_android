@@ -45,7 +45,7 @@ public class ForeignProfile extends AppCompatActivity {
     private User user = null;
     private DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
     private StorageReference mStorage = FirebaseStorage.getInstance().getReference();
-
+    private ArrayList<String> interests = new ArrayList<String>(0);
 
     public static class InterestListAdapter extends BaseAdapter {
         ArrayList<String> result;
@@ -89,10 +89,25 @@ public class ForeignProfile extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_foreign_profile);
 
-        //Firebase Uid of the foreign user
-        String uid = ((MainActivityTabHost)getParent()).baseBundle.getString(TicketMatch.FOREIGN_PROFILE_UID);
-        final ForeignProfile that = this;
-        mDatabase.child("users").child(uid).addListenerForSingleValueEvent(
+        ((ListView) findViewById(R.id.foreignprofile_interests)).setAdapter(new InterestListAdapter(this, interests));
+
+        ((RatingBar)findViewById(R.id.foreignprofile_rating)).setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if(event.getAction()==MotionEvent.ACTION_DOWN){
+                    //put rating information from user into bundle to give that to new Screen myprofile_ratings
+                    if (user.getRatings() != null) {
+                        ((TabHost) getParent().findViewById(R.id.tabHost)).setCurrentTabByTag("foreign_profile_ratings");
+                        ((ForeignProfileRating)((TabHost)getParent().findViewById(R.id.tabHost)).getCurrentView().getContext()).updateFRating(user.getRatings());
+                    }
+                }
+                return true;
+            }
+        });
+    }
+
+    public void updateFProfile(String key) {
+        mDatabase.child("users").child(key).addListenerForSingleValueEvent(
                 new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -101,14 +116,18 @@ public class ForeignProfile extends AppCompatActivity {
                         ((TextView) findViewById(R.id.foreignprofile_gender_age)).setText(user.getGender() + " " + user.getBirthday());
                         ((TextView) findViewById(R.id.foreignprofile_location)).setText(user.getLocation());
 
+                        interests.clear();
                         if (user.getInterests()!= null) {
                             if (user.getInterests().size()!=0) {
-                                ((ListView) findViewById(R.id.foreignprofile_interests)).setAdapter(new InterestListAdapter(that, user.getInterests()));
+                                for (String i : user.getInterests()) {
+                                    interests.add(i);
+                                }
                             }
                         } else {
                             user.setInterests(new ArrayList<String>(0));
-                            ((ListView) findViewById(R.id.foreignprofile_interests)).setAdapter(new InterestListAdapter(that, user.getInterests()));
                         }
+                        ((InterestListAdapter)((ListView) findViewById(R.id.foreignprofile_interests)).getAdapter()).notifyDataSetChanged();
+
 
                         if (user.getRatings() != null) {
                             if (user.getRatings().size()!=0) {
@@ -121,40 +140,21 @@ public class ForeignProfile extends AppCompatActivity {
                             }
                         } else {
                             user.setRatings(new ArrayList<HashMap<String, String>>(0));
+                            ((RatingBar) findViewById(R.id.foreignprofile_rating)).setRating(0);
                         }
-                        //((MainActivityTabHost)getParent()).baseBundle.putString("myprofile_name", user.getFirstName() + " " + user.getLastName());
                     }
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
-                        //Log.w("MyProfile", "getUser:onCancelled", databaseError.toException());
                     }
                 });
 
-        mStorage.child("images/"+uid+".jpg").getBytes(512*1024).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+        mStorage.child("images/"+key+".jpg").getBytes(512*1024).addOnSuccessListener(new OnSuccessListener<byte[]>() {
             @Override
             public void onSuccess(byte[] bytes) {
                 Bitmap bm = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
                 ((ImageButton)findViewById(R.id.foreignprofile_image)).setImageBitmap(bm);
             }
         });
-
-
-        ((RatingBar)findViewById(R.id.foreignprofile_rating)).setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if(event.getAction()==MotionEvent.ACTION_DOWN){
-                    //put rating information from user into bundle to give that to new Screen myprofile_ratings
-                    if (user.getRatings() != null) {
-                        if (user.getRatings().size() != 0) {
-                            ((MainActivityTabHost) getParent()).baseBundle.putSerializable("foreignprofile_ratings", user.getRatings());
-                            ((TabHost) getParent().findViewById(R.id.tabHost)).setCurrentTabByTag("foreign_profile_ratings");
-                        }
-                    }
-                }
-                return true;
-            }
-        });
-
     }
 
     /*

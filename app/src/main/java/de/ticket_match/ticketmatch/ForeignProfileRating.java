@@ -32,7 +32,7 @@ import java.util.HashMap;
 
 public class ForeignProfileRating extends AppCompatActivity {
 
-    ArrayList<HashMap<String,String>> ratings_list;
+    ArrayList<HashMap<String,String>> ratings_list = new ArrayList<HashMap<String,String>>(0);
     private DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
     private StorageReference mStorage = FirebaseStorage.getInstance().getReference();
 
@@ -79,8 +79,15 @@ public class ForeignProfileRating extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_foreign_profile_rating);
 
-        ratings_list = (ArrayList<HashMap<String,String>>)((MainActivityTabHost)getParent()).baseBundle.getSerializable("foreignprofile_ratings");
         ((ListView) findViewById(R.id.foreignprofile_ratings)).setAdapter(new RatingListAdapter(this, ratings_list));
+    }
+
+    public void updateFRating(ArrayList<HashMap<String,String>> ratings) {
+        ratings_list.clear();
+        for (HashMap<String,String> h :ratings) {
+            ratings_list.add(h);
+        }
+        ((RatingListAdapter)((ListView) findViewById(R.id.foreignprofile_ratings)).getAdapter()).notifyDataSetChanged();
     }
 
 
@@ -109,7 +116,8 @@ public class ForeignProfileRating extends AppCompatActivity {
             ratings_list.add(hm);
 
             ((RatingListAdapter)((ListView) findViewById(R.id.foreignprofile_ratings)).getAdapter()).notifyDataSetChanged();
-            mDatabase.child("users").child(foreignUid).child("ratings").setValue(ratings_list);
+
+            mDatabase.child("users").child(foreignUid).child("ratings").child(String.valueOf(ratings_list.size()-1)).setValue(hm);
 
             //String rt = "me|" + new SimpleDateFormat("dd.MM.yyyy").format(new Date()) + "|" + rating_text;
             ((EditText)findViewById(R.id.newrating_text)).setText("");

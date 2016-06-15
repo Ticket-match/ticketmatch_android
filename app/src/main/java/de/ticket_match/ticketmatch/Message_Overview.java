@@ -125,11 +125,16 @@ public class Message_Overview extends AppCompatActivity {
         ((ListView) findViewById(R.id.messages_list)).setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                ((MainActivityTabHost) getParent()).baseBundle.putString("messages_chat_key", chats_keys.get(position));
-                ((MainActivityTabHost) getParent()).baseBundle.putString("chat_p1", chats.get(position).getParticipant1());
-                ((MainActivityTabHost) getParent()).baseBundle.putString("chat_p2", chats.get(position).getParticipant2());
+                //((MainActivityTabHost) getParent()).baseBundle.putString("messages_chat_key", chats_keys.get(position));
+                //((MainActivityTabHost) getParent()).baseBundle.putString("chat_p1", chats.get(position).getParticipant1());
+                //((MainActivityTabHost) getParent()).baseBundle.putString("chat_p2", chats.get(position).getParticipant2());
                 ((TabHost)getParent().findViewById(R.id.tabHost)).setCurrentTabByTag("messages_chat");
-                ((Message_Chat)((TabHost)getParent().findViewById(R.id.tabHost)).getCurrentView().getContext()).createChatList();
+                //((Message_Chat)((TabHost)getParent().findViewById(R.id.tabHost)).getCurrentView().getContext()).createChatList();
+                if(!chats.get(position).getParticipant1().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
+                    ((Message_Chat)((TabHost)getParent().findViewById(R.id.tabHost)).getCurrentView().getContext()).updateList(chats_keys.get(position), chats.get(position).getParticipant1());
+                } else if (!chats.get(position).getParticipant2().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
+                    ((Message_Chat)((TabHost)getParent().findViewById(R.id.tabHost)).getCurrentView().getContext()).updateList(chats_keys.get(position), chats.get(position).getParticipant2());
+                }
             }
         });
     }
