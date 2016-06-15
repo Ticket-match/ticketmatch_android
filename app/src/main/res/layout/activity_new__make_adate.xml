@@ -10,30 +10,34 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:layout_above="@+id/footer"
-        android:layout_below="@+id/header">
+        android:orientation="vertical" >
 
         <TextView
             android:text="Date"
-            android:layout_width="293dp"
+            android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:id="@+id/new_makeadate_date"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             android:layout_marginBottom="10dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
+            android:drawableRight="@android:drawable/ic_menu_today"
+            android:background="?attr/editTextBackground"
             android:layout_gravity="center"
+            android:gravity="bottom"
             android:alpha="0.54"/>
 
         <TextView
             android:text="Time"
-            android:layout_width="293dp"
+            android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:id="@+id/new_makeadate_time"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            android:layout_marginBottom="10dp"
+            android:drawableRight="@android:drawable/ic_menu_recent_history"
             android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:background="?attr/editTextBackground"
             android:layout_gravity="center"
+            android:gravity="bottom"
             android:alpha="0.54"/>
 
         <EditText
@@ -42,8 +46,8 @@
             android:layout_height="wrap_content"
             android:id="@+id/new_makeadate_eventname"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            android:layout_marginBottom="10dp"
             android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
             android:layout_gravity="center"
             android:alpha="0.54"/>
 
@@ -53,8 +57,8 @@
             android:layout_height="wrap_content"
             android:id="@+id/new_makeadate_eventlocation"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            android:layout_marginBottom="10dp"
             android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
             android:layout_gravity="center"
             android:alpha="0.54"/>
 
@@ -62,10 +66,10 @@
             android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:id="@+id/new_makeadate_eventtype"
-            android:layout_marginBottom="10dp"
             android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
             android:layout_gravity="center"
-            android:alpha="0.54"/>
+            android:alpha="0.38"/>
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -92,19 +96,23 @@
 
         </LinearLayout>
 
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/fab_makeadate_new"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|right"
-            android:layout_marginRight="10dp"
-            android:layout_marginBottom="10dp"
-            android:src="@drawable/ic_add_white_18dp"
-            app:elevation="3dp"
-            android:onClick="btn_new_makeadate"
-            app:backgroundTint="#FFAB00"
-            android:clickable="true" />
+
 
     </LinearLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_makeadate_new"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|right"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="10dp"
+        android:src="@drawable/ic_done_white_18dp"
+        app:elevation="3dp"
+        android:onClick="btn_new_makeadate"
+        app:backgroundTint="#FFAB00"
+        android:clickable="true"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"/>
 
 </android.widget.RelativeLayout>

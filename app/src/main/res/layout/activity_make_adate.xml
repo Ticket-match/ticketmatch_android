@@ -36,6 +36,8 @@
                 android:layout_height="wrap_content"
                 android:gravity="right"
                 android:layout_gravity="right"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
                 >
 
                 <android.support.design.widget.FloatingActionButton
