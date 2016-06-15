@@ -145,6 +145,7 @@ public class Message_Chat extends ListActivity {
         }
     }
 
+    //Navigate to foreign profile of chat partner
     public void btn_go_foreign(View view) {
                 String p1 = ((MainActivityTabHost) getParent()).baseBundle.getString("chat_p1");
                 String p2 = ((MainActivityTabHost) getParent()).baseBundle.getString("chat_p2");
