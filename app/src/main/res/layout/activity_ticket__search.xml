@@ -15,8 +15,7 @@
             android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:id="@+id/event_type"
-            android:layout_marginBottom="5dp"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="10dp"
             android:layout_gravity="center"
             android:alpha="0.38"/>
 
@@ -26,8 +25,8 @@
             android:layout_height="wrap_content"
             android:id="@+id/eventlocation"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            android:layout_marginBottom="5dp"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
             android:layout_gravity="center"
             android:alpha="0.54"/>
 
@@ -39,8 +38,8 @@
             android:drawableRight="@android:drawable/ic_menu_today"
             android:background="?attr/editTextBackground"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            android:layout_marginBottom="5dp"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
             android:layout_gravity="center"
             android:gravity="bottom"
             android:alpha="0.54"/>

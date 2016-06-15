@@ -16,8 +16,7 @@
             android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:id="@+id/event_type"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"
+            android:layout_marginTop="10dp"
             android:layout_gravity="center"
             android:alpha="0.38"/>
 
@@ -27,8 +26,8 @@
             android:layout_height="wrap_content"
             android:id="@+id/eventname"
             android:textAppearance="@android:style/TextAppearance.DeviceDefault.Medium"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
             android:layout_gravity="center"
             android:alpha="0.54"/>
 
@@ -38,8 +37,8 @@
             android:layout_height="wrap_content"
             android:id="@+id/eventlocation"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="5dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
             android:layout_gravity="center"
             android:alpha="0.54"/>
 
@@ -50,36 +49,10 @@
             android:id="@+id/numberoftickets"
             android:inputType="number"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            android:layout_marginBottom="5dp"
-            android:layout_marginTop="5dp"
-            android:layout_gravity="center"
-            android:alpha="0.54"/>
-
-
-        <!--<EditText
-            android:hint="Date"
-            android:layout_width="300dp"
-            android:layout_height="wrap_content"
-            android:id="@+id/date"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            android:layout_marginBottom="5dp"
-            android:layout_marginTop="5dp"
-            android:focusable="false"
-            android:drawableRight="@android:drawable/ic_menu_today"
-            android:layout_gravity="center"
-            android:alpha="0.54"/>
-
-        <EditText
-            android:hint="Time"
-            android:layout_width="300dp"
-            android:layout_height="wrap_content"
-            android:id="@+id/time"
-            android:focusable="false"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            android:layout_marginBottom="5dp"
             android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
             android:layout_gravity="center"
-            android:alpha="0.54"/>-->
+            android:alpha="0.54"/>
 
         <TextView
             android:text="Date"
@@ -87,8 +60,8 @@
             android:layout_height="wrap_content"
             android:id="@+id/date"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            android:layout_marginBottom="5dp"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
             android:drawableRight="@android:drawable/ic_menu_today"
             android:layout_gravity="center"
             android:gravity="bottom"
@@ -101,9 +74,9 @@
             android:layout_height="wrap_content"
             android:id="@+id/time"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            android:layout_marginBottom="5dp"
             android:drawableRight="@android:drawable/ic_menu_recent_history"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
             android:background="?attr/editTextBackground"
             android:layout_gravity="center"
             android:gravity="bottom"
@@ -113,8 +86,8 @@
             android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginBottom="5dp"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
             android:layout_gravity="center"
             >
 

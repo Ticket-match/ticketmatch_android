@@ -67,28 +67,28 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="20dp"/>
 
             <TextView
                 android:text="Fill in all information to register!"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:layout_marginTop="20dp"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textStyle="normal|bold"
                 android:alpha="0.54"/>
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="20dp"/>
+                android:layout_height="10dp"/>
 
             <EditText
                 android:layout_width="300dp"
                 android:layout_height="wrap_content"
                 android:inputType="text"
                 android:ems="10"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
                 android:id="@+id/register_firstname"
                 android:hint="First name"
                 android:layout_gravity="center"
@@ -100,6 +100,8 @@
                 android:layout_height="wrap_content"
                 android:inputType="text"
                 android:ems="10"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
                 android:id="@+id/register_lastname"
                 android:hint="Last name"
                 android:layout_gravity="center"
@@ -111,6 +113,8 @@
                 android:layout_height="wrap_content"
                 android:inputType="textEmailAddress"
                 android:ems="10"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
                 android:id="@+id/register_email"
                 android:hint="E-Mail"
                 android:layout_gravity="center"
@@ -121,6 +125,8 @@
                 android:layout_width="300dp"
                 android:layout_height="wrap_content"
                 android:ems="10"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
                 android:id="@+id/register_password"
                 android:hint="Password"
                 android:inputType="textPassword"
@@ -133,6 +139,8 @@
                 android:layout_height="wrap_content"
                 android:inputType="text"
                 android:ems="10"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
                 android:id="@+id/register_location"
                 android:hint="Location"
                 android:layout_gravity="center"
@@ -145,9 +153,12 @@
                 android:layout_width="300dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
                 android:id="@+id/register_birthdate"
-                android:layout_marginBottom="15dp"
-                android:layout_marginTop="10dp"
+                android:drawableRight="@android:drawable/ic_menu_today"
+                android:background="?attr/editTextBackground"
+                android:gravity="bottom"
                 android:onClick="register_birthdate"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:alpha="0.54"/>
@@ -157,8 +168,10 @@
                 android:layout_width="300dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
                 android:id="@+id/register_gender"
-                android:alpha="0.54"/>
+                android:alpha="0.38"/>
 
             <View
                 android:layout_width="match_parent"
@@ -182,6 +195,8 @@
                 android:layout_gravity="center"
                 android:onClick="btn_register"
                 android:alpha="0.54"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="5dp"
                 android:id="@+id/btn_register" />
 
         </LinearLayout>
