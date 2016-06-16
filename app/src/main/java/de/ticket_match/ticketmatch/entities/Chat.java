@@ -8,15 +8,25 @@ public class Chat {
     private String participant1;
     private String participant2;
     private ArrayList<HashMap<String,String>> messages;
+    private HashMap<String,String> lastMessage;
 
     public Chat(){
         // Default constructor required for calls to DataSnapshot.getValue(User.class)
     }
 
-    public Chat(String participant1, String participant2, ArrayList<HashMap<String,String>> messages) {
+    public Chat(String participant1, String participant2, ArrayList<HashMap<String,String>> messages, HashMap<String,String> lastMessage) {
         this.setParticipant1(participant1);
         this.setParticipant2(participant2);
         this.setMessages(messages);
+        this.setLastMessage(lastMessage);
+    }
+
+    public HashMap<String, String> getLastMessage() {
+        return lastMessage;
+    }
+
+    public void setLastMessage(HashMap<String, String> lastMessage) {
+        this.lastMessage = lastMessage;
     }
 
     public String getParticipant1() {

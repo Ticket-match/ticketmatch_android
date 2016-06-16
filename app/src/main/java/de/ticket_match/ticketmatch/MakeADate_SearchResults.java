@@ -114,7 +114,7 @@ public class MakeADate_SearchResults extends AppCompatActivity {
 
                                                 a.add(hm);
 
-                                                Chat chat = new Chat(FirebaseAuth.getInstance().getCurrentUser().getUid(), text.getUser(), a);
+                                                Chat chat = new Chat(FirebaseAuth.getInstance().getCurrentUser().getUid(), text.getUser(), a, hm);
                                                 mDatabase.child("chats").push().setValue(chat);
                                             } else{
 
@@ -140,9 +140,8 @@ public class MakeADate_SearchResults extends AppCompatActivity {
                                                 HashMap<String, Chat> key = chats.get(0);
                                                 Set<String> keys = key.keySet();
                                                 Chat chat = key.get(keys.toArray()[0]);
-                                                ArrayList<HashMap<String, String>> messages = chat.getMessages();
-                                                messages.add(hm);
-                                                mDatabase.child("chats").child((String)keys.toArray()[0]).child("messages").setValue(messages);
+                                                mDatabase.child("chats").child((String)keys.toArray()[0]).child("messages").child(String.valueOf(chat.getMessages().size())).setValue(hm);
+                                                mDatabase.child("chats").child((String)keys.toArray()[0]).child("lastMessage").setValue(hm);
                                             }
                                         }
 
@@ -175,9 +174,8 @@ public class MakeADate_SearchResults extends AppCompatActivity {
                                     HashMap<String, Chat> key = chats.get(0);
                                     Set<String> keys = key.keySet();
                                     Chat chat = key.get(keys.toArray()[0]);
-                                    ArrayList<HashMap<String, String>> messages = chat.getMessages();
-                                    messages.add(hm);
-                                    mDatabase.child("chats").child((String)keys.toArray()[0]).child("messages").setValue(messages);
+                                    mDatabase.child("chats").child((String)keys.toArray()[0]).child("messages").child(String.valueOf(chat.getMessages().size())).setValue(hm);
+                                    mDatabase.child("chats").child((String)keys.toArray()[0]).child("lastMessage").setValue(hm);
                                 }
                             }
 

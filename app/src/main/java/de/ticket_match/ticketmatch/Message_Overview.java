@@ -62,8 +62,7 @@ public class Message_Overview extends AppCompatActivity {
             View rowView = inflater.inflate(R.layout.listitem_messages, null);
 
             Chat chat = chats.get(position);
-            ArrayList<HashMap<String,String>> messages = chat.getMessages();
-            HashMap<String, String> message = messages.get(messages.size()-1);
+            HashMap<String, String> message = chat.getLastMessage();
             int text_length = 25;
 
             if(message.get("text").length() < text_length) {

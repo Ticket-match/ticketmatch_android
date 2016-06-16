@@ -96,11 +96,11 @@ public class Message_Chat extends AppCompatActivity {
 
             if (message.getAuthor().equals(myusername)) {
                 rowView = inflater.inflate(R.layout.listitem_message_chat_right, null);
-                ((TextView) rowView.findViewById(R.id.listitem_messagechat)).setText(message.getText() + "\n" + message.getAuthor());
+                ((TextView) rowView.findViewById(R.id.listitem_messagechat)).setText(message.getText());// + "\n" + message.getAuthor());
                 ((TextView) rowView.findViewById(R.id.listitem_messagechat_date)).setText(message.getTimestamp() + "\n" + message.getDate());
             } else {
                 rowView = inflater.inflate(R.layout.listitem_message_chat_left, null);
-                ((TextView) rowView.findViewById(R.id.listitem_messagechat)).setText(message.getText() + "\n" + message.getAuthor());
+                ((TextView) rowView.findViewById(R.id.listitem_messagechat)).setText(message.getText());// + "\n" + message.getAuthor());
                 ((TextView) rowView.findViewById(R.id.listitem_messagechat_date)).setText(message.getTimestamp() + "\n" + message.getDate());
             }
 
@@ -173,6 +173,7 @@ public class Message_Chat extends AppCompatActivity {
 
             Message m = new Message(((MainActivityTabHost)getParent()).baseBundle.getString("myprofile_name"),date,time,e.getText().toString());
             mDatabase.child("chats").child(check_old).child("messages").child(String.valueOf(messages.size())).setValue(m);
+            mDatabase.child("chats").child(check_old).child("lastMessage").setValue(m);
 
             e.setText("");
         }
