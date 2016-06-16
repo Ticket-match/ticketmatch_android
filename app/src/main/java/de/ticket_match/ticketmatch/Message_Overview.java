@@ -86,32 +86,47 @@ public class Message_Overview extends AppCompatActivity {
         mDatabase.child("chats").orderByChild("participant1").equalTo(FirebaseAuth.getInstance().getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                chats.clear();
-                chats_keys.clear();
-
                 for (DataSnapshot d:dataSnapshot.getChildren()) {
                     Chat chat = d.getValue(Chat.class);
-                    chats.add(chat);
-                    chats_keys.add(d.getKey());
+                    if (!chats_keys.contains(d.getKey())) {
+                        chats.add(chat);
+                        chats_keys.add(d.getKey());
+                    } else if(chats_keys.contains(d.getKey())) {
+                        Chat ref = chats.get(chats_keys.indexOf(d.getKey()));
+                        if (!chat.getLastMessage().get("text").equals(ref.getLastMessage().get("text"))) {
+                            chats.remove(chats_keys.indexOf(d.getKey()));
+                            chats.add(chats_keys.indexOf(d.getKey()), chat);
+                        }
+                    }
                 }
 
-                mDatabase.child("chats").orderByChild("participant2").equalTo(FirebaseAuth.getInstance().getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        for (DataSnapshot d:dataSnapshot.getChildren()) {
-                            Chat chat = d.getValue(Chat.class);
-                            chats.add(chat);
-                            chats_keys.add(d.getKey());
+                ((ChatListAdapter)((ListView)findViewById(R.id.messages_list)).getAdapter()).notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        mDatabase.child("chats").orderByChild("participant2").equalTo(FirebaseAuth.getInstance().getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot d:dataSnapshot.getChildren()) {
+                    Chat chat = d.getValue(Chat.class);
+                    if (!chats_keys.contains(d.getKey())) {
+                        chats.add(chat);
+                        chats_keys.add(d.getKey());
+                    } else if(chats_keys.contains(d.getKey())) {
+                        Chat ref = chats.get(chats_keys.indexOf(d.getKey()));
+                        if (!chat.getLastMessage().get("text").equals(ref.getLastMessage().get("text"))) {
+                            chats.remove(chats_keys.indexOf(d.getKey()));
+                            chats.add(chats_keys.indexOf(d.getKey()), chat);
                         }
-
-                        ((ChatListAdapter)((ListView)findViewById(R.id.messages_list)).getAdapter()).notifyDataSetChanged();
                     }
+                }
 
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
-                    }
-                });
+                ((ChatListAdapter)((ListView)findViewById(R.id.messages_list)).getAdapter()).notifyDataSetChanged();
             }
 
             @Override
