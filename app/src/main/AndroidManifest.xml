@@ -62,22 +62,10 @@
             android:name=".NewOffer"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Offer_Detail"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".Find"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Find_Vendor"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".Message_Vendor"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".MakeADate"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".MakeADate_Detail"
             android:screenOrientation="portrait" />
         <activity
             android:name=".Search_MakeADate"
@@ -87,9 +75,6 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".MakeADate_SearchResults"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".MakeADateResults_Message"
             android:screenOrientation="portrait" />
         <activity
             android:name=".MainActivityTabHost"

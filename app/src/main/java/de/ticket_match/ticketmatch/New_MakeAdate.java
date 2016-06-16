@@ -83,6 +83,11 @@ public class New_MakeAdate extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onBackPressed() {
+        getParent().onBackPressed();
+    }
+
     public void btn_new_makeadate(View view){
 
         //check if all values are entered, if yes save data in database and delete input fields

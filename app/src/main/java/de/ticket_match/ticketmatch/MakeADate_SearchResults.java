@@ -98,7 +98,7 @@ public class MakeADate_SearchResults extends AppCompatActivity {
 
                                                 //get actual Date
                                                 final Calendar c = Calendar.getInstance();
-                                                String date = "" + c.get(Calendar.DAY_OF_MONTH) + "." + c.get(Calendar.MONTH) + "." + c.get(Calendar.YEAR);
+                                                String date = "" + c.get(Calendar.DAY_OF_MONTH) + "." + (c.get(Calendar.MONTH)+1) + "." + c.get(Calendar.YEAR);
 
                                                 //get actual Time, if hours are less than 10 a zero will be added
                                                 final String time;
@@ -123,7 +123,7 @@ public class MakeADate_SearchResults extends AppCompatActivity {
 
                                                 //get actual Date
                                                 final Calendar c = Calendar.getInstance();
-                                                String date = "" + c.get(Calendar.DAY_OF_MONTH) + "." + c.get(Calendar.MONTH) + "." + c.get(Calendar.YEAR);
+                                                String date = "" + c.get(Calendar.DAY_OF_MONTH) + "." + (c.get(Calendar.MONTH)+1) + "." + c.get(Calendar.YEAR);
 
                                                 //get actual Time, if hours are less than 10 a zero will be added
                                                 final String time;
@@ -158,7 +158,7 @@ public class MakeADate_SearchResults extends AppCompatActivity {
 
                                     //get actual Date
                                     final Calendar c = Calendar.getInstance();
-                                    String date = "" + c.get(Calendar.DAY_OF_MONTH) + "." + c.get(Calendar.MONTH) + "." + c.get(Calendar.YEAR);
+                                    String date = "" + c.get(Calendar.DAY_OF_MONTH) + "." + (c.get(Calendar.MONTH)+1) + "." + c.get(Calendar.YEAR);
 
                                     //get actual Time, if hours are less than 10 a zero will be added
                                     final String time;
@@ -202,6 +202,11 @@ public class MakeADate_SearchResults extends AppCompatActivity {
             }
         });
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        getParent().onBackPressed();
     }
 
     public static class CustomAdapter extends BaseAdapter {

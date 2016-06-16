@@ -82,6 +82,11 @@ public class ForeignProfileRating extends AppCompatActivity {
         ((ListView) findViewById(R.id.foreignprofile_ratings)).setAdapter(new RatingListAdapter(this, ratings_list));
     }
 
+    @Override
+    public void onBackPressed() {
+        getParent().onBackPressed();
+    }
+
     public void updateFRating(ArrayList<HashMap<String,String>> ratings) {
         ratings_list.clear();
         for (HashMap<String,String> h :ratings) {

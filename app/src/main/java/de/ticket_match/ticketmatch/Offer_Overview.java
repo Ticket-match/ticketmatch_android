@@ -115,6 +115,11 @@ public class Offer_Overview extends AppCompatActivity {
         });
     }
 
+    @Override
+    public void onBackPressed() {
+        getParent().onBackPressed();
+    }
+
     public void btn_newoffer (View view){
         ((TabHost)getParent().findViewById(R.id.tabHost)).setCurrentTabByTag("tickets_newoffer");
     }

@@ -110,6 +110,11 @@ public class MakeADate extends AppCompatActivity {
         });
     }
 
+    @Override
+    public void onBackPressed() {
+        getParent().onBackPressed();
+    }
+
     public void btn_find_makeadate(View view){
         ((TabHost)getParent().findViewById(R.id.tabHost)).setCurrentTabByTag("makeadate_search");
 

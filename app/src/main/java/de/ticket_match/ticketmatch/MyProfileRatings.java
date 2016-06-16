@@ -61,4 +61,9 @@ public class MyProfileRatings extends AppCompatActivity {
         ArrayList<HashMap<String,String>> ratings_list = (ArrayList<HashMap<String,String>>)((MainActivityTabHost)getParent()).baseBundle.getSerializable("myprofile_ratings");
         ((ListView) findViewById(R.id.myprofile_ratings)).setAdapter(new RatingListAdapter(this, ratings_list));
     }
+
+    @Override
+    public void onBackPressed() {
+        getParent().onBackPressed();
+    }
 }

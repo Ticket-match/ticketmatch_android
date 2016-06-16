@@ -91,6 +91,11 @@ public class NewOffer extends AppCompatActivity {
         });
     }
 
+    @Override
+    public void onBackPressed() {
+        getParent().onBackPressed();
+    }
+
     //if ticket is for free price enter field is hided
     public void cb_clicked(View view){
 

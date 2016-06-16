@@ -20,6 +20,7 @@ import com.google.firebase.auth.FirebaseUser;
 public class MainActivity extends AppCompatActivity {
     private final String TAG = "MainActivity";
     FirebaseAuth mAuth;
+    FirebaseAuth.AuthStateListener mAuthListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         mAuth = FirebaseAuth.getInstance();
-        mAuth.addAuthStateListener(new FirebaseAuth.AuthStateListener() {
+        mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
@@ -37,7 +38,15 @@ public class MainActivity extends AppCompatActivity {
                     startActivity(maintab);
                 }
             }
-        });
+        };
+        mAuth.addAuthStateListener(mAuthListener);
+    }
+
+    @Override
+    public void onBackPressed() {
+        mAuth.removeAuthStateListener(mAuthListener);
+        finish();
+        System.exit(0);
     }
 
     //delete email and password input fields

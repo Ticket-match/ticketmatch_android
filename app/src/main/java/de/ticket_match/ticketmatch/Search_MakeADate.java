@@ -62,6 +62,11 @@ public class Search_MakeADate extends AppCompatActivity {
         });
         }
 
+    @Override
+    public void onBackPressed() {
+        getParent().onBackPressed();
+    }
+
     public void btn_search_makeadate(View view){
 
         //check if all values are entered, if yes save data in database and delete input fields

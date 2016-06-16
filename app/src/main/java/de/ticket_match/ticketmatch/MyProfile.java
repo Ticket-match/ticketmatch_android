@@ -156,20 +156,12 @@ public class MyProfile extends AppCompatActivity {
                 return true;
             }
         });
-
-
-        // TODO: Check if the app works on all devices
-        /*if(savedInstanceState!=null){
-            ((ImageButton)findViewById(R.id.myprofile_image)).setImageBitmap((Bitmap)savedInstanceState.getParcelable("myprofile_image"));
-        }*/
     }
 
-    /*@Override
-    protected void onSaveInstanceState(Bundle outState) {
-        Bitmap bm = ((BitmapDrawable)((ImageButton)findViewById(R.id.myprofile_image)).getDrawable()).getBitmap();
-        outState.putParcelable("myprofile_image", bm);
-        super.onSaveInstanceState(outState);
-    }*/
+    @Override
+    public void onBackPressed() {
+        getParent().onBackPressed();
+    }
 
     // method for deleting an interest
     public void btn_listitem_delete(View view) {

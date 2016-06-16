@@ -138,4 +138,9 @@ public class Message_Overview extends AppCompatActivity {
             }
         });
     }
+
+    @Override
+    public void onBackPressed() {
+        getParent().onBackPressed();
+    }
 }

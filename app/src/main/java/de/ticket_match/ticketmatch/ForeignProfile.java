@@ -106,6 +106,11 @@ public class ForeignProfile extends AppCompatActivity {
         });
     }
 
+    @Override
+    public void onBackPressed() {
+        getParent().onBackPressed();
+    }
+
     public void updateFProfile(String key) {
         mDatabase.child("users").child(key).addListenerForSingleValueEvent(
                 new ValueEventListener() {

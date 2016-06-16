@@ -61,6 +61,11 @@ public class Ticket_Search extends AppCompatActivity {
 
     }
 
+    @Override
+    public void onBackPressed() {
+        getParent().onBackPressed();
+    }
+
     //check if all values are entered, if yes save data in database and delete input fields
     public void btn_searchticket(View view){
         tickets.clear();
