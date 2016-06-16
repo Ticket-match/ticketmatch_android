@@ -123,6 +123,16 @@ public class MyProfile extends AppCompatActivity {
                         } else {
                             user.setRatings(new ArrayList<HashMap<String, String>>(0));
                         }
+
+                        //get profile picture from database with a size of maximum 512KB
+                        mStorage.child("images/"+FirebaseAuth.getInstance().getCurrentUser().getUid()+".jpg").getBytes(512*1024).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                            @Override
+                            public void onSuccess(byte[] bytes) {
+                                Bitmap bm = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                                ((ImageButton)findViewById(R.id.myprofile_image)).setImageBitmap(bm);
+                            }
+                        });
+
                         ((MainActivityTabHost)getParent()).baseBundle.putString("myprofile_name", user.getFirstName() + " " + user.getLastName());
                     }
                     @Override
@@ -130,15 +140,6 @@ public class MyProfile extends AppCompatActivity {
                         //Log.w("MyProfile", "getUser:onCancelled", databaseError.toException());
                     }
                 });
-
-        //get profile picture from database with a size of maximum 512KB
-        mStorage.child("images/"+FirebaseAuth.getInstance().getCurrentUser().getUid()+".jpg").getBytes(512*1024).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-            @Override
-            public void onSuccess(byte[] bytes) {
-                Bitmap bm = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                ((ImageButton)findViewById(R.id.myprofile_image)).setImageBitmap(bm);
-            }
-        });
 
         //for Ratingbar: if onclicked --> got to screen myprofile_ratings
         ((RatingBar)findViewById(R.id.myprofile_rating)).setOnTouchListener(new View.OnTouchListener() {

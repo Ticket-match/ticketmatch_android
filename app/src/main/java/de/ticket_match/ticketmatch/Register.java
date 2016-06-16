@@ -97,14 +97,18 @@ public class Register extends AppCompatActivity {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
-                                mDatabase.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(user);
-
                                 //TODO: Change R.drawable.contacts in correct image
                                 Bitmap bm = BitmapFactory.decodeResource(getResources(), R.drawable.contacts);
                                 ByteArrayOutputStream bytes = new ByteArrayOutputStream();
                                 bm.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
                                 byte[] ba = bytes.toByteArray();
                                 mStorage.child("images/" + FirebaseAuth.getInstance().getCurrentUser().getUid() + ".jpg").putBytes(ba);
+                                mDatabase.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(user);
+                                try{
+                                    Thread.sleep(1000);
+                                } catch (Exception e) {
+
+                                }
                             } else {
                                 progressDialog.dismiss();
                                 Toast.makeText(getApplicationContext(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();

@@ -12,6 +12,7 @@ import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TabHost;
 import android.widget.TextView;
@@ -130,8 +131,8 @@ public class New_MakeAdate extends AppCompatActivity {
             }
 
             Toast.makeText(getApplicationContext(), "Your date is registered!", Toast.LENGTH_SHORT).show();
-
             ((TabHost) getParent().findViewById(R.id.tabHost)).setCurrentTabByTag("makeadate");
+            ((MakeADate.DateListAdapter)(((ListView)((TabHost)getParent().findViewById(R.id.tabHost)).getCurrentView().findViewById(R.id.listview_makeadate)).getAdapter())).notifyDataSetChanged();
         }
 
     }
