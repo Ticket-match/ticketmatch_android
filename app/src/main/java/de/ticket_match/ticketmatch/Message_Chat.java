@@ -137,7 +137,7 @@ public class Message_Chat extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 User f = dataSnapshot.getValue(User.class);
-                ((TextView)findViewById(R.id.chat_with_name)).setText("You currently chat with " + f.getFirstName() + " " + f.getLastName());
+                ((TextView)findViewById(R.id.chat_with_name)).setText("Chatting with " + f.getFirstName() + " " + f.getLastName());
             }
 
             @Override
