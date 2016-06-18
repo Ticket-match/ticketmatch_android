@@ -181,7 +181,6 @@ public class MakeADate_SearchResults extends AppCompatActivity {
 
                             @Override
                             public void onCancelled(DatabaseError databaseError) {
-                                System.out.println("Cancel");
                             }
                         });
 

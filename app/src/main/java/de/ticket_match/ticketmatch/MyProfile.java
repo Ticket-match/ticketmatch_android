@@ -232,9 +232,8 @@ public class MyProfile extends AppCompatActivity {
                         }
                         return true;
                     case R.id.delete_photo:
-                        //TODO: Change R.drawable.contacts in correct image
-                        ((ImageButton)findViewById(R.id.myprofile_image)).setImageResource(R.drawable.contacts);
-                        Bitmap bm = BitmapFactory.decodeResource(getResources(),R.drawable.contacts);
+                        ((ImageButton)findViewById(R.id.myprofile_image)).setImageResource(R.drawable.profilbild);
+                        Bitmap bm = BitmapFactory.decodeResource(getResources(),R.drawable.profilbild);
                         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
                         bm.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
                         byte [] ba = bytes.toByteArray();

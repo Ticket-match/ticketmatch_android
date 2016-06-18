@@ -2,12 +2,12 @@ package de.ticket_match.ticketmatch;
 
 import android.app.LocalActivityManager;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -17,7 +17,6 @@ import android.widget.PopupMenu;
 import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -25,15 +24,32 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 public class MainActivityTabHost extends AppCompatActivity {
-    private static final String TAG = "MainActivityTabHost";
     Bundle baseBundle = new Bundle();
     private StorageReference mStorage = FirebaseStorage.getInstance().getReference();
     TabHost th;
+    Intent mServiceIntent;
+    MessageNotifications mn;
+    SharedPreferences settings;
+    SharedPreferences.Editor editor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_activity_tab_host);
+
+        settings = getSharedPreferences("TicketMatch", 0);
+        editor = settings.edit();
+        editor.putString("UID", FirebaseAuth.getInstance().getCurrentUser().getUid());
+        editor.commit();
+
+        if (MessageNotifications.getInstance() == null) {
+            //Send work request to the MessageNotification class
+            mServiceIntent = new Intent(this, MessageNotifications.class);
+            // Starts the IntentService: MessageNotification
+            startService(mServiceIntent);
+        } else {
+            mn = MessageNotifications.getInstance();
+        }
 
         // TabHost Setup
         th = (TabHost)findViewById(R.id.tabHost);
@@ -264,6 +280,15 @@ public class MainActivityTabHost extends AppCompatActivity {
                         startActivity(changepassword);
                         return true;
                     case R.id.logout:
+                        //stops IntentService: MessageNotifications
+                        if (mn != null) {
+                            mn.stopSelf();
+                        } else {
+                            stopService(mServiceIntent);
+                        }
+                        editor.remove("UID");
+                        editor.commit();
+                        // Firebase Logout
                         FirebaseAuth.getInstance().signOut();
                         Intent mainActivity = new Intent(getApplicationContext(), MainActivity.class);
                         mainActivity.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

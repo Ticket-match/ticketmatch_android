@@ -64,12 +64,12 @@ public class Message_Overview extends AppCompatActivity {
             Chat chat = chats.get(position);
             HashMap<String, String> message = chat.getLastMessage();
             int text_length = 25;
-
-            if(message.get("text").length() < text_length) {
-                text_length = message.get("text").length();
+            String text = message.get("text");
+            if(text.length() > text_length) {
+                text = text.substring(0,text_length) + " ...";
             }
             String date_time = message.get("date") + "\n" + message.get("timestamp");
-            String name_text = message.get("author") + "\n" + message.get("text").substring(0,text_length) + "...";
+            String name_text = message.get("author") + "\n" + text;
 
             ((TextView) rowView.findViewById(R.id.listitem_messages_name_text)).setText(name_text);
             ((TextView) rowView.findViewById(R.id.listitem_messages_date_time)).setText(date_time);

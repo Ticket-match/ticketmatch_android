@@ -4,6 +4,4 @@
         android:title="Change Password" />
     <item android:id="@+id/logout"
         android:title="Logout" />
-    <!-- <item android:id="@+id/foreign_profile_debug"
-        android:title="Foreign Profile" /> -->
     </menu>

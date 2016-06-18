@@ -180,7 +180,6 @@ public class Find extends AppCompatActivity {
 
                             @Override
                             public void onCancelled(DatabaseError databaseError) {
-                                System.out.println("Cancel");
                             }
                         });
 
