@@ -14,6 +14,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
 import java.util.HashMap;
 import de.ticket_match.ticketmatch.entities.Chat;
 import de.ticket_match.ticketmatch.entities.User;
@@ -21,6 +23,7 @@ import de.ticket_match.ticketmatch.entities.User;
 public class MessageNotifications extends Service {
     SharedPreferences settings;
     private static MessageNotifications instance = null;
+    private static boolean check = false;
 
     public static MessageNotifications getInstance() {
         return instance;
@@ -68,24 +71,29 @@ public class MessageNotifications extends Service {
 
                         @Override
                         public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                            Chat c = dataSnapshot.getValue(Chat.class);
-                            HashMap<String, String> hm = c.getLastMessage();
-                            if (!hm.get("author").equals(name)) {
-                                int text_length = 25;
-                                String text = hm.get("text");
-                                if (text.length() > text_length) {
-                                    text = text.substring(0, text_length) + " ...";
-                                }
-                                NotificationCompat.Builder mBuilder =
-                                        new NotificationCompat.Builder(getApplicationContext())
-                                                .setSmallIcon(R.mipmap.ic_launcher)
-                                                .setColor(getResources().getColor(R.color.bgColor))
-                                                .setContentTitle(hm.get("author"))
-                                                .setContentText(text);
+                            if (check) {
+                                Chat c = dataSnapshot.getValue(Chat.class);
+                                HashMap<String, String> hm = c.getLastMessage();
+                                if (!hm.get("author").equals(name)) {
+                                    int text_length = 25;
+                                    String text = hm.get("text");
+                                    if (text.length() > text_length) {
+                                        text = text.substring(0, text_length) + " ...";
+                                    }
+                                    NotificationCompat.Builder mBuilder =
+                                            new NotificationCompat.Builder(getApplicationContext())
+                                                    .setSmallIcon(R.mipmap.ic_launcher)
+                                                    .setColor(getResources().getColor(R.color.bgColor))
+                                                    .setContentTitle(hm.get("author"))
+                                                    .setContentText(text);
 
-                                NotificationManager mNotificationManager =
-                                        (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-                                mNotificationManager.notify(0, mBuilder.build());
+                                    NotificationManager mNotificationManager =
+                                            (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                                    mNotificationManager.notify(0, mBuilder.build());
+                                }
+                                check = false;
+                            } else {
+                                check = true;
                             }
                         }
 
@@ -113,25 +121,29 @@ public class MessageNotifications extends Service {
 
                         @Override
                         public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                            Chat c = dataSnapshot.getValue(Chat.class);
-                            HashMap<String, String> hm = c.getLastMessage();
-                            if (!hm.get("author").equals(name)) {
-                                int text_length = 25;
-                                String text = hm.get("text");
-                                if (text.length() > text_length) {
-                                    text = text.substring(0, text_length) + " ...";
+                            if (check) {
+                                Chat c = dataSnapshot.getValue(Chat.class);
+                                HashMap<String, String> hm = c.getLastMessage();
+                                if (!hm.get("author").equals(name)) {
+                                    int text_length = 25;
+                                    String text = hm.get("text");
+                                    if (text.length() > text_length) {
+                                        text = text.substring(0, text_length) + " ...";
+                                    }
+                                    NotificationCompat.Builder mBuilder =
+                                            new NotificationCompat.Builder(getApplicationContext())
+                                                    .setSmallIcon(R.mipmap.ic_launcher)
+                                                    .setColor(getResources().getColor(R.color.bgColor))
+                                                    .setContentTitle(hm.get("author"))
+                                                    .setContentText(text);
+
+                                    NotificationManager mNotificationManager =
+                                            (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                                    mNotificationManager.notify(0, mBuilder.build());
                                 }
-                                NotificationCompat.Builder mBuilder =
-                                        new NotificationCompat.Builder(getApplicationContext())
-                                                .setSmallIcon(R.mipmap.ic_launcher)
-                                                .setColor(getResources().getColor(R.color.bgColor))
-                                                .setContentTitle(hm.get("author"))
-                                                .setContentText(text);
-
-                                NotificationManager mNotificationManager =
-                                        (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-                                mNotificationManager.notify(0, mBuilder.build());
-
+                                check = false;
+                            } else {
+                                check = true;
                             }
                         }
 
