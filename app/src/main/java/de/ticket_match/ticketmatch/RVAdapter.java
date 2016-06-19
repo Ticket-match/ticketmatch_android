@@ -143,8 +143,4 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.ChatViewHolder>{
     public void onAttachedToRecyclerView(RecyclerView recyclerView) {
         super.onAttachedToRecyclerView(recyclerView);
     }
-
-
-
-
 }
