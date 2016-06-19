@@ -12,6 +12,7 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -142,6 +143,7 @@ public class MakeADate_SearchResults extends AppCompatActivity {
                                                 Chat chat = key.get(keys.toArray()[0]);
                                                 mDatabase.child("chats").child((String)keys.toArray()[0]).child("messages").child(String.valueOf(chat.getMessages().size())).setValue(hm);
                                                 mDatabase.child("chats").child((String)keys.toArray()[0]).child("lastMessage").setValue(hm);
+                                                Toast.makeText(getApplicationContext(), "You sent a request to join the date!", Toast.LENGTH_SHORT).show();
                                             }
                                         }
 
@@ -176,6 +178,7 @@ public class MakeADate_SearchResults extends AppCompatActivity {
                                     Chat chat = key.get(keys.toArray()[0]);
                                     mDatabase.child("chats").child((String)keys.toArray()[0]).child("messages").child(String.valueOf(chat.getMessages().size())).setValue(hm);
                                     mDatabase.child("chats").child((String)keys.toArray()[0]).child("lastMessage").setValue(hm);
+                                    Toast.makeText(getApplicationContext(), "You sent a request to join the date!", Toast.LENGTH_SHORT).show();;
                                 }
                             }
 

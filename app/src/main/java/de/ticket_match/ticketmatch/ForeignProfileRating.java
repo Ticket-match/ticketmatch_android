@@ -127,6 +127,8 @@ public class ForeignProfileRating extends AppCompatActivity {
             //String rt = "me|" + new SimpleDateFormat("dd.MM.yyyy").format(new Date()) + "|" + rating_text;
             ((EditText)findViewById(R.id.newrating_text)).setText("");
             ((RatingBar)findViewById(R.id.newrating_stars)).setRating(0);
+
+            Toast.makeText(getApplicationContext(), "Rated successfully!", Toast.LENGTH_SHORT).show();
         }
 
     }

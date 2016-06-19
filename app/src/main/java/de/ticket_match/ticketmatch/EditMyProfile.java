@@ -154,6 +154,8 @@ public class EditMyProfile extends AppCompatActivity {
                 InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(aview.getWindowToken(), 0);
             }
+
+            Toast.makeText(getApplicationContext(), "Profile edited successfully!", Toast.LENGTH_SHORT).show();
         }
     }
 

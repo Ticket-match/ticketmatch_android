@@ -12,6 +12,7 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -115,6 +116,7 @@ public class Find extends AppCompatActivity {
 
                                                     Chat chat = new Chat(FirebaseAuth.getInstance().getCurrentUser().getUid(), text.getUser(), a, hm);
                                                     mDatabase.child("chats").push().setValue(chat);
+                                                    Toast.makeText(getApplicationContext(), "You sent a request to buy the ticket!", Toast.LENGTH_SHORT).show();
                                                 } else{
 
                                                     HashMap<String, String> hm = new HashMap<String, String>(0);
@@ -141,6 +143,7 @@ public class Find extends AppCompatActivity {
                                                     Chat chat = key.get(keys.toArray()[0]);
                                                     mDatabase.child("chats").child((String)keys.toArray()[0]).child("messages").child(String.valueOf(chat.getMessages().size())).setValue(hm);
                                                     mDatabase.child("chats").child((String)keys.toArray()[0]).child("lastMessage").setValue(hm);
+                                                    Toast.makeText(getApplicationContext(), "You sent a request to buy the ticket!", Toast.LENGTH_SHORT).show();
                                                 }
                                             }
 
@@ -175,6 +178,7 @@ public class Find extends AppCompatActivity {
                                     Chat chat = key.get(keys.toArray()[0]);
                                     mDatabase.child("chats").child((String)keys.toArray()[0]).child("messages").child(String.valueOf(chat.getMessages().size())).setValue(hm);
                                     mDatabase.child("chats").child((String)keys.toArray()[0]).child("lastMessage").setValue(hm);
+                                    Toast.makeText(getApplicationContext(), "You sent a request to buy the ticket!", Toast.LENGTH_SHORT).show();
                                 }
                                 }
 
