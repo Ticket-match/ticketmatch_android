@@ -42,6 +42,7 @@ import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import de.ticket_match.ticketmatch.entities.Chat;
 import de.ticket_match.ticketmatch.entities.User;
 
 public class MyProfile extends AppCompatActivity {
@@ -157,6 +158,41 @@ public class MyProfile extends AppCompatActivity {
                 return true;
             }
         });
+
+
+
+        mDatabase.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                    user = dataSnapshot.getValue(User.class);
+                    TicketMatch.setCurrentUser(user);
+                    ((TextView) findViewById(R.id.myprofile_name)).setText(user.getFirstName() + " " + user.getLastName());
+                    ((TextView) findViewById(R.id.myprofile_gender_age)).setText(user.getGender() + " " + user.getBirthday());
+                    ((TextView) findViewById(R.id.myprofile_location)).setText(user.getLocation());
+                    if (user.getInterests()!= null) {
+                        if (user.getInterests().size()!=0) {
+                            ((ListView) findViewById(R.id.myprofile_interests)).setAdapter(new InterestListAdapter(that, user.getInterests()));
+                        }
+                    } else {
+                        user.setInterests(new ArrayList<String>(0));
+                        ((ListView) findViewById(R.id.myprofile_interests)).setAdapter(new InterestListAdapter(that, user.getInterests()));
+                    }
+
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+    }
+
+    //Load Tab Edit MyProfile
+    public void editProfile(View view){
+        ((TabHost)getParent().findViewById(R.id.tabHost)).setCurrentTabByTag("edit_myprofile");
     }
 
     @Override
@@ -247,7 +283,5 @@ public class MyProfile extends AppCompatActivity {
 
         popup.show();
     }
-
-
 
 }
