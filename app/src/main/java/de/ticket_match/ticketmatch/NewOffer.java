@@ -129,7 +129,7 @@ public class NewOffer extends AppCompatActivity {
         price_currency.put("currency", currency);
 
         if(eventname.equals("") | eventlocation.equals("") | numberoftickets.equals("") | date.equals("Date") | (price.equals("") & free | time.equals("Time"))){
-            Toast.makeText(getApplicationContext(),"Please fill out the requiered information!",Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(),"Please fill out the required information!",Toast.LENGTH_SHORT).show();
         }
         else {
             // Create ticket in database

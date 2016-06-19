@@ -104,7 +104,7 @@ public class New_MakeAdate extends AppCompatActivity {
         String swithwoman = (withwoman?"true": "false");
 
         if(date.equals("Date") | time.equals("Time") | name.equals("") | location.equals("")){
-            Toast.makeText(getApplicationContext(),"Please fill out the requiered information!",Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(),"Please fill out the required information!",Toast.LENGTH_SHORT).show();
         }
         else {
             // Create ticket in database
