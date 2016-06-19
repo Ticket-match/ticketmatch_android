@@ -6,6 +6,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,6 +35,86 @@ import java.util.HashMap;
 import de.ticket_match.ticketmatch.entities.Chat;
 import de.ticket_match.ticketmatch.entities.User;
 
+public class Message_Overview extends AppCompatActivity {
+
+    private static DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
+    private static StorageReference mStorage = FirebaseStorage.getInstance().getReference();
+    private ArrayList<Chat> chats = new ArrayList<Chat>(0);
+    private ArrayList<String> chats_keys = new ArrayList<String>(0);
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_message__overview);
+
+
+        final RecyclerView rv = (RecyclerView) findViewById(R.id.messages_list);
+        LinearLayoutManager llm = new LinearLayoutManager(this);
+        rv.setLayoutManager(llm);
+
+        //Added this for activity
+        final RVAdapter adapter = new RVAdapter(chats, this, chats_keys);
+        rv.setAdapter(adapter);
+
+        mDatabase.child("chats").orderByChild("participant1").equalTo(FirebaseAuth.getInstance().getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot d:dataSnapshot.getChildren()) {
+                    Chat chat = d.getValue(Chat.class);
+                    if (!chats_keys.contains(d.getKey())) {
+                        chats.add(chat);
+                        chats_keys.add(d.getKey());
+                    } else if(chats_keys.contains(d.getKey())) {
+                        Chat ref = chats.get(chats_keys.indexOf(d.getKey()));
+                        if (!chat.getLastMessage().get("text").equals(ref.getLastMessage().get("text"))) {
+                            chats.remove(chats_keys.indexOf(d.getKey()));
+                            chats.add(chats_keys.indexOf(d.getKey()), chat);
+                        }
+                    }
+                }
+                adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        mDatabase.child("chats").orderByChild("participant2").equalTo(FirebaseAuth.getInstance().getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot d:dataSnapshot.getChildren()) {
+                    Chat chat = d.getValue(Chat.class);
+                    if (!chats_keys.contains(d.getKey())) {
+                        chats.add(chat);
+                        chats_keys.add(d.getKey());
+                    } else if(chats_keys.contains(d.getKey())) {
+                        Chat ref = chats.get(chats_keys.indexOf(d.getKey()));
+                        if (!chat.getLastMessage().get("text").equals(ref.getLastMessage().get("text"))) {
+                            chats.remove(chats_keys.indexOf(d.getKey()));
+                            chats.add(chats_keys.indexOf(d.getKey()), chat);
+                        }
+                    }
+                }
+                adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    @Override
+    public void onBackPressed() {
+        getParent().onBackPressed();
+    }
+}
+
+
+/*
 public class Message_Overview extends AppCompatActivity {
 
     private static DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
@@ -198,4 +280,5 @@ public class Message_Overview extends AppCompatActivity {
     public void onBackPressed() {
         getParent().onBackPressed();
     }
-}
+}*/
+
