@@ -88,21 +88,39 @@
                 android:inputType="text"
                 android:hint="Your Message"
                 android:ems="10"
+                android:layout_gravity="bottom"
                 android:id="@+id/messageInput"
                 android:layout_weight="1"
                 android:alpha="0.54"
                 />
 
-            <Button
+           <!-- <Button
                 android:text="Send"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/send_message"
                 android:alpha="0.54"
                 android:onClick="btn_send_message"
-                />
+                />-->
+            <android.support.design.widget.FloatingActionButton
+                android:id="@+id/fab_send_message"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|right"
+                android:layout_marginRight="10dp"
+                android:layout_marginBottom="10dp"
+                android:src="@drawable/ic_send_white_24dp"
+                app:elevation="3dp"
+                android:onClick="btn_send_message"
+                app:backgroundTint="#FFAB00"
+                android:clickable="true"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"/>
+
         </LinearLayout>
 
     </LinearLayout>
+
+
 
 </android.widget.RelativeLayout>
