@@ -74,7 +74,7 @@ public class MainActivityTabHost extends AppCompatActivity {
         // Tab "Messages"
         TabHost.TabSpec ts2 = th.newTabSpec("messages");
         View ts2Ind = getLayoutInflater().inflate(R.layout.activity_main_activity_tab_indicator, th.getTabWidget(), false);
-        ((TextView) ts2Ind.findViewById(android.R.id.title)).setText("Messages");
+        ((TextView) ts2Ind.findViewById(android.R.id.title)).setText("My Messages");
         ((ImageView) ts2Ind.findViewById(android.R.id.icon)).setImageResource(R.drawable.message);
         ts2.setIndicator(ts2Ind);
         ts2.setContent(new Intent(this, Message_Overview.class));
@@ -88,7 +88,7 @@ public class MainActivityTabHost extends AppCompatActivity {
         // Tab "Tickets"
         TabHost.TabSpec ts3 = th.newTabSpec("tickets");
         View ts3Ind = getLayoutInflater().inflate(R.layout.activity_main_activity_tab_indicator, th.getTabWidget(), false);
-        ((TextView) ts3Ind.findViewById(android.R.id.title)).setText("Tickets");
+        ((TextView) ts3Ind.findViewById(android.R.id.title)).setText("My Tickets");
         ((ImageView) ts3Ind.findViewById(android.R.id.icon)).setImageResource(R.drawable.ticket);
         ts3.setIndicator(ts3Ind);
         ts3.setContent(new Intent(this, Offer_Overview.class));
@@ -114,7 +114,7 @@ public class MainActivityTabHost extends AppCompatActivity {
         // Tab "Make A Date"
         TabHost.TabSpec ts5 = th.newTabSpec("makeadate");
         View ts5Ind = getLayoutInflater().inflate(R.layout.activity_main_activity_tab_indicator, th.getTabWidget(), false);
-        ((TextView) ts5Ind.findViewById(android.R.id.title)).setText("Make A Date");
+        ((TextView) ts5Ind.findViewById(android.R.id.title)).setText("My Dates");
         ((ImageView) ts5Ind.findViewById(android.R.id.icon)).setImageResource(R.drawable.group);
         ts5.setIndicator(ts5Ind);
         ts5.setContent(new Intent(this, MakeADate.class));
@@ -155,6 +155,11 @@ public class MainActivityTabHost extends AppCompatActivity {
         ts19.setIndicator(ts19Ind);
         ts19.setContent(new Intent(this, EditMyProfile.class));
 
+        TabHost.TabSpec ts20 = th.newTabSpec("change_password");
+        View ts20Ind = getLayoutInflater().inflate(R.layout.activity_main_activity_tab_indicator_inv, th.getTabWidget(), false);
+        ts20.setIndicator(ts20Ind);
+        ts20.setContent(new Intent(this, ChangePassword.class));
+
         // Add Tabs to TabHost
         th.addTab(ts1);
         th.addTab(ts2);
@@ -171,42 +176,45 @@ public class MainActivityTabHost extends AppCompatActivity {
         th.addTab(ts17);
         th.addTab(ts18);
         th.addTab(ts19);
+        th.addTab(ts20);
 
         //Listener for tabchange so that header title can be changed
         th.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
             @Override
             public void onTabChanged(String tabId) {
                 if(tabId.equals("myprofile")) {
-                    ((TextView)findViewById(R.id.headerTitle)).setText("My Profile");
+                    ((TextView)findViewById(R.id.headerTitle)).setText("My profile");
                 } else if(tabId.equals("messages")) {
-                    ((TextView)findViewById(R.id.headerTitle)).setText("Messages");
+                    ((TextView)findViewById(R.id.headerTitle)).setText("My messages");
                 } else if(tabId.equals("tickets")) {
-                    ((TextView)findViewById(R.id.headerTitle)).setText("Tickets");
+                    ((TextView)findViewById(R.id.headerTitle)).setText("My tickets");
                 } else if(tabId.equals("search")) {
-                    ((TextView)findViewById(R.id.headerTitle)).setText("Search Results");
+                    ((TextView)findViewById(R.id.headerTitle)).setText("Search results");
                 } else if(tabId.equals("makeadate")) {
-                    ((TextView)findViewById(R.id.headerTitle)).setText("Make a date");
+                    ((TextView)findViewById(R.id.headerTitle)).setText("My dates");
                 } else if(tabId.equals("myprofile_ratings")) {
-                    ((TextView)findViewById(R.id.headerTitle)).setText("My Ratings");
+                    ((TextView)findViewById(R.id.headerTitle)).setText("My ratings");
                 } else if(tabId.equals("messages_chat")) {
                     ((TextView)findViewById(R.id.headerTitle)).setText("Chat");
                 } else if(tabId.equals("tickets_newoffer")) {
                     ((TextView)findViewById(R.id.headerTitle)).setText("Offer your ticket");
                 } else if(tabId.equals("makeadate_new")) {
-                    ((TextView)findViewById(R.id.headerTitle)).setText("Make a new date");
+                    ((TextView)findViewById(R.id.headerTitle)).setText("Create a new date");
                 } else if(tabId.equals("makeadate_search")) {
-                    ((TextView)findViewById(R.id.headerTitle)).setText("Search a date");
+                    ((TextView)findViewById(R.id.headerTitle)).setText("Search for dates");
                 } else if(tabId.equals("makeadate_search_result")) {
-                    ((TextView)findViewById(R.id.headerTitle)).setText("Search results");
+                    ((TextView)findViewById(R.id.headerTitle)).setText("Searchs results");
                 } else if(tabId.equals("foreign_profile")) {
                     ((TextView)findViewById(R.id.headerTitle)).setText("Profile");
                 } else if(tabId.equals("foreign_profile_ratings")) {
                     ((TextView)findViewById(R.id.headerTitle)).setText("Ratings");
                 } else if (tabId.equals("tickets_search")) {
-                    ((TextView)findViewById(R.id.headerTitle)).setText("Search Tickets");
+                    ((TextView)findViewById(R.id.headerTitle)).setText("Search for tickets");
                 } else if (tabId.equals("edit_myprofile")) {
-                    ((TextView)findViewById(R.id.headerTitle)).setText("Edit My Profile");
-                }else {
+                    ((TextView)findViewById(R.id.headerTitle)).setText("Edit my profile");
+                } else if (tabId.equals("change_password")) {
+                    ((TextView) findViewById(R.id.headerTitle)).setText("Change your password");
+                } else {
                     ((TextView)findViewById(R.id.headerTitle)).setText("TicketMatch");
                 }
             }
@@ -288,8 +296,9 @@ public class MainActivityTabHost extends AppCompatActivity {
                         th.setCurrentTabByTag("edit_myprofile");
                         return true;
                     case R.id.change_password:
-                        Intent changepassword =  new Intent(getApplicationContext(), ChangePassword.class);
-                        startActivity(changepassword);
+                        /*Intent changepassword =  new Intent(getApplicationContext(), ChangePassword.class);
+                        startActivity(changepassword);*/
+                        th.setCurrentTabByTag("change_password");
                         return true;
                     case R.id.logout:
                         //stops IntentService: MessageNotifications
