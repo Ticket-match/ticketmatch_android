@@ -149,6 +149,12 @@ public class MainActivityTabHost extends AppCompatActivity {
         ts18.setIndicator(ts18Ind);
         ts18.setContent(new Intent(this, ForeignProfileRating.class));
 
+        //Tab "Edit My Profile"
+        TabHost.TabSpec ts19 = th.newTabSpec("edit_myprofile");
+        View ts19Ind = getLayoutInflater().inflate(R.layout.activity_main_activity_tab_indicator_inv, th.getTabWidget(), false);
+        ts19.setIndicator(ts19Ind);
+        ts19.setContent(new Intent(this, EditMyProfile.class));
+
         // Add Tabs to TabHost
         th.addTab(ts1);
         th.addTab(ts2);
@@ -164,6 +170,7 @@ public class MainActivityTabHost extends AppCompatActivity {
         th.addTab(ts15);
         th.addTab(ts17);
         th.addTab(ts18);
+        th.addTab(ts19);
 
         //Listener for tabchange so that header title can be changed
         th.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
@@ -197,7 +204,9 @@ public class MainActivityTabHost extends AppCompatActivity {
                     ((TextView)findViewById(R.id.headerTitle)).setText("Ratings");
                 } else if (tabId.equals("tickets_search")) {
                     ((TextView)findViewById(R.id.headerTitle)).setText("Search Tickets");
-                } else {
+                } else if (tabId.equals("edit_myprofile")) {
+                    ((TextView)findViewById(R.id.headerTitle)).setText("Edit My Profile");
+                }else {
                     ((TextView)findViewById(R.id.headerTitle)).setText("TicketMatch");
                 }
             }
@@ -327,6 +336,8 @@ public class MainActivityTabHost extends AppCompatActivity {
             th.setCurrentTabByTag("foreign_profile");
         } else if (tabId.equals("tickets_search")) {
             th.setCurrentTabByTag("tickets");
+        } else if (tabId.equals("edit_myprofile")) {
+            th.setCurrentTabByTag("myprofile");
         }
     }
 }
