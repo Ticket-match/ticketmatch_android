@@ -116,6 +116,10 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.ChatViewHolder>{
                         User user = dataSnapshot.getValue(User.class);
 
                         String text = user.getFirstName() + " " + user.getLastName() + "\n" + holder.nametext.getText().toString();
+                        /*CharSequence fn = user.getFirstName();
+                        CharSequence ln = user.getLastName();
+                        text.replace(fn, "");
+                        text.replace(ln, "");*/
                         holder.nametext.setText(text);
                     }
                     @Override
