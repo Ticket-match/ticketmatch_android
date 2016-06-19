@@ -83,7 +83,7 @@ public class MessageNotifications extends Service {
                                     NotificationCompat.Builder mBuilder =
                                             new NotificationCompat.Builder(getApplicationContext())
                                                     .setSmallIcon(R.mipmap.ic_launcher)
-                                                    .setColor(getResources().getColor(R.color.bgColor))
+                                                    .setColor(getResources().getColor(R.color.colorAccent))
                                                     .setContentTitle(hm.get("author"))
                                                     .setContentText(text);
 
