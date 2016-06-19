@@ -13,10 +13,6 @@
             android:orientation="vertical"
             >
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="10dp"/>
-
 
             <ListView
                 android:layout_width="match_parent"
@@ -26,10 +22,7 @@
                 android:alpha="0.54"
 
                 />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="10dp"/>
+        </LinearLayout>
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -69,6 +62,6 @@
 
             </LinearLayout>
 
-        </LinearLayout>
+
 
     </android.widget.RelativeLayout>

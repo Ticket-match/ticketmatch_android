@@ -119,7 +119,7 @@ public class Message_Chat extends AppCompatActivity {
         getParent().onBackPressed();
     }
 
-    public void updateList(String chatKey, String foreignKey) {
+    public void updateList(String chatKey, String foreignKey, String fname) {
         messages.clear();
 
         if (!check) {
@@ -133,18 +133,7 @@ public class Message_Chat extends AppCompatActivity {
             check_old = chatKey;
         }
 
-        mDatabase.child("users").child(foreignKey).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                User f = dataSnapshot.getValue(User.class);
-                ((TextView)findViewById(R.id.chat_with_name)).setText("Chatting with " + f.getFirstName() + " " + f.getLastName());
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
+        ((TextView)findViewById(R.id.chat_with_name)).setText("Chatting with " + fname);
 
         this.fouid = foreignKey;
     }

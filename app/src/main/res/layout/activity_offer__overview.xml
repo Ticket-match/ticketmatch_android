@@ -10,13 +10,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:layout_above="@+id/footer"
-        android:layout_below="@+id/header">
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="10dp"/>
+        android:orientation="vertical">
 
         <ListView
         android:layout_width="match_parent"
@@ -24,6 +18,7 @@
         android:id="@+id/offeroverview_list"
         android:layout_weight="1"
             android:alpha="0.54"/>
+    </LinearLayout>
 
 
     <LinearLayout
@@ -62,6 +57,5 @@
             android:clickable="true" />
         </LinearLayout>
 
-        </LinearLayout>
 
 </android.widget.RelativeLayout>

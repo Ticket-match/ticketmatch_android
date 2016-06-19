@@ -12,13 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:layout_above="@+id/footer"
-        android:layout_below="@+id/header"
         >
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="10dp"/>
 
         <ListView
             android:layout_width="match_parent"
@@ -26,10 +20,6 @@
             android:id="@+id/find_results"
             android:layout_weight="1"
             android:alpha="0.54"/>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="10dp" />
 
     </LinearLayout>
 
