@@ -23,6 +23,7 @@
 
         <EditText
             android:hint="Event Location"
+            android:singleLine="true"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:id="@+id/search_makeadate_eventlocation"

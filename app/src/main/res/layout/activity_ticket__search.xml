@@ -27,6 +27,7 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
+            android:singleLine="true"
             android:layout_gravity="center"
             android:alpha="0.54"/>
 

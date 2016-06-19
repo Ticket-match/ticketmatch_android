@@ -3,6 +3,8 @@ package de.ticket_match.ticketmatch;
 import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +25,75 @@ import java.util.ArrayList;
 
 import de.ticket_match.ticketmatch.entities.Ticket;
 
+public class Offer_Overview extends AppCompatActivity {
+
+    private DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
+    private ArrayList<Ticket> tickets = new ArrayList<Ticket>(0);
+    private ArrayList<String> tickets_keys = new ArrayList<String>(0);
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_offer__overview);
+
+
+
+        ((MainActivityTabHost) getParent()).baseBundle.putSerializable("tickets_offerdetail", tickets);
+        ((MainActivityTabHost) getParent()).baseBundle.putSerializable("tickets_offerdetail_keys", tickets_keys);
+
+        final RecyclerView rv = (RecyclerView) findViewById(R.id.offeroverview_list);
+        LinearLayoutManager llm = new LinearLayoutManager(this);
+        rv.setLayoutManager(llm);
+
+        final RVAdapter_OfferOverview adapter = new RVAdapter_OfferOverview(tickets, this, tickets_keys);
+        rv.setAdapter(adapter);
+
+        mDatabase.child("tickets").orderByChild("user").equalTo(FirebaseAuth.getInstance().getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot d:dataSnapshot.getChildren()) {
+                    Ticket ticket = d.getValue(Ticket.class);
+                    tickets.add(ticket);
+                    tickets_keys.add((String)d.getKey());
+                }
+                (((RecyclerView) findViewById(R.id.offeroverview_list)).getAdapter()).notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+    }
+
+    @Override
+    public void onBackPressed() {
+        getParent().onBackPressed();
+    }
+
+    public void btn_newoffer (View view){
+        ((TabHost)getParent().findViewById(R.id.tabHost)).setCurrentTabByTag("tickets_newoffer");
+    }
+
+    public void btn_search_ticket (View view){
+        ((TabHost)getParent().findViewById(R.id.tabHost)).setCurrentTabByTag("tickets_search");
+    }
+
+    public void btn_ticket_delete (View view) {
+        //We have an invisible Textfield in the style file to delete the ticket.
+        String ticket_key = ((TextView)((View)view.getParent()).findViewById(R.id.row_key)).getText().toString();
+        int ticket_position = tickets_keys.indexOf(ticket_key);
+        tickets_keys.remove(ticket_position);
+        tickets.remove(ticket_position);
+        (((RecyclerView) findViewById(R.id.offeroverview_list)).getAdapter()).notifyDataSetChanged();
+        mDatabase.child("tickets").child(ticket_key).removeValue();
+    }
+
+
+}
+
+/*
 public class Offer_Overview extends AppCompatActivity {
 
     private DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
@@ -140,3 +211,4 @@ public class Offer_Overview extends AppCompatActivity {
 
 
 }
+ */

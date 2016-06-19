@@ -5,6 +5,7 @@ import android.app.TimePickerDialog;
 import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.RecyclerView;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -159,8 +160,9 @@ public class NewOffer extends AppCompatActivity {
 
             Toast.makeText(getApplicationContext(),"Your ticket is registered!",Toast.LENGTH_SHORT).show();
             ((TabHost)getParent().findViewById(R.id.tabHost)).setCurrentTabByTag("tickets");
-//            ((Offer_Overview.MyTicketAdapter)((HeaderViewListAdapter)((ListView)((TabHost)getParent().findViewById(R.id.tabHost)).getCurrentView().findViewById(R.id.offeroverview_list)).getAdapter()).getWrappedAdapter()).notifyDataSetChanged();
-            ((Offer_Overview.MyTicketAdapter)(((ListView)((TabHost)getParent().findViewById(R.id.tabHost)).getCurrentView().findViewById(R.id.offeroverview_list)).getAdapter())).notifyDataSetChanged();
+            //((Offer_Overview.MyTicketAdapter)((HeaderViewListAdapter)((ListView)((TabHost)getParent().findViewById(R.id.tabHost)).getCurrentView().findViewById(R.id.offeroverview_list)).getAdapter()).getWrappedAdapter()).notifyDataSetChanged();
+            //((Offer_Overview.MyTicketAdapter)(((ListView)((TabHost)getParent().findViewById(R.id.tabHost)).getCurrentView().findViewById(R.id.offeroverview_list)).getAdapter())).notifyDataSetChanged();
+            ((((RecyclerView)((TabHost)getParent().findViewById(R.id.tabHost)).getCurrentView().findViewById(R.id.offeroverview_list)).getAdapter())).notifyDataSetChanged();
         }
     }
 }

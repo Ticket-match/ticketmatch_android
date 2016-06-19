@@ -284,6 +284,9 @@ public class MainActivityTabHost extends AppCompatActivity {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()){
+                    case R.id.edit_profile:
+                        th.setCurrentTabByTag("edit_myprofile");
+                        return true;
                     case R.id.change_password:
                         Intent changepassword =  new Intent(getApplicationContext(), ChangePassword.class);
                         startActivity(changepassword);

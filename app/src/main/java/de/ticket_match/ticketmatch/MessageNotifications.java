@@ -75,16 +75,16 @@ public class MessageNotifications extends Service {
                                 Chat c = dataSnapshot.getValue(Chat.class);
                                 HashMap<String, String> hm = c.getLastMessage();
                                 if (!hm.get("author").equals(name)) {
-                                    int text_length = 25;
+                                    int text_length = 20;
                                     String text = hm.get("text");
                                     if (text.length() > text_length) {
-                                        text = text.substring(0, text_length) + " ...";
+                                        text = text.substring(0, text_length) + "...";
                                     }
                                     NotificationCompat.Builder mBuilder =
                                             new NotificationCompat.Builder(getApplicationContext())
                                                     .setSmallIcon(R.mipmap.ic_launcher)
-                                                    .setColor(getResources().getColor(R.color.bgColor))
-                                                    .setContentTitle(hm.get("author"))
+                                                    .setColor(getResources().getColor(R.color.colorAccent))
+                                                    .setContentTitle("From "+hm.get("author"))
                                                     .setContentText(text);
 
                                     NotificationManager mNotificationManager =

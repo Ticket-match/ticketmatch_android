@@ -1,7 +1,6 @@
 package de.ticket_match.ticketmatch;
 
 import android.app.Activity;
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -75,16 +74,15 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.ChatViewHolder>{
             @Override
             public void onClick(View v) {
                 Chat chat = chats.get(position);
-                //System.out.println(chat.getMessages().get(chat.getMessages().size()-1));
-                //String fname = holder.nametext.toString();
-                //fname = fname.substring(0,fname.indexOf("\n"));
+                String fname = (((TextView)v.findViewById(R.id.listitem_messages_name_text))).getText().toString();
+                fname = fname.substring(0,fname.indexOf("\n"));
 
                 ((TabHost)prevActivity.getParent().findViewById(R.id.tabHost)).setCurrentTabByTag("messages_chat");
 
                 if(!chats.get(position).getParticipant1().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
-                    ((Message_Chat)((TabHost)prevActivity.getParent().findViewById(R.id.tabHost)).getCurrentView().getContext()).updateList(chat_keys.get(position), chats.get(position).getParticipant1(),"Tim");
+                    ((Message_Chat)((TabHost)prevActivity.getParent().findViewById(R.id.tabHost)).getCurrentView().getContext()).updateList(chat_keys.get(position), chats.get(position).getParticipant1(),fname);
                 } else if (!chats.get(position).getParticipant2().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
-                    ((Message_Chat)((TabHost)prevActivity.getParent().findViewById(R.id.tabHost)).getCurrentView().getContext()).updateList(chat_keys.get(position), chats.get(position).getParticipant2(),"Tim");
+                    ((Message_Chat)((TabHost)prevActivity.getParent().findViewById(R.id.tabHost)).getCurrentView().getContext()).updateList(chat_keys.get(position), chats.get(position).getParticipant2(),fname);
                 }
             }
         });
@@ -99,10 +97,10 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.ChatViewHolder>{
         }
 
         HashMap<String, String> message = chat.getLastMessage();
-        int text_length = 25;
+        int text_length = 20;
         String text = message.get("text");
         if(text.length() > text_length) {
-            text = text.substring(0,text_length) + " ...";
+            text = text.substring(0,text_length) + "...";
         }
         text = text.replaceAll("\n"," ");
         String date_time = message.get("date") + "\n" + message.get("timestamp");
@@ -118,10 +116,6 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.ChatViewHolder>{
                         User user = dataSnapshot.getValue(User.class);
 
                         String text = user.getFirstName() + " " + user.getLastName() + "\n" + holder.nametext.getText().toString();
-                        //CharSequence fn = user.getFirstName();
-                        //CharSequence ln = user.getLastName();
-                        //text.replace(fn,"");
-                        //text.replace(ln, "");
                         holder.nametext.setText(text);
                     }
                     @Override
@@ -149,8 +143,4 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.ChatViewHolder>{
     public void onAttachedToRecyclerView(RecyclerView recyclerView) {
         super.onAttachedToRecyclerView(recyclerView);
     }
-
-
-
-
 }
