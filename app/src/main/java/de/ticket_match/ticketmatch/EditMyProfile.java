@@ -1,8 +1,6 @@
 package de.ticket_match.ticketmatch;
 
 import android.app.DatePickerDialog;
-import android.app.Dialog;
-import android.app.DialogFragment;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.support.v7.app.AppCompatActivity;
@@ -19,12 +17,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashMap;
 
 import de.ticket_match.ticketmatch.entities.User;
 
@@ -32,6 +32,7 @@ public class EditMyProfile extends AppCompatActivity {
 
     private DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
     private User user;
+    public ArrayList<String> interests;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,16 +62,46 @@ public class EditMyProfile extends AppCompatActivity {
             }
         });
 
+        mDatabase.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).addValueEventListener(
+                new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        user = dataSnapshot.getValue(User.class);
+                        TicketMatch.setCurrentUser(user);
+                        if(!user.getFirstName().equals("")) {
+                            ((EditText) findViewById(R.id.edit_myprofile_firstname)).setText(user.getFirstName());
+                        }
+                        if(!user.getLastName().equals("")){
+                            ((EditText) findViewById(R.id.edit_myprofile_lastname)).setText(user.getLastName());
+                        }
+                        if(!user.getLocation().equals("")){
+                            ((EditText) findViewById(R.id.edit_myprofile_location)).setText(user.getLocation());
+                        }
+                        if(!user.getBirthday().equals("")){
+                            ((TextView) findViewById(R.id.edit_myprofile_birthdate)).setText(user.getBirthday());
+                        }
+                        if(user.getGender().equals("Neutral")){
+                            ((Spinner) findViewById(R.id.edit_myprofile_gender)).setSelection(0);
+                        } else if(user.getGender().equals("Male")){
+                            ((Spinner) findViewById(R.id.edit_myprofile_gender)).setSelection(1);
+                        } else{
+                            ((Spinner) findViewById(R.id.edit_myprofile_gender)).setSelection(2);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                    }
+                });
     }
 
     public void btn_edit_myprofile(View view){
+
         String firstname = ((EditText)findViewById(R.id.edit_myprofile_firstname)).getText().toString();
         String lastname = ((EditText)findViewById(R.id.edit_myprofile_lastname)).getText().toString();
         String location = ((EditText)findViewById(R.id.edit_myprofile_location)).getText().toString();
         String birthdate = ((TextView)findViewById(R.id.edit_myprofile_birthdate)).getText().toString();
         String gender = ((Spinner)findViewById(R.id.edit_myprofile_gender)).getSelectedItem().toString();
-
-
 
         if(firstname.equals("") | lastname.equals("") | location.equals("") | birthdate.equals("Birthday")) {
             Toast.makeText(getApplicationContext(), "Please fill out the required information!", Toast.LENGTH_SHORT).show();
@@ -78,28 +109,30 @@ public class EditMyProfile extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), "No internet connection. Editing profile information failed.", Toast.LENGTH_SHORT).show();
         }
         else {
-            //Create a User class with attributes
-            user = new User(firstname,lastname,gender,birthdate,location, new ArrayList<String>(0), new ArrayList<HashMap<String, String>>(0));
-            // Edit Account information
+
+            System.out.println(user.getRatings() + " " + user.getInterests() + " Interessen");
+
+            // Create a User with attributes and the interests and ratings from screen MyProfile
+            user = new User(firstname, lastname,gender, birthdate, location, user.getInterests(), user.getRatings());
+            // Edit attributes by setting new values
             mDatabase.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(user);
+            // Open the tab MyProfile
             ((TabHost)getParent().findViewById(R.id.tabHost)).setCurrentTabByTag("myprofile");
 
+            // delete input fields
+            ((EditText)findViewById(R.id.edit_myprofile_firstname)).setText("");
+            ((EditText)findViewById(R.id.edit_myprofile_lastname)).setText("");
+            ((EditText)findViewById(R.id.edit_myprofile_location)).setText("");
+            ((TextView)findViewById(R.id.edit_myprofile_birthdate)).setText("Birthday");
+            ((Spinner)findViewById(R.id.edit_myprofile_gender)).setSelection(0);
+
+            // hide keyboard
+            View aview = this.getCurrentFocus();
+            if (aview != null) {
+                InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(aview.getWindowToken(), 0);
+            }
         }
-
-        // delete input fields
-        ((EditText)findViewById(R.id.edit_myprofile_firstname)).setText("");
-        ((EditText)findViewById(R.id.edit_myprofile_lastname)).setText("");
-        ((EditText)findViewById(R.id.edit_myprofile_location)).setText("");
-        ((TextView)findViewById(R.id.edit_myprofile_birthdate)).setText("Birthday");
-        ((Spinner)findViewById(R.id.edit_myprofile_gender)).setSelection(0);
-
-        // hide keyboard
-        View aview = this.getCurrentFocus();
-        if (aview != null) {
-            InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(aview.getWindowToken(), 0);
-        }
-
     }
 
     @Override
