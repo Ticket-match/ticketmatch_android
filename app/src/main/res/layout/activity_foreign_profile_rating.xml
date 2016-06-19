@@ -66,6 +66,7 @@
                     android:inputType="text"
                     android:hint="Type your description!"
                     android:ems="10"
+                    android:layout_gravity="bottom"
                     android:layout_weight="1"
                     android:id="@+id/newrating_text"
                     android:alpha="0.38"
@@ -73,14 +74,30 @@
 
 
 
-                <Button
+               <!-- <Button
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:onClick="btn_newrating"
                     android:text="Send"
                     android:alpha="0.54"
 
-                    />
+                    />-->
+
+                <android.support.design.widget.FloatingActionButton
+                    android:id="@+id/fab_rate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|right"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginBottom="10dp"
+                    android:src="@drawable/ic_done_white_18dp"
+                    app:elevation="3dp"
+                    android:onClick="btn_newrating"
+                    app:backgroundTint="#FFAB00"
+                    android:clickable="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentRight="true"/>
+
             </LinearLayout>
 
         </LinearLayout>
