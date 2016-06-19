@@ -109,9 +109,6 @@ public class EditMyProfile extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), "No internet connection. Editing profile information failed.", Toast.LENGTH_SHORT).show();
         }
         else {
-
-            System.out.println(user.getRatings() + " " + user.getInterests() + " Interessen");
-
             // Create a User with attributes and the interests and ratings from screen MyProfile
             user = new User(firstname, lastname,gender, birthdate, location, user.getInterests(), user.getRatings());
             // Edit attributes by setting new values
@@ -119,12 +116,37 @@ public class EditMyProfile extends AppCompatActivity {
             // Open the tab MyProfile
             ((TabHost)getParent().findViewById(R.id.tabHost)).setCurrentTabByTag("myprofile");
 
-            // delete input fields
-            ((EditText)findViewById(R.id.edit_myprofile_firstname)).setText("");
-            ((EditText)findViewById(R.id.edit_myprofile_lastname)).setText("");
-            ((EditText)findViewById(R.id.edit_myprofile_location)).setText("");
-            ((TextView)findViewById(R.id.edit_myprofile_birthdate)).setText("Birthday");
-            ((Spinner)findViewById(R.id.edit_myprofile_gender)).setSelection(0);
+            mDatabase.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).addValueEventListener(
+                    new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot dataSnapshot) {
+                            user = dataSnapshot.getValue(User.class);
+                            TicketMatch.setCurrentUser(user);
+                            if(!user.getFirstName().equals("")) {
+                                ((EditText) findViewById(R.id.edit_myprofile_firstname)).setText(user.getFirstName());
+                            }
+                            if(!user.getLastName().equals("")){
+                                ((EditText) findViewById(R.id.edit_myprofile_lastname)).setText(user.getLastName());
+                            }
+                            if(!user.getLocation().equals("")){
+                                ((EditText) findViewById(R.id.edit_myprofile_location)).setText(user.getLocation());
+                            }
+                            if(!user.getBirthday().equals("")){
+                                ((TextView) findViewById(R.id.edit_myprofile_birthdate)).setText(user.getBirthday());
+                            }
+                            if(user.getGender().equals("Neutral")){
+                                ((Spinner) findViewById(R.id.edit_myprofile_gender)).setSelection(0);
+                            } else if(user.getGender().equals("Male")){
+                                ((Spinner) findViewById(R.id.edit_myprofile_gender)).setSelection(1);
+                            } else{
+                                ((Spinner) findViewById(R.id.edit_myprofile_gender)).setSelection(2);
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                        }
+                    });
 
             // hide keyboard
             View aview = this.getCurrentFocus();
@@ -137,6 +159,37 @@ public class EditMyProfile extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+        mDatabase.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).addValueEventListener(
+                new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        user = dataSnapshot.getValue(User.class);
+                        TicketMatch.setCurrentUser(user);
+                        if(!user.getFirstName().equals("")) {
+                            ((EditText) findViewById(R.id.edit_myprofile_firstname)).setText(user.getFirstName());
+                        }
+                        if(!user.getLastName().equals("")){
+                            ((EditText) findViewById(R.id.edit_myprofile_lastname)).setText(user.getLastName());
+                        }
+                        if(!user.getLocation().equals("")){
+                            ((EditText) findViewById(R.id.edit_myprofile_location)).setText(user.getLocation());
+                        }
+                        if(!user.getBirthday().equals("")){
+                            ((TextView) findViewById(R.id.edit_myprofile_birthdate)).setText(user.getBirthday());
+                        }
+                        if(user.getGender().equals("Neutral")){
+                            ((Spinner) findViewById(R.id.edit_myprofile_gender)).setSelection(0);
+                        } else if(user.getGender().equals("Male")){
+                            ((Spinner) findViewById(R.id.edit_myprofile_gender)).setSelection(1);
+                        } else{
+                            ((Spinner) findViewById(R.id.edit_myprofile_gender)).setSelection(2);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                    }
+                });
         getParent().onBackPressed();
     }
 
