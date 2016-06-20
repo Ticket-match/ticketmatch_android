@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Ticket Match</string>
+    <string name="facebook_app_id">1143432469012777</string>
     <string-array name="dropdown_logo">
-
         <item></item>
         <item>Change Password</item>
         <item>Logout</item>

@@ -17,6 +17,8 @@ import android.widget.PopupMenu;
 import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.facebook.login.LoginManager;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -311,6 +313,8 @@ public class MainActivityTabHost extends AppCompatActivity {
                         editor.commit();
                         // Firebase Logout
                         FirebaseAuth.getInstance().signOut();
+                        //Facebook Logout
+                        LoginManager.getInstance().logOut();
                         Intent mainActivity = new Intent(getApplicationContext(), MainActivity.class);
                         mainActivity.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(mainActivity);

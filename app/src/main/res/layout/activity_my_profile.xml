@@ -104,7 +104,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="10dp"/>
-
+ese
             <TextView
                 android:text="Interests"
                 android:id="@+id/interests"
