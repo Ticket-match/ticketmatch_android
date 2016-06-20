@@ -145,14 +145,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="10dp"/>
 
-            <!--<Button
-                android:text="Register"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:onClick="btn_activity_register"
-                android:alpha="0.38"/>-->
-
             <TextView
                 android:text="No account yet? Register!"
                 android:layout_width="wrap_content"
@@ -164,21 +156,6 @@
                 android:textColor="#2196F3"
                 android:alpha="0.54"
                 android:textStyle="bold" />
-
-            //For testing purpose only
-            <!--<android.support.design.widget.FloatingActionButton
-                android:id="@+id/fab"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_margin="5dp"
-                android:src="@drawable/search"
-                app:elevation="3dp"
-                app:backgroundTint="#FFAB00"
-                android:clickable="true" />-->
-
         </LinearLayout>
-
     </ScrollView>
-
 </android.widget.RelativeLayout>
