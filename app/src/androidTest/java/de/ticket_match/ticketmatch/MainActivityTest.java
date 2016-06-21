@@ -42,7 +42,7 @@ public class MainActivityTest {
     }
 
     @Test
-    public void changeText() {
+    public void test() {
 
         //Insert text automatically
         onView(withId(R.id.login_mail))
