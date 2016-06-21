@@ -13,6 +13,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ListView;
+import android.widget.RatingBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.AccessToken;
@@ -31,10 +35,12 @@ import com.facebook.login.widget.LoginButton;
 import com.firebase.client.AuthData;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
+import com.firebase.client.utilities.Base64;
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
@@ -43,8 +49,12 @@ import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.facebook.FacebookSdk;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -52,10 +62,15 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Array;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.SocketException;
+import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.security.Provider;
 import java.util.ArrayList;
@@ -80,6 +95,7 @@ public class MainActivity extends AppCompatActivity {
     LoginButton loginButton;
     public User user;
     public String uid;
+    public boolean tmpExists;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,19 +113,16 @@ public class MainActivity extends AppCompatActivity {
             public void onSuccess(LoginResult loginResult) {
                 Log.d(TAG, "facebook:onSuccess:" + loginResult);
                 handleFacebookAccessToken(loginResult.getAccessToken());
-                Log.d(TAG, "after requestFacebookData");
             }
 
             @Override
             public void onCancel() {
                 Log.d(TAG, "facebook:onCancel");
-
             }
 
             @Override
             public void onError(FacebookException error) {
                 Log.d(TAG, "facebook:onError", error);
-
             }
         });
 
@@ -188,15 +201,15 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG, "handleFacebookAccessToken:" + token);
 
         AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
-        mAuth.signInWithCredential(credential)
+        Task<AuthResult> signInWithCredential = mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         Log.d(TAG, "signInWithCredential:onComplete:" + task.isSuccessful());
-                        Log.d(TAG, "onAuthStateChanged:signed_in:" + FirebaseAuth.getInstance().getCurrentUser().getUid());
                         uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                        requestFacebookData(token);
-                        Log.d(TAG, "signInWithCredential:onComplete: SUCCESS!!!");
+                            Log.d(TAG, "Daten werden von Facebook geladen....");
+                            requestFacebookData(token);
+
                         // If sign in fails, display a message to the user. If sign in succeeds
                         // the auth state listener will be notified and logic to handle the
                         // signed in user can be handled in the listener.
@@ -225,7 +238,6 @@ public class MainActivity extends AppCompatActivity {
                     String userID = "";
                     String location = "Default";
 
-
                     @Override
                     public void onCompleted(
                             JSONObject object,
@@ -235,21 +247,36 @@ public class MainActivity extends AppCompatActivity {
                             firstname = object.getString("first_name");
                             lastname = object.getString("last_name");
                             birthday = object.getString("birthday");
+                            birthday = birthday.substring(3,5) + "." + birthday.substring(0,2) + "." + birthday.substring(6);
                             gender = object.getString("gender");
+                            gender = gender.substring(0,1).toUpperCase() + gender.substring(1).toLowerCase();
                             userID = object.getString("id");
-                            Log.d(TAG, "requestFacebookData Worked" + userID);
-                            location = object.getString("location");
-                            Log.d(TAG, "requestFacebookData Worked" + object.getString("first_name"));
+                            location = object.getJSONObject("location").getString("name");
 
                         }catch (JSONException e){
                             Log.d(TAG, "You came in the Catch Block");
                             e.printStackTrace();
                         }
 
+                        Bitmap bm = null;
+
+                        try {
+                            bm = getFacebookProfilePicture(userID);
+                            Log.d(TAG, "ProfilePicture worked");
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                        if(bm == null){
+                            bm = BitmapFactory.decodeResource(getResources(), R.drawable.profilbild);
+                        }
+                        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+                        bm.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+                        byte[] ba = bytes.toByteArray();
+                        mStorage.child("images/" + uid + ".jpg").putBytes(ba);
+
                         user = new User(firstname, lastname, gender, birthday, location, new ArrayList<String>(0), new ArrayList<HashMap<String, String>>(0));
                         mDatabase.child("users").child(uid).setValue(user);
 
-                        Log.d(TAG, "requestFacebookData Worked");
                         //Log.d(TAG, "UserID is from Firebase" + FirebaseAuth.getInstance().getCurrentUser().getUid());
 
                     }
@@ -258,11 +285,25 @@ public class MainActivity extends AppCompatActivity {
         parameters.putString("fields", "id,first_name,last_name,gender,birthday,location,email");
         request.setParameters(parameters);
         request.executeAsync();
-
-        Log.d(TAG, "End requestFacebookData");
-
     }
 
+    public static Bitmap getFacebookProfilePicture(String userID)
+            throws SocketException, SocketTimeoutException,
+            MalformedURLException, IOException, Exception {
+        String imageURL;
+        imageURL = "https://graph.facebook.com/" + userID
+                 + "/picture?type=large";
+        //imageURL ="https://scontent.xx.fbcdn.net/v/t1.0-1/p200x200/13450151_106511123112706_2658917247530074233_n.jpg?oh=dca4ce49dee21bbd61c64cc116b75747&oe=57CC6DB0";
+
+        URL url = new URL(imageURL);
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        connection.setInstanceFollowRedirects(true);
+        InputStream is = (InputStream) new URL(connection.getURL().toString()).getContent();
+        Bitmap bitmap = BitmapFactory.decodeStream(is);
+
+
+        return bitmap;
+    }
 
     // Check Internet Status
     private boolean isNetworkConnected() {
