@@ -51,7 +51,7 @@ public class MainActivityTest {
                 .perform(typeText(mTestLoginPassword));
 
 
-        //Check
+        //CheckValues
         onView(withId(R.id.login_mail))
                 .check(matches(withText(mTestLoginMail)));
 
