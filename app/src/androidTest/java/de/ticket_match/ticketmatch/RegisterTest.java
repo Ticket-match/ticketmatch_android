@@ -132,7 +132,7 @@ public class RegisterTest {
         onView(withId(R.id.register_gender))
                 .check(matches(withSpinnerText(containsString(gender))));
 
-        //Push final Register Button to navigate to next view
+        //Click final Register Button to navigate to next view
         //click does not work
       //  onView(withId(R.id.btnRegister)).perform(closeSoftKeyboard());
         //onView(withId(R.id.btnRegister))

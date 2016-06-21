@@ -58,7 +58,7 @@ public class MainActivityTest {
         onView(withId(R.id.login_password))
                 .check(matches(withText(mTestLoginPassword)));
 
-        //Push final Login Button to navigate to next view
+        //Click final Login Button to navigate to next view
         onView(withId(R.id.btn_login)).perform(click());
 
 
