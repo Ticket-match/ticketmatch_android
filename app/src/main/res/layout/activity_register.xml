@@ -198,7 +198,8 @@
                 android:alpha="0.54"
                 android:layout_marginTop="5dp"
                 android:layout_marginBottom="5dp"
-                android:id="@+id/btn_register" />
+                android:id="@+id/btnRegister"
+                android:nestedScrollingEnabled="true" />
 
         </LinearLayout>
 
