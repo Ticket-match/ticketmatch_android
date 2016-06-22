@@ -46,6 +46,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:background="@drawable/ic_more_vert_white_36dp"
+                    android:id="@+id/overflow_button"
                     android:onClick="btn_tm_logo" />
 
             </LinearLayout>

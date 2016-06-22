@@ -56,8 +56,8 @@ public class EditMyProfileTest {
     String gender;
 
     @Rule
-    public ActivityTestRule<EditMyProfile> mActivityRule = new ActivityTestRule<EditMyProfile>(
-        EditMyProfile.class);
+    public ActivityTestRule<MainActivityTabHost> mActivityRule = new ActivityTestRule<MainActivityTabHost>(
+            MainActivityTabHost.class);
 
     @Before
     public void initValidString() {
@@ -73,7 +73,11 @@ public class EditMyProfileTest {
     }
 
     @Test
-    public void test() {
+    public void test()throws InterruptedException {
+
+        // Open the overflow menu OR open the options menu,
+        onView(withId(R.id.myprofile_name)).perform(click());
+        Thread.sleep(5000);
 
 
         //Insert text automatically
@@ -83,17 +87,19 @@ public class EditMyProfileTest {
         onView(withId(R.id.edit_myprofile_lastname)).perform(clearText())
                 .perform(typeText(mTestLastName));
 
-        onView(withId(R.id.edit_myprofile_location)).perform(clearText())
-                .perform(typeText(mTestLocation)).perform(closeSoftKeyboard());
+
 
         // Datepicker Birthdate
-        onView(withId(R.id.edit_myprofile_birthdate)).perform(click());
-        onView(withClassName(Matchers.equalTo(DatePicker.class.getName()))).perform(PickerActions.setDate(year, month, day));
-        onView(withText("OK")).perform(click());
+       onView(withId(R.id.edit_myprofile_birthdate)).perform(click());
+      onView(withClassName(Matchers.equalTo(DatePicker.class.getName()))).perform(PickerActions.setDate(year, month, day));
+       onView(withText("OK")).perform(click());
 
         //Spinner Value (Gender)
         onView(withId(R.id.edit_myprofile_gender)).perform(click());
         onData(allOf(is(instanceOf(String.class)), is(gender))).perform(click());
+
+        onView(withId(R.id.edit_myprofile_location)).perform(clearText())
+                .perform(typeText(mTestLocation)).perform(closeSoftKeyboard());
 
 
 
@@ -105,17 +111,20 @@ public class EditMyProfileTest {
         onView(withId(R.id.edit_myprofile_lastname))
                 .check(matches(withText(mTestLastName)));
 
-        onView(withId(R.id.edit_myprofile_location))
-                .check(matches(withText(mTestLocation)));
 
         onView(withId(R.id.edit_myprofile_birthdate)).check(matches(withText(day + "." + month + "." + year)));
 
         onView(withId(R.id.edit_myprofile_gender))
                 .check(matches(withSpinnerText(containsString(gender))));
 
+        onView(withId(R.id.edit_myprofile_location))
+                .check(matches(withText(mTestLocation)));
+
 
         //Click final Save Button to navigate to next view
         onView(withId(R.id.fab_btn_edit_myprofile)).perform(click());
+
+
 
 
 

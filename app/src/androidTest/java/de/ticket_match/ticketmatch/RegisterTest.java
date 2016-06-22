@@ -1,6 +1,6 @@
 package de.ticket_match.ticketmatch;
-
 import android.support.test.espresso.ViewAction;
+import android.support.test.espresso.action.ViewActions;
 import android.support.test.rule.ActivityTestRule;
 import android.widget.DatePicker;
 
@@ -26,6 +26,7 @@ import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard
 import static android.support.test.espresso.action.ViewActions.scrollTo;
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withClassName;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withSpinnerText;
@@ -95,21 +96,23 @@ public class RegisterTest {
         onView(withId(R.id.register_password))
                 .perform(typeText(mTestPassword));
 
-
-
-
-        // Datepicker Birthdate
-        onView(withId(R.id.register_birthdate)).perform(click());
-        onView(withClassName(Matchers.equalTo(DatePicker.class.getName()))).perform(PickerActions.setDate(year, month, day));
-       onView(withText("OK")).perform(click());
-
-
-        //Spinner Value (Gender)
-        onView(withId(R.id.register_gender)).perform(click());
-        onData(allOf(is(instanceOf(String.class)), is(gender))).perform(click());
+        onView(withId(R.id.register_location)).perform(ViewActions.scrollTo()).check(matches(isDisplayed()));
 
         onView(withId(R.id.register_location))
                 .perform(typeText(mTestLocation)).perform(closeSoftKeyboard());
+
+
+        // Datepicker Birthdate
+        onView(withId(R.id.register_birthdate)).perform(ViewActions.scrollTo()).check(matches(isDisplayed()));
+        onView(withId(R.id.register_birthdate)).perform(click());
+        onView(withClassName(Matchers.equalTo(DatePicker.class.getName()))).perform(PickerActions.setDate(year, month, day));
+        onView(withText("OK")).perform(click());
+
+        //Spinner Value (Gender)
+        onView(withId(R.id.register_gender)).perform(ViewActions.scrollTo()).check(matches(isDisplayed()));
+        onView(withId(R.id.register_gender)).perform(click());
+        onData(allOf(is(instanceOf(String.class)), is(gender))).perform(click());
+
 
 
         //Check Values
@@ -130,7 +133,7 @@ public class RegisterTest {
 
         onView(withId(R.id.register_birthdate)).check(matches(withText(day + "." + month + "." + year)));
 
-      onView(withId(R.id.register_gender))
+        onView(withId(R.id.register_gender))
                 .check(matches(withSpinnerText(containsString(gender))));
 
         onView(withId(R.id.register_location))

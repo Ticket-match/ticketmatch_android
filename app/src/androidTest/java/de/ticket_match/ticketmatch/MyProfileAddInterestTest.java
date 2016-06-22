@@ -8,6 +8,7 @@ import org.junit.Test;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
@@ -30,7 +31,7 @@ public class MyProfileAddInterestTest {
     public void initValidString() {
         // Specify a valid string.
 
-        mTestInterest = "Sport";
+        mTestInterest = "Autos";
             }
 
     @Test
@@ -38,7 +39,7 @@ public class MyProfileAddInterestTest {
 
         //Insert text automatically
         onView(withId(R.id.newinterest_text))
-              .perform(typeText(mTestInterest));
+              .perform(typeText(mTestInterest)).perform(closeSoftKeyboard());
 
        //Click final Add Button to add new interest
         onView(withId(R.id.btn_newinterest))
