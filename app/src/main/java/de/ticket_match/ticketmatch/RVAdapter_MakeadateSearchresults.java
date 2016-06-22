@@ -1,18 +1,14 @@
 package de.ticket_match.ticketmatch;
 
-import android.content.Context;
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.BaseAdapter;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,63 +28,40 @@ import java.util.Set;
 import de.ticket_match.ticketmatch.entities.Chat;
 import de.ticket_match.ticketmatch.entities.MakeDate;
 
-public class MakeADate_SearchResults extends AppCompatActivity {
+/**
+ * Created by D060450 on 22.06.2016.
+ */
+public class RVAdapter_MakeadateSearchresults extends RecyclerView.Adapter<RVAdapter_MakeadateSearchresults.MakeadateResultsViewholder> {
 
-    private ArrayList<MakeDate> dates = new ArrayList<MakeDate>(0);
+    List<MakeDate> dates;
+    Activity prevActivity;
     private DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
 
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_make_adate__search_results);
-
-        dates = (ArrayList<MakeDate>)((MainActivityTabHost) getParent()).baseBundle.getSerializable("makeadate_search_result");
-
-        RecyclerView rv = (RecyclerView) findViewById(R.id.makedate_searchresults);
-        LinearLayoutManager llm = new LinearLayoutManager(this);
-        rv.setLayoutManager(llm);
-
-        RVAdapter_MakeadateSearchresults adapter = new RVAdapter_MakeadateSearchresults(dates, this);
-        rv.setAdapter(adapter);
-
+    public RVAdapter_MakeadateSearchresults(List<MakeDate> dates, Activity prevActivity) {
+        this.dates = dates;
+        this.prevActivity = prevActivity;
     }
 
     @Override
-    public void onBackPressed() {
-        getParent().onBackPressed();
+    public MakeadateResultsViewholder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.cardviewitem_makeadatesearchresults, parent, false);
+        MakeadateResultsViewholder madrvh = new MakeadateResultsViewholder(v);
+        return madrvh;
     }
 
-}
-
-/*public class MakeADate_SearchResults extends AppCompatActivity {
-
-    ListView listview;
-    ArrayList<MakeDate> listitems_makeadate_results= new ArrayList<MakeDate>(0);
-    private DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
-
-
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_make_adate__search_results);
+    public void onBindViewHolder(MakeadateResultsViewholder holder, final int position) {
+        final MakeDate currentDate = dates.get(position);
 
-        listview = (ListView) findViewById(R.id.listview_makeadate_results);
-        listitems_makeadate_results = (ArrayList<MakeDate>)((MainActivityTabHost) getParent()).baseBundle.getSerializable("makeadate_search_result");
-        listview.setAdapter(new CustomAdapter(this, listitems_makeadate_results));
-
-
-
-        listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        holder.cv.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                final MakeDate text = listitems_makeadate_results.get(position);
-
-                final String message = "Hello, " + "\n" + "I am interested to meet you in " + text.getLocation()+ " on " + text.getDate() + " at " + text.getTime();
+            public void onClick(View v) {
+                final MakeDate date = currentDate;
+                final String message = "Hello, " + "\n" + "I am interested to meet you in " + currentDate.getLocation()+ " on " + currentDate.getDate() + " at " + currentDate.getTime();
 
 
                 //create Dialog for asking if the vendor should be contacted
-                AlertDialog.Builder builder = new AlertDialog.Builder(getParent());
+                AlertDialog.Builder builder = new AlertDialog.Builder(prevActivity.getParent());
                 builder.setMessage("Do you want to join the date?").setTitle("Join Date");
                 builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
@@ -102,7 +75,7 @@ public class MakeADate_SearchResults extends AppCompatActivity {
                             public void onDataChange(DataSnapshot dataSnapshot) {
                                 for (DataSnapshot d : dataSnapshot.getChildren()) {
                                     Chat chat = d.getValue(Chat.class);
-                                    if(chat.getParticipant2().equals(text.getUser())){
+                                    if(chat.getParticipant2().equals(date.getUser())){
                                         //get Message key if there is a chat with both participants
                                         HashMap<String, Chat> key = new HashMap<String, Chat>(0);
                                         key.put((String)d.getKey(), chat);
@@ -116,7 +89,7 @@ public class MakeADate_SearchResults extends AppCompatActivity {
                                         public void onDataChange(DataSnapshot dataSnapshot) {
                                             for (DataSnapshot d : dataSnapshot.getChildren()) {
                                                 Chat chat = d.getValue(Chat.class);
-                                                if(chat.getParticipant1().equals(text.getUser())){
+                                                if(chat.getParticipant1().equals(date.getUser())){
                                                     //get Message key if there is a chat with both participants
                                                     HashMap<String, Chat> key = new HashMap<String, Chat>(0);
                                                     key.put((String)d.getKey(), chat);
@@ -127,7 +100,7 @@ public class MakeADate_SearchResults extends AppCompatActivity {
                                             if(chats.size()==0){
                                                 ArrayList<HashMap<String, String>> a = new ArrayList<HashMap<String, String>>(0);
                                                 HashMap<String, String> hm = new HashMap<String, String>(0);
-                                                hm.put("author", ((MainActivityTabHost)getParent()).baseBundle.getString("myprofile_name"));
+                                                hm.put("author", ((MainActivityTabHost)prevActivity.getParent()).baseBundle.getString("myprofile_name"));
 
                                                 //get actual Date
                                                 final Calendar c = Calendar.getInstance();
@@ -146,13 +119,12 @@ public class MakeADate_SearchResults extends AppCompatActivity {
                                                 hm.put("timestamp", time);
 
                                                 a.add(hm);
-
-                                                Chat chat = new Chat(FirebaseAuth.getInstance().getCurrentUser().getUid(), text.getUser(), a, hm);
+                                                Chat chat = new Chat(FirebaseAuth.getInstance().getCurrentUser().getUid(), currentDate.getUser(), a, hm);
                                                 mDatabase.child("chats").push().setValue(chat);
                                             } else{
 
                                                 HashMap<String, String> hm = new HashMap<String, String>(0);
-                                                hm.put("author", ((MainActivityTabHost)getParent()).baseBundle.getString("myprofile_name"));
+                                                hm.put("author", ((MainActivityTabHost)prevActivity.getParent()).baseBundle.getString("myprofile_name"));
 
                                                 //get actual Date
                                                 final Calendar c = Calendar.getInstance();
@@ -175,7 +147,7 @@ public class MakeADate_SearchResults extends AppCompatActivity {
                                                 Chat chat = key.get(keys.toArray()[0]);
                                                 mDatabase.child("chats").child((String)keys.toArray()[0]).child("messages").child(String.valueOf(chat.getMessages().size())).setValue(hm);
                                                 mDatabase.child("chats").child((String)keys.toArray()[0]).child("lastMessage").setValue(hm);
-                                                Toast.makeText(getApplicationContext(), "You sent a request to join the date!", Toast.LENGTH_SHORT).show();
+                                                Toast.makeText(prevActivity.getApplicationContext(), "You sent a request to join the date!", Toast.LENGTH_SHORT).show();
                                             }
                                         }
 
@@ -187,7 +159,7 @@ public class MakeADate_SearchResults extends AppCompatActivity {
                                 }else{
 
                                     HashMap<String, String> hm = new HashMap<String, String>(0);
-                                    hm.put("author", ((MainActivityTabHost)getParent()).baseBundle.getString("myprofile_name"));
+                                    hm.put("author", ((MainActivityTabHost)prevActivity.getParent()).baseBundle.getString("myprofile_name"));
 
                                     //get actual Date
                                     final Calendar c = Calendar.getInstance();
@@ -210,7 +182,7 @@ public class MakeADate_SearchResults extends AppCompatActivity {
                                     Chat chat = key.get(keys.toArray()[0]);
                                     mDatabase.child("chats").child((String)keys.toArray()[0]).child("messages").child(String.valueOf(chat.getMessages().size())).setValue(hm);
                                     mDatabase.child("chats").child((String)keys.toArray()[0]).child("lastMessage").setValue(hm);
-                                    Toast.makeText(getApplicationContext(), "You sent a request to join the date!", Toast.LENGTH_SHORT).show();;
+                                    Toast.makeText(prevActivity.getApplicationContext(), "You sent a request to join the date!", Toast.LENGTH_SHORT).show();;
                                 }
                             }
 
@@ -230,61 +202,40 @@ public class MakeADate_SearchResults extends AppCompatActivity {
                 AlertDialog dialog = builder.create();
 
                 dialog.show();
-                //builder.create().show();
             }
         });
 
+        String gender = "";
+        if(currentDate.isWithman().equals("true") & currentDate.isWithwoman().equals("false")){
+            gender = "man";
+        }else if (currentDate.isWithwoman().equals("true") & currentDate.isWithman().equals("false")){
+            gender = "woman";
+        }else gender = "man | woman";
+
+        holder.type.setText(currentDate.getName() + "\n" + currentDate.getType());
+        holder.time.setText(currentDate.getTime() + "\n" + gender);
+        holder.date.setText(currentDate.getDate() + "\n" + currentDate.getLocation());
     }
 
     @Override
-    public void onBackPressed() {
-        getParent().onBackPressed();
+    public int getItemCount() {
+        return dates.size();
     }
 
-    public static class CustomAdapter extends BaseAdapter {
-        ArrayList<MakeDate> result;
-        Context context;
-        private static LayoutInflater inflater=null;
 
-        public CustomAdapter(MakeADate_SearchResults mainActivity, ArrayList<MakeDate>  findlist) {
-            result=findlist;
-            context=mainActivity;
-            inflater = ( LayoutInflater )context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        }
-        @Override
-        public int getCount() {
+    public static class MakeadateResultsViewholder extends RecyclerView.ViewHolder{
+        CardView cv;
+        TextView type;
+        TextView date;
+        TextView time;
 
-            return result.size();
-        }
-
-        @Override
-        public Object getItem(int position) {
-            return position;
+        MakeadateResultsViewholder(View itemView) {
+            super(itemView);
+            cv = (CardView)itemView.findViewById(R.id.cv_makeadate_searchresult);
+            type = (TextView) itemView.findViewById(R.id.makeadate_results_row_type);
+            date = (TextView) itemView.findViewById(R.id.makeadate_results_row_date);
+            time = (TextView) itemView.findViewById(R.id.makeadate_results_row_time);
         }
 
-        @Override
-        public long getItemId(int position) {
-            return position;
-        }
-
-        @Override
-        public View getView(final int position, View convertView, ViewGroup parent) {
-
-            MakeDate text = result.get(position);
-
-            View rowView = inflater.inflate(R.layout.listitem_find, null);
-
-            String gender = "";
-            if(text.isWithman().equals("true") & text.isWithwoman().equals("false")){
-                gender = "man";
-            }else if (text.isWithwoman().equals("true") & text.isWithman().equals("false")){
-                gender = "woman";
-            }else gender = "man | woman";
-
-            ((TextView) rowView.findViewById(R.id.row_type)).setText(text.getName() + "\n" + text.getType());
-            ((TextView) rowView.findViewById(R.id.row_date)).setText(text.getDate() + "\n" + text.getLocation());
-            ((TextView) rowView.findViewById(R.id.row_time)).setText(text.getTime() + "\n" + gender);
-            return rowView;
-        }
     }
-}*/
+}
