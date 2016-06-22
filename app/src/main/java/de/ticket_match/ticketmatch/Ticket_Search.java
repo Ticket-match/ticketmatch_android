@@ -3,6 +3,7 @@ package de.ticket_match.ticketmatch;
 import android.app.DatePickerDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.RecyclerView;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ArrayAdapter;
@@ -143,7 +144,8 @@ public class Ticket_Search extends AppCompatActivity {
                             }
                         }
                     }
-                    ((Find.CustomAdapter) ((ListView) ((TabHost) getParent().findViewById(R.id.tabHost)).getCurrentView().findViewById(R.id.find_results)).getAdapter()).notifyDataSetChanged();
+                    (((RecyclerView) ((TabHost) getParent().findViewById(R.id.tabHost)).getCurrentView().findViewById(R.id.find_results)).getAdapter()).notifyDataSetChanged();
+                    //((Find.CustomAdapter) ((ListView) ((TabHost) getParent().findViewById(R.id.tabHost)).getCurrentView().findViewById(R.id.find_results)).getAdapter()).notifyDataSetChanged();
                 }
 
                 @Override

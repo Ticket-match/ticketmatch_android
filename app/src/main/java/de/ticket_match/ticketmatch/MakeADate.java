@@ -3,6 +3,8 @@ package de.ticket_match.ticketmatch;
 import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +25,69 @@ import java.util.ArrayList;
 import de.ticket_match.ticketmatch.entities.MakeDate;
 
 public class MakeADate extends AppCompatActivity {
+
+    private DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
+    private ArrayList<MakeDate> dates = new ArrayList<MakeDate>(0);
+    private ArrayList<String> dates_keys = new ArrayList<String>(0);
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_make_adate);
+
+        mDatabase.child("makedates").orderByChild("user").equalTo(FirebaseAuth.getInstance().getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot d:dataSnapshot.getChildren()) {
+                    MakeDate date = d.getValue(MakeDate.class);
+                    dates.add(date);
+                    dates_keys.add((String)d.getKey());
+                }
+                ((((RecyclerView)findViewById(R.id.makedate_overview)).getAdapter())).notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+
+        final RecyclerView rv = (RecyclerView) findViewById(R.id.makedate_overview);
+        LinearLayoutManager llm = new LinearLayoutManager(this);
+        rv.setLayoutManager(llm);
+
+        final RVAdapter_MakeadateOverview adapter = new RVAdapter_MakeadateOverview(dates, dates_keys);
+        rv.setAdapter(adapter);
+
+        ((MainActivityTabHost) getParent()).baseBundle.putSerializable("makeadate_list", dates);
+        ((MainActivityTabHost) getParent()).baseBundle.putSerializable("makeadate_list_keys", dates_keys);
+    }
+
+    @Override
+    public void onBackPressed() {
+        getParent().onBackPressed();
+    }
+
+    public void btn_find_makeadate(View view){
+        ((TabHost)getParent().findViewById(R.id.tabHost)).setCurrentTabByTag("makeadate_search");
+
+    }
+
+    public void btn_save_makeadate(View view){
+        ((TabHost)getParent().findViewById(R.id.tabHost)).setCurrentTabByTag("makeadate_new");
+    }
+
+    public void btn_date_delete (View view) {
+        String date_key = ((TextView)((View)view.getParent()).findViewById(R.id.makeadate_row_key)).getText().toString();
+        int date_position = dates_keys.indexOf(date_key);
+        dates_keys.remove(date_position);
+        dates.remove(date_position);
+        (((RecyclerView) findViewById(R.id.makedate_overview)).getAdapter()).notifyDataSetChanged();
+        mDatabase.child("makedates").child(date_key).removeValue();
+    }
+}
+
+/*public class MakeADate extends AppCompatActivity {
 
     private DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
     private ArrayList<MakeDate> dates = new ArrayList<MakeDate>(0);
@@ -132,4 +197,4 @@ public class MakeADate extends AppCompatActivity {
         ((DateListAdapter)((ListView) findViewById(R.id.listview_makeadate)).getAdapter()).notifyDataSetChanged();
         mDatabase.child("makedates").child(date_key).removeValue();
     }
-}
+}*/
