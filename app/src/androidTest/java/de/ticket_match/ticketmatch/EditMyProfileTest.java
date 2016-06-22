@@ -21,6 +21,7 @@ import android.support.test.espresso.contrib.PickerActions;
 import static android.app.PendingIntent.getActivity;
 import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.action.ViewActions.clearText;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static android.support.test.espresso.action.ViewActions.scrollTo;
@@ -39,18 +40,15 @@ import android.widget.DatePicker;
 
 import java.util.EnumSet;
 
-
 /**
- * Created by D060644 on 6/10/2016.
+ * Created by D060644 on 6/21/2016.
  */
-public class RegisterTest {
+public class EditMyProfileTest {
 
     //Variables
 
     String mTestFirstName;
     String mTestLastName;
-    String mTestEmail;
-    String mTestPassword;
     String mTestLocation;
     int year;
     int month;
@@ -58,90 +56,68 @@ public class RegisterTest {
     String gender;
 
     @Rule
-
-    public ActivityTestRule<Register> mActivityRule = new ActivityTestRule<>(
-            Register.class);
+    public ActivityTestRule<EditMyProfile> mActivityRule = new ActivityTestRule<EditMyProfile>(
+        EditMyProfile.class);
 
     @Before
     public void initValidString() {
         // Specify a valid string.
 
-        mTestFirstName = "Hans";
-        mTestLastName = "Mueller";
-        mTestEmail = "hans.hm333@mail.com";
-        mTestPassword = "hansmueller";
-        mTestLocation = "Mannheim";
-        year = 1998;
-        month = 2;
-        day = 16;
-        gender = "Male";
+        mTestFirstName = "Maxi";
+        mTestLastName = "Musterfrau";
+        mTestLocation = "Heidelberg";
+        year = 1999;
+        month = 9;
+        day = 29;
+        gender = "Female";
     }
 
     @Test
-
     public void test() {
 
-        //Insert text automatically
 
-        onView(withId(R.id.register_firstname))
+        //Insert text automatically
+        onView(withId(R.id.edit_myprofile_firstname)).perform(clearText())
                 .perform(typeText(mTestFirstName));
 
-        onView(withId(R.id.register_lastname))
+        onView(withId(R.id.edit_myprofile_lastname)).perform(clearText())
                 .perform(typeText(mTestLastName));
 
-        onView(withId(R.id.register_email))
-                .perform(typeText(mTestEmail));
-
-        onView(withId(R.id.register_password))
-                .perform(typeText(mTestPassword));
-
-
-
+        onView(withId(R.id.edit_myprofile_location)).perform(clearText())
+                .perform(typeText(mTestLocation)).perform(closeSoftKeyboard());
 
         // Datepicker Birthdate
-        onView(withId(R.id.register_birthdate)).perform(click());
+        onView(withId(R.id.edit_myprofile_birthdate)).perform(click());
         onView(withClassName(Matchers.equalTo(DatePicker.class.getName()))).perform(PickerActions.setDate(year, month, day));
-       onView(withText("OK")).perform(click());
-
+        onView(withText("OK")).perform(click());
 
         //Spinner Value (Gender)
-        onView(withId(R.id.register_gender)).perform(click());
+        onView(withId(R.id.edit_myprofile_gender)).perform(click());
         onData(allOf(is(instanceOf(String.class)), is(gender))).perform(click());
 
-        onView(withId(R.id.register_location))
-                .perform(typeText(mTestLocation)).perform(closeSoftKeyboard());
 
 
         //Check Values
 
-        onView(withId(R.id.register_firstname))
+        onView(withId(R.id.edit_myprofile_firstname))
                 .check(matches(withText(mTestFirstName)));
 
-        onView(withId(R.id.register_lastname))
+        onView(withId(R.id.edit_myprofile_lastname))
                 .check(matches(withText(mTestLastName)));
 
-        onView(withId(R.id.register_email))
-                .check(matches(withText(mTestEmail)));
-
-        onView(withId(R.id.register_password))
-                .check(matches(withText(mTestPassword)));
-
-
-
-        onView(withId(R.id.register_birthdate)).check(matches(withText(day + "." + month + "." + year)));
-
-      onView(withId(R.id.register_gender))
-                .check(matches(withSpinnerText(containsString(gender))));
-
-        onView(withId(R.id.register_location))
+        onView(withId(R.id.edit_myprofile_location))
                 .check(matches(withText(mTestLocation)));
 
-        //Click final Register Button to navigate to next view
-        //click does not work
-        onView(withId(R.id.btnRegister))
-                .perform(click());
+        onView(withId(R.id.edit_myprofile_birthdate)).check(matches(withText(day + "." + month + "." + year)));
+
+        onView(withId(R.id.edit_myprofile_gender))
+                .check(matches(withSpinnerText(containsString(gender))));
+
+
+        //Click final Save Button to navigate to next view
+        onView(withId(R.id.fab_btn_edit_myprofile)).perform(click());
+
+
 
     }
-
-
 }
