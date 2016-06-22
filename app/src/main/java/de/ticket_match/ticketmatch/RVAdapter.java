@@ -103,19 +103,18 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.ChatViewHolder>{
             text = text.substring(0,text_length) + "...";
         }
         text = text.replaceAll("\n"," ");
+        final String t = text;
         String date_time = message.get("date") + "\n" + message.get("timestamp");
 
         holder.datetime.setText(date_time);
 
-        holder.nametext.setText(text);
-        //mDatabase.child("users").child(fuid).addListenerForSingleValueEvent(
         mDatabase.child("users").child(fuid).addValueEventListener(
                 new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         User user = dataSnapshot.getValue(User.class);
 
-                        String text = user.getFirstName() + " " + user.getLastName() + "\n" + holder.nametext.getText().toString();
+                        String text = user.getFirstName() + " " + user.getLastName() + "\n" + t;
                         /*CharSequence fn = user.getFirstName();
                         CharSequence ln = user.getLastName();
                         text.replace(fn, "");

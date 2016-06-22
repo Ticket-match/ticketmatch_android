@@ -157,10 +157,10 @@ public class MainActivityTabHost extends AppCompatActivity {
         ts19.setIndicator(ts19Ind);
         ts19.setContent(new Intent(this, EditMyProfile.class));
 
-        TabHost.TabSpec ts20 = th.newTabSpec("change_password");
+        /*TabHost.TabSpec ts20 = th.newTabSpec("change_password");
         View ts20Ind = getLayoutInflater().inflate(R.layout.activity_main_activity_tab_indicator_inv, th.getTabWidget(), false);
         ts20.setIndicator(ts20Ind);
-        ts20.setContent(new Intent(this, ChangePassword.class));
+        ts20.setContent(new Intent(this, ChangePassword.class));*/
 
         // Add Tabs to TabHost
         th.addTab(ts1);
@@ -178,7 +178,7 @@ public class MainActivityTabHost extends AppCompatActivity {
         th.addTab(ts17);
         th.addTab(ts18);
         th.addTab(ts19);
-        th.addTab(ts20);
+        //th.addTab(ts20);
 
         //Listener for tabchange so that header title can be changed
         th.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
@@ -214,9 +214,9 @@ public class MainActivityTabHost extends AppCompatActivity {
                     ((TextView)findViewById(R.id.headerTitle)).setText("Search for tickets");
                 } else if (tabId.equals("edit_myprofile")) {
                     ((TextView)findViewById(R.id.headerTitle)).setText("Edit my profile");
-                } else if (tabId.equals("change_password")) {
+                } /*else if (tabId.equals("change_password")) {
                     ((TextView) findViewById(R.id.headerTitle)).setText("Change your password");
-                } else {
+                } */else {
                     ((TextView)findViewById(R.id.headerTitle)).setText("TicketMatch");
                 }
             }
@@ -298,9 +298,9 @@ public class MainActivityTabHost extends AppCompatActivity {
                         th.setCurrentTabByTag("edit_myprofile");
                         return true;
                     case R.id.change_password:
-                        /*Intent changepassword =  new Intent(getApplicationContext(), ChangePassword.class);
-                        startActivity(changepassword);*/
-                        th.setCurrentTabByTag("change_password");
+                        Intent changepassword =  new Intent(getApplicationContext(), ChangePassword.class);
+                        startActivity(changepassword);
+                        //th.setCurrentTabByTag("change_password");
                         return true;
                     case R.id.logout:
                         //stops IntentService: MessageNotifications

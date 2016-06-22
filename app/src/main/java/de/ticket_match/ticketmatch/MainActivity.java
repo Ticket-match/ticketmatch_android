@@ -7,7 +7,9 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -52,6 +54,7 @@ import com.facebook.FacebookSdk;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.Exclude;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
@@ -243,66 +246,66 @@ public class MainActivity extends AppCompatActivity {
                             JSONObject object,
                             GraphResponse response) {
                         Log.d(TAG, "in onCompletedGraphREquest");
+
                         try{
-                            firstname = object.getString("first_name");
-                            lastname = object.getString("last_name");
-                            birthday = object.getString("birthday");
-                            birthday = birthday.substring(3,5) + "." + birthday.substring(0,2) + "." + birthday.substring(6);
-                            gender = object.getString("gender");
-                            gender = gender.substring(0,1).toUpperCase() + gender.substring(1).toLowerCase();
                             userID = object.getString("id");
-                            location = object.getJSONObject("location").getString("name");
-
-                        }catch (JSONException e){
-                            Log.d(TAG, "You came in the Catch Block");
+                            if(object.has("first_name")) firstname = object.getString("first_name");
+                            if(object.has("last_name")) lastname = object.getString("last_name");
+                            if(object.has("birthday")) birthday = object.getString("birthday");
+                            birthday = birthday.substring(3,5) + "." + birthday.substring(0,2) + "." + birthday.substring(6);
+                            if(object.has("gender")) gender = object.getString("gender");
+                            gender = gender.substring(0,1).toUpperCase() + gender.substring(1).toLowerCase();
+                            if(object.has("location")) location = object.getJSONObject("location").getString("name");
+                        } catch (JSONException e){
                             e.printStackTrace();
                         }
 
-                        Bitmap bm = null;
+                        if (!userID.equals("")) {
+                            final String imageUrl = "https://graph.facebook.com/" + userID + "/picture?type=large";
 
-                        try {
-                            bm = getFacebookProfilePicture(userID);
-                            Log.d(TAG, "ProfilePicture worked");
-                        } catch (Exception e) {
-                            e.printStackTrace();
+                            // AsyncTask NetwqorkOn Main Thread Exception
+                            AsyncTask a = new AsyncTask() {
+                                @Override
+                                protected Object doInBackground(Object[] params) {
+                                    try
+                                    {
+                                        URL url = new URL((String)params[0]);
+                                        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                                        connection.setDoInput(true);
+                                        connection.setInstanceFollowRedirects(true);
+                                        connection.connect();
+                                        InputStream input = connection.getInputStream();
+                                        Bitmap myBitmap = BitmapFactory.decodeStream(input);
+                                        if (myBitmap == null) myBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.profilbild);
+                                        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+                                        myBitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+                                        byte[] ba = bytes.toByteArray();
+                                        mStorage.child("images/" + uid + ".jpg").putBytes(ba);
+                                    }
+                                    catch (Exception e)
+                                    {
+                                        e.printStackTrace();
+                                    }
+                                    return null;
+                                }
+                            };
+                            a.execute(imageUrl);
+
+                            user = new User(firstname, lastname, gender, birthday, location, new ArrayList<String>(0), new ArrayList<HashMap<String, String>>(0));
+                            mDatabase.child("users").child(uid).setValue(user);
+
+                            try {
+                                Thread.sleep(1000);
+                            } catch (Exception e) {
+
+                            }
                         }
-                        if(bm == null){
-                            bm = BitmapFactory.decodeResource(getResources(), R.drawable.profilbild);
-                        }
-                        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-                        bm.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
-                        byte[] ba = bytes.toByteArray();
-                        mStorage.child("images/" + uid + ".jpg").putBytes(ba);
-
-                        user = new User(firstname, lastname, gender, birthday, location, new ArrayList<String>(0), new ArrayList<HashMap<String, String>>(0));
-                        mDatabase.child("users").child(uid).setValue(user);
-
-                        //Log.d(TAG, "UserID is from Firebase" + FirebaseAuth.getInstance().getCurrentUser().getUid());
-
                     }
                 });
         Bundle parameters = new Bundle();
         parameters.putString("fields", "id,first_name,last_name,gender,birthday,location,email");
         request.setParameters(parameters);
-        request.executeAsync();
-    }
-
-    public static Bitmap getFacebookProfilePicture(String userID)
-            throws SocketException, SocketTimeoutException,
-            MalformedURLException, IOException, Exception {
-        String imageURL;
-        imageURL = "https://graph.facebook.com/" + userID
-                 + "/picture?type=large";
-        //imageURL ="https://scontent.xx.fbcdn.net/v/t1.0-1/p200x200/13450151_106511123112706_2658917247530074233_n.jpg?oh=dca4ce49dee21bbd61c64cc116b75747&oe=57CC6DB0";
-
-        URL url = new URL(imageURL);
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-        connection.setInstanceFollowRedirects(true);
-        InputStream is = (InputStream) new URL(connection.getURL().toString()).getContent();
-        Bitmap bitmap = BitmapFactory.decodeStream(is);
-
-
-        return bitmap;
+        request.executeAndWait();
     }
 
     // Check Internet Status
