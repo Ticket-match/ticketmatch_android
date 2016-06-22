@@ -37,7 +37,7 @@ public class MyProfileTakePhotoTest {
     public IntentsTestRule<MyProfile> intentsRule = new IntentsTestRule<>(MyProfile.class);
 
     @Test
-    public void validateCameraScenario() {
+    public void validateCameraScenario() throws InterruptedException {
         // Create a bitmap we can use for our simulated camera image
         Bitmap icon = BitmapFactory.decodeResource(
                 InstrumentationRegistry.getTargetContext().getResources(),
@@ -54,7 +54,7 @@ public class MyProfileTakePhotoTest {
 
         // Now that we have the stub in place, click on the button in our app that launches into the Camera
         onView(withId(R.id.myprofile_image)).perform(click());
-      //  onData(withChild(0)).perform(click());
+        Thread.sleep(500);
         onView(withId(R.id.take_photo)).perform(click());
 
         // We can also validate that an intent resolving to the "camera" activity has been sent out by our app

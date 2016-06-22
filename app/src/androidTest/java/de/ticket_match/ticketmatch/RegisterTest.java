@@ -1,44 +1,45 @@
 package de.ticket_match.ticketmatch;
-import android.support.test.espresso.ViewAction;
-import android.support.test.espresso.action.ViewActions;
-import android.support.test.rule.ActivityTestRule;
-import android.widget.DatePicker;
+
+        import android.support.test.espresso.ViewAction;
+        import android.support.test.espresso.action.ViewActions;
+        import android.support.test.rule.ActivityTestRule;
+        import android.widget.DatePicker;
 
 
-import android.test.ActivityInstrumentationTestCase2;
-import android.widget.DatePicker;
-import android.widget.TextView;
-import android.widget.TimePicker;
+        import android.test.ActivityInstrumentationTestCase2;
+        import android.widget.DatePicker;
+        import android.widget.TextView;
+        import android.widget.TimePicker;
 
 
-import org.hamcrest.Matchers;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
+        import org.hamcrest.Matchers;
+        import org.junit.Before;
+        import org.junit.Rule;
+        import org.junit.Test;
 
-import android.support.test.espresso.contrib.PickerActions;
+        import android.support.test.espresso.contrib.PickerActions;
 
-import static android.app.PendingIntent.getActivity;
-import static android.support.test.espresso.Espresso.onData;
-import static android.support.test.espresso.Espresso.onView;
-import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
-import static android.support.test.espresso.action.ViewActions.scrollTo;
-import static android.support.test.espresso.action.ViewActions.typeText;
-import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static android.support.test.espresso.matcher.ViewMatchers.withClassName;
-import static android.support.test.espresso.matcher.ViewMatchers.withId;
-import static android.support.test.espresso.matcher.ViewMatchers.withSpinnerText;
-import static android.support.test.espresso.matcher.ViewMatchers.withText;
-import static org.hamcrest.Matchers.allOf;
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.instanceOf;
-import static org.hamcrest.Matchers.is;
+        import static android.app.PendingIntent.getActivity;
+        import static android.support.test.espresso.Espresso.onData;
+        import static android.support.test.espresso.Espresso.onView;
+        import static android.support.test.espresso.action.ViewActions.click;
+        import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
+        import static android.support.test.espresso.action.ViewActions.scrollTo;
+        import static android.support.test.espresso.action.ViewActions.typeText;
+        import static android.support.test.espresso.assertion.ViewAssertions.matches;
+        import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
+        import static android.support.test.espresso.matcher.ViewMatchers.withClassName;
+        import static android.support.test.espresso.matcher.ViewMatchers.withId;
+        import static android.support.test.espresso.matcher.ViewMatchers.withSpinnerText;
+        import static android.support.test.espresso.matcher.ViewMatchers.withText;
+        import static org.hamcrest.Matchers.allOf;
+        import static org.hamcrest.Matchers.containsString;
+        import static org.hamcrest.Matchers.instanceOf;
+        import static org.hamcrest.Matchers.is;
 
-import android.widget.DatePicker;
+        import android.widget.DatePicker;
 
-import java.util.EnumSet;
+        import java.util.EnumSet;
 
 
 /**
@@ -60,8 +61,8 @@ public class RegisterTest {
 
     @Rule
 
-    public ActivityTestRule<Register> mActivityRule = new ActivityTestRule<>(
-            Register.class);
+    public ActivityTestRule<MainActivity> mActivityRule = new ActivityTestRule<>(
+            MainActivity.class);
 
     @Before
     public void initValidString() {
@@ -69,7 +70,7 @@ public class RegisterTest {
 
         mTestFirstName = "Hans";
         mTestLastName = "Mueller";
-        mTestEmail = "hans.hm333@mail.com";
+        mTestEmail = "hans.hm36776@mail.com";
         mTestPassword = "hansmueller";
         mTestLocation = "Mannheim";
         year = 1998;
@@ -80,7 +81,11 @@ public class RegisterTest {
 
     @Test
 
-    public void test() {
+    public void test() throws InterruptedException {
+
+        onView(withId(R.id.textViewRegister)).perform(click());
+        Thread.sleep(500);
+
 
         //Insert text automatically
 
@@ -140,9 +145,11 @@ public class RegisterTest {
                 .check(matches(withText(mTestLocation)));
 
         //Click final Register Button to navigate to next view
-        //click does not work
+
         onView(withId(R.id.btnRegister))
                 .perform(click());
+        Thread.sleep(500);
+
 
     }
 

@@ -23,19 +23,20 @@ public class MyProfileAddInterestTest {
     //Variables
 
     String mTestInterest;
+
     @Rule
-    public ActivityTestRule<MyProfile> mActivityRule = new ActivityTestRule<MyProfile>(
-            MyProfile.class);
+    public ActivityTestRule<MainActivityTabHost> mActivityRule = new ActivityTestRule<MainActivityTabHost>(
+            MainActivityTabHost.class);
 
     @Before
     public void initValidString() {
         // Specify a valid string.
 
-        mTestInterest = "Autos";
+        mTestInterest = "Sport";
             }
 
     @Test
-    public void test() {
+    public void test() throws InterruptedException {
 
         //Insert text automatically
         onView(withId(R.id.newinterest_text))
@@ -44,6 +45,7 @@ public class MyProfileAddInterestTest {
        //Click final Add Button to add new interest
         onView(withId(R.id.btn_newinterest))
                 .perform(click());
+        Thread.sleep(5000);
 
         //CheckValues
         onView(withId(R.id.newinterest_text))
