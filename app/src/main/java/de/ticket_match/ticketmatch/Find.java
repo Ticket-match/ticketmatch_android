@@ -5,6 +5,8 @@ import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +32,36 @@ import de.ticket_match.ticketmatch.entities.Chat;
 import de.ticket_match.ticketmatch.entities.Ticket;
 
 public class Find extends AppCompatActivity {
+
+    ArrayList<Ticket> listitems_find;
+    private DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
+    ListView listview;
+
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_find);
+
+        listitems_find = (ArrayList<Ticket>)((MainActivityTabHost) getParent()).baseBundle.getSerializable("tickets_search_result");
+
+        final RecyclerView rv = (RecyclerView) findViewById(R.id.find_results);
+        LinearLayoutManager llm = new LinearLayoutManager(this);
+        rv.setLayoutManager(llm);
+
+        final RVAdapter_TicketSearchResults adapter = new RVAdapter_TicketSearchResults(listitems_find, this);
+        rv.setAdapter(adapter);
+
+    }
+
+    @Override
+    public void onBackPressed() {
+        getParent().onBackPressed();
+    }
+
+}
+
+/*public class Find extends AppCompatActivity {
 
     ArrayList<Ticket> listitems_find;
     private DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
@@ -248,4 +280,4 @@ public class Find extends AppCompatActivity {
             return rowView;
         }
     }
-}
+}*/

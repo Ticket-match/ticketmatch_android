@@ -35,15 +35,15 @@ public class RVAdapter_OfferOverview extends RecyclerView.Adapter<RVAdapter_Offe
 
     List<Ticket> tickets;
     List<String> tickets_keys;
-    private static DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
-    Activity prevActivity;
-    private static LayoutInflater inflater = null;
+    //private static DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
+    //Activity prevActivity;
+    //private static LayoutInflater inflater = null;
 
     RVAdapter_OfferOverview(List<Ticket> tickets, final Activity prevActivity, final List<String> tickets_keys){
         this.tickets = tickets;
-        this.prevActivity = prevActivity;
+        //this.prevActivity = prevActivity;
         this.tickets_keys = tickets_keys;
-        this.inflater = (LayoutInflater) prevActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        //this.inflater = (LayoutInflater) prevActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
     }
 
@@ -56,7 +56,7 @@ public class RVAdapter_OfferOverview extends RecyclerView.Adapter<RVAdapter_Offe
 
         OfferViewHolder(View itemView) {
             super(itemView);
-            cv = (CardView)itemView.findViewById(R.id.cv);
+            cv = (CardView)itemView.findViewById(R.id.cv_mytickets);
             type = (TextView)itemView.findViewById(R.id.row_type);
             name = (TextView) itemView.findViewById(R.id.row_name);
             date = (TextView) itemView.findViewById(R.id.row_date);
@@ -76,9 +76,6 @@ public class RVAdapter_OfferOverview extends RecyclerView.Adapter<RVAdapter_Offe
     public void onBindViewHolder(final OfferViewHolder holder, final int position) {
         Ticket ticket = tickets.get(position);
         String ticket_key = tickets_keys.get(position);
-        String type = ticket.getType();
-        String name = ticket.getName();
-        String date = ticket.getDate();
 
         holder.type.setText(ticket.getName() + "\n" + ticket.getType());
         holder.name.setText(ticket.getDate() + "\n" + ticket.getLocation());
