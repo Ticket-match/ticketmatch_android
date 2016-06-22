@@ -39,7 +39,7 @@
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:id="@+id/makeadate_row_date"
                 android:layout_column="1"
-                android:layout_weight="2"
+                android:layout_weight="1"
                 android:gravity="left" />
 
             <TextView
@@ -48,7 +48,7 @@
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:id="@+id/makeadate_row_who"
                 android:layout_column="2"
-                android:layout_weight="1.5"
+                android:layout_weight="1"
                 android:gravity="left" />
 
             <TextView
