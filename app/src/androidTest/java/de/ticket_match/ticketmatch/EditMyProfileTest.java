@@ -64,7 +64,7 @@ public class EditMyProfileTest {
         // Specify a valid string.
 
         mTestFirstName = "Maxi";
-        mTestLastName = "Musterfrau";
+        mTestLastName = "Musterfrauchen";
         mTestLocation = "Heidelberg";
         year = 1999;
         month = 9;
