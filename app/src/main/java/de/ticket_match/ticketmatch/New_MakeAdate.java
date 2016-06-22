@@ -5,6 +5,7 @@ import android.app.TimePickerDialog;
 import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.RecyclerView;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -132,7 +133,7 @@ public class New_MakeAdate extends AppCompatActivity {
 
             Toast.makeText(getApplicationContext(), "Your date is registered!", Toast.LENGTH_SHORT).show();
             ((TabHost) getParent().findViewById(R.id.tabHost)).setCurrentTabByTag("makeadate");
-            ((MakeADate.DateListAdapter)(((ListView)((TabHost)getParent().findViewById(R.id.tabHost)).getCurrentView().findViewById(R.id.listview_makeadate)).getAdapter())).notifyDataSetChanged();
+            ((((RecyclerView)((TabHost)getParent().findViewById(R.id.tabHost)).getCurrentView().findViewById(R.id.makedate_overview)).getAdapter())).notifyDataSetChanged();
         }
 
     }
