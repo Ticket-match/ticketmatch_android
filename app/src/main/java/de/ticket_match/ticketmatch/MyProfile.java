@@ -70,8 +70,9 @@ public class MyProfile extends AppCompatActivity {
 
         @Override
         public Object getItem(int position) {
-            return position;
+            return result.get(position);
         }
+        //return position;
 
         @Override
         public long getItemId(int position) {

@@ -51,28 +51,24 @@ public class MyProfileDeleteInterestTest {
     @Test
     public void test() throws InterruptedException {
 
-        //Insert text automatically
+        //Add new interest
         onView(withId(R.id.newinterest_text))
-                .perform(typeText(mTestInterest)).perform(closeSoftKeyboard());
+        .perform(typeText(mTestInterest)).perform(closeSoftKeyboard());
         Thread.sleep(500);
-
-        //Click final Add Button to add new interest
         onView(withId(R.id.btn_newinterest))
                 .perform(click());
         Thread.sleep(500);
 
         //CheckValues- Listview Entry
+        onView(withId(R.id.listitem_text)).check(matches(withText(mTestInterest)));
 
-       // onView(withId(R.id.listitem_text)).check(matches(withText(mTestInterest)));
-
-        //delete interest
-
-        onData((withId(R.id.listitem_interests_delete)))
-                .inAdapterView(withId(R.id.listitem_interests))
+        //Delete Interest
+        onData(hasToString(mTestInterest))
+                .inAdapterView(withId(R.id.myprofile_interests))
+                .onChildView(withId(R.id.listitem_interests_delete))
                 .perform(click());
-        //onData(allOf(is(instanceOf(MyProfile.InterestListAdapter.class)), is(mTestInterest))).perform(click());
+        Thread.sleep(5000);
 
-        //onView(withId(R.id.listitem_interests_delete)).perform(click());
 
 
 

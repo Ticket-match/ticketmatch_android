@@ -39,6 +39,7 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.startsWith;
 
+
 /**
  * Created by D060644 on 6/22/2016.
  */
@@ -47,26 +48,32 @@ public class MyProfileTakePhotoTest {
     // IntentsTestRule is an extension of ActivityTestRule. IntentsTestRule sets up Espresso-Intents
     // before each Test is executed to allow stubbing and validation of intents.
     @Rule
-    public ActivityTestRule<MainActivityTabHost> mActivityRule = new ActivityTestRule<MainActivityTabHost>(
-            MainActivityTabHost.class);
+    public IntentsTestRule<MyProfile> intentsRule = new IntentsTestRule<>(MyProfile.class);
 
     @Test
-    public void test() throws InterruptedException {
-        Thread.sleep(5000);
+    public void validateCameraScenario() throws InterruptedException {
+        // Create a bitmap we can use for our simulated camera image
+        Bitmap icon = BitmapFactory.decodeResource(
+                InstrumentationRegistry.getTargetContext().getResources(),
+                R.mipmap.ic_launcher);
 
-        //Open menu
+        // Build a result to return from the Camera app
+        Intent resultData = new Intent();
+        resultData.putExtra("data", icon);
+        Instrumentation.ActivityResult result = new Instrumentation.ActivityResult(Activity.RESULT_OK, resultData);
+
+        // Stub out the Camera. When an intent is sent to the Camera, this tells Espresso to respond
+        // with the ActivityResult we just created
+        intending(toPackage("com.android.camera2")).respondWith(result);
+
+        // Now that we have the stub in place, click on the button in our app that launches into the Camera
         onView(withId(R.id.myprofile_image)).perform(click());
-
-        onData(hasToString(startsWith("Take Photo")))
-                .inAdapterView(withText("popup"))
-                .perform(click());
-
-//     onData(allOf(is(instanceOf(String.class)), is("Take Photo"))).perform(click());
-      //onView(withId(R.id.delete_photo)).perform(click());
         Thread.sleep(500);
+        onView(withText("Take Photo")).perform(click());
 
+        // We can also validate that an intent resolving to the "camera" activity has been sent out by our app
+        intended(toPackage("com.android.camera2"));
+
+        // ... additional test steps and validation ...
     }
-
-
-
 }
