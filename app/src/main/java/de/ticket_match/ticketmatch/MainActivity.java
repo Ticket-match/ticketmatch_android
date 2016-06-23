@@ -230,46 +230,45 @@ public class MainActivity extends AppCompatActivity {
     //Get the Userdata from Facebook and store it in Firebase Database
     private void requestFacebookData(final AccessToken accessToken){
 
-        GraphRequest request = GraphRequest.newMeRequest(
-                accessToken,
-                new GraphRequest.GraphJSONObjectCallback() {
+        Thread t = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                GraphRequest request = GraphRequest.newMeRequest(
+                        accessToken,
+                        new GraphRequest.GraphJSONObjectCallback() {
 
-                    String firstname = "Firstname";
-                    String lastname = "Lastname";
-                    String birthday = "1.1.1900";
-                    String gender = "Male";
-                    String userID = "";
-                    String location = "Default";
+                            String firstname = "Firstname";
+                            String lastname = "Lastname";
+                            String birthday = "1.1.1900";
+                            String gender = "Male";
+                            String userID = "";
+                            String location = "Default";
 
-                    @Override
-                    public void onCompleted(
-                            JSONObject object,
-                            GraphResponse response) {
-                        Log.d(TAG, "in onCompletedGraphREquest");
+                            @Override
+                            public void onCompleted(
+                                    JSONObject object,
+                                    GraphResponse response) {
+                                Log.d(TAG, "in onCompletedGraphREquest");
 
-                        try{
-                            userID = object.getString("id");
-                            if(object.has("first_name")) firstname = object.getString("first_name");
-                            if(object.has("last_name")) lastname = object.getString("last_name");
-                            if(object.has("birthday")) birthday = object.getString("birthday");
-                            birthday = birthday.substring(3,5) + "." + birthday.substring(0,2) + "." + birthday.substring(6);
-                            if(object.has("gender")) gender = object.getString("gender");
-                            gender = gender.substring(0,1).toUpperCase() + gender.substring(1).toLowerCase();
-                            if(object.has("location")) location = object.getJSONObject("location").getString("name");
-                        } catch (JSONException e){
-                            e.printStackTrace();
-                        }
+                                try{
+                                    userID = object.getString("id");
+                                    if(object.has("first_name")) firstname = object.getString("first_name");
+                                    if(object.has("last_name")) lastname = object.getString("last_name");
+                                    if(object.has("birthday")) birthday = object.getString("birthday");
+                                    birthday = birthday.substring(3,5) + "." + birthday.substring(0,2) + "." + birthday.substring(6);
+                                    if(object.has("gender")) gender = object.getString("gender");
+                                    gender = gender.substring(0,1).toUpperCase() + gender.substring(1).toLowerCase();
+                                    if(object.has("location")) location = object.getJSONObject("location").getString("name");
+                                } catch (JSONException e){
+                                    e.printStackTrace();
+                                }
 
-                        if (!userID.equals("")) {
-                            final String imageUrl = "https://graph.facebook.com/" + userID + "/picture?type=large";
+                                if (!userID.equals("")) {
+                                    final String imageUrl = "https://graph.facebook.com/" + userID + "/picture?type=large";
 
-                            // AsyncTask NetwqorkOn Main Thread Exception
-                            AsyncTask a = new AsyncTask() {
-                                @Override
-                                protected Object doInBackground(Object[] params) {
                                     try
                                     {
-                                        URL url = new URL((String)params[0]);
+                                        URL url = new URL(imageUrl);//(String)params[0]);
                                         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                                         connection.setDoInput(true);
                                         connection.setInstanceFollowRedirects(true);
@@ -286,26 +285,27 @@ public class MainActivity extends AppCompatActivity {
                                     {
                                         e.printStackTrace();
                                     }
-                                    return null;
+
+                                    user = new User(firstname, lastname, gender, birthday, location, new ArrayList<String>(0), new ArrayList<HashMap<String, String>>(0));
+                                    mDatabase.child("users").child(uid).setValue(user);
                                 }
-                            };
-                            a.execute(imageUrl);
-
-                            user = new User(firstname, lastname, gender, birthday, location, new ArrayList<String>(0), new ArrayList<HashMap<String, String>>(0));
-                            mDatabase.child("users").child(uid).setValue(user);
-
-                            try {
-                                Thread.sleep(1000);
-                            } catch (Exception e) {
-
                             }
-                        }
-                    }
-                });
-        Bundle parameters = new Bundle();
-        parameters.putString("fields", "id,first_name,last_name,gender,birthday,location,email");
-        request.setParameters(parameters);
-        request.executeAndWait();
+                        });
+                Bundle parameters = new Bundle();
+                parameters.putString("fields", "id,first_name,last_name,gender,birthday,location,email");
+                request.setParameters(parameters);
+                request.executeAndWait();
+            }
+        });
+
+        t.start();
+
+        try{
+            t.join();
+            Thread.sleep(1000);
+        } catch (Exception e) {
+
+        }
     }
 
     // Check Internet Status
