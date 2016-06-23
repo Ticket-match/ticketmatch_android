@@ -191,11 +191,6 @@ public class MyProfile extends AppCompatActivity {
 
     }
 
-    //Load Tab Edit MyProfile
-    public void editProfile(View view){
-        ((TabHost)getParent().findViewById(R.id.tabHost)).setCurrentTabByTag("edit_myprofile");
-    }
-
     @Override
     public void onBackPressed() {
         getParent().onBackPressed();

@@ -53,8 +53,7 @@
                         android:id="@+id/myprofile_name"
                         android:layout_margin="1dp"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                        android:alpha="0.87"
-                        android:onClick="editProfile" />
+                        android:alpha="0.87" />
 
                     <TextView
                         android:text="Gender and Age"
@@ -63,8 +62,7 @@
                         android:id="@+id/myprofile_gender_age"
                         android:layout_margin="1dp"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                        android:alpha="0.87"
-                        android:onClick="editProfile"/>
+                        android:alpha="0.87"/>
 
                     <TextView
                         android:text="Location"
@@ -73,8 +71,7 @@
                         android:id="@+id/myprofile_location"
                         android:layout_margin="1dp"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                        android:alpha="0.87"
-                        android:onClick="editProfile"/>
+                        android:alpha="0.87"/>
 
 
                     <RatingBar
