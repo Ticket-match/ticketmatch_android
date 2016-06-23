@@ -115,6 +115,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onSuccess(LoginResult loginResult) {
                 Log.d(TAG, "facebook:onSuccess:" + loginResult);
+                final ProgressDialog progressDialog = ProgressDialog.show(MainActivity.this, "Please wait ...", "Logging in ...", true);
+                progressDialog.setCancelable(true);
                 handleFacebookAccessToken(loginResult.getAccessToken());
             }
 
