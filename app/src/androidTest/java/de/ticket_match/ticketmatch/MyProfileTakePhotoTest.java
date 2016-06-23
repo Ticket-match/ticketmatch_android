@@ -52,8 +52,9 @@ public class MyProfileTakePhotoTest {
 
     @Test
     public void validateCameraScenario() throws InterruptedException {
+
         // Create a bitmap we can use for our simulated camera image
-        Bitmap icon = BitmapFactory.decodeResource(
+       Bitmap icon = BitmapFactory.decodeResource(
                 InstrumentationRegistry.getTargetContext().getResources(),
                 R.mipmap.ic_launcher);
 
@@ -68,10 +69,10 @@ public class MyProfileTakePhotoTest {
 
         // Now that we have the stub in place, click on the button in our app that launches into the Camera
         onView(withId(R.id.myprofile_image)).perform(click());
-        Thread.sleep(500);
         onView(withText("Take Photo")).perform(click());
 
-        // We can also validate that an intent resolving to the "camera" activity has been sent out by our app
+
+//        // We can also validate that an intent resolving to the "camera" activity has been sent out by our app
         intended(toPackage("com.android.camera2"));
 
         // ... additional test steps and validation ...
