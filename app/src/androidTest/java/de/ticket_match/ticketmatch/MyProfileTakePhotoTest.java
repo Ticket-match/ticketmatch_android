@@ -5,6 +5,7 @@ import android.app.Instrumentation;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Camera;
 import android.support.test.InstrumentationRegistry;
 import android.support.test.espresso.Root;
 import android.support.test.espresso.intent.rule.IntentsTestRule;
@@ -16,6 +17,8 @@ import org.hamcrest.Matcher;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+
+import de.ticket_match.ticketmatch.entities.Ticket;
 
 import static android.app.PendingIntent.getActivity;
 import static android.support.test.espresso.Espresso.onData;
@@ -31,6 +34,7 @@ import static android.support.test.espresso.matcher.RootMatchers.isPlatformPopup
 import static android.support.test.espresso.matcher.RootMatchers.withDecorView;
 import static android.support.test.espresso.matcher.ViewMatchers.withChild;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static android.support.test.espresso.matcher.ViewMatchers.withResourceName;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.hasToString;
@@ -43,12 +47,13 @@ import static org.hamcrest.Matchers.startsWith;
 /**
  * Created by D060644 on 6/22/2016.
  */
-public class MyProfileTakePhotoTest {
+public class MyProfileTakePhotoTest{
 
     // IntentsTestRule is an extension of ActivityTestRule. IntentsTestRule sets up Espresso-Intents
     // before each Test is executed to allow stubbing and validation of intents.
     @Rule
-    public IntentsTestRule<MyProfile> intentsRule = new IntentsTestRule<>(MyProfile.class);
+    public IntentsTestRule<MainActivityTabHost> intentsRule = new IntentsTestRule<>(MainActivityTabHost.class);
+
 
     @Test
     public void validateCameraScenario() throws InterruptedException {
@@ -75,6 +80,10 @@ public class MyProfileTakePhotoTest {
 //        // We can also validate that an intent resolving to the "camera" activity has been sent out by our app
         intended(toPackage("com.android.camera2"));
 
-        // ... additional test steps and validation ...
+        // Take a Picture
+    //    onView(withResourceName("com.android.shutter_button")).perform(click());
+
+
+
     }
 }
