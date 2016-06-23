@@ -56,7 +56,7 @@ public class MyProfileAddInterestTest {
                 .perform(click());
         Thread.sleep(500);
 
-        //stilltodo: CheckValues- Listview Entry
+        //CheckValues- Listview Entry
 
         onView(withId(R.id.listitem_text)).check(matches(withText(mTestInterest)));
 
