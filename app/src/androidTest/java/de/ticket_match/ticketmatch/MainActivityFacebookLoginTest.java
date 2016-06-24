@@ -12,7 +12,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 
 /**
- * Created by D060644 on 6/24/2016.
+ * Created by D060644 on 6/24/2016..
  *
  * INFO: Please be logged out before testing. You have 1.5 minutes to interact with the facebook API for typing in your personal login data. After this time frame the App will shut down.
  */
