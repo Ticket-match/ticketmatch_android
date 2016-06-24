@@ -17,7 +17,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.hasToString;
 
 /**
- * Created by D060644 on 6/23/2016. Tobedone: Code Cleanup, Verify check() methods
+ * Created by D060644 on 6/23/2016.
  */
 public class LoginInterestIntegrationTest {
     //Variables
@@ -103,6 +103,11 @@ public class LoginInterestIntegrationTest {
                 .onChildView(withId(R.id.listitem_interests_delete))
                 .perform(click());
         Thread.sleep(50);
+
+      //  tobedone:  CheckValues- Listview Entry
+
+        onView(withId(R.id.listitem_text)).check(matches(withText(mTestInterest3)));
+
 
         //Logout
         onView(withId(R.id.overflow_button)).perform(click());
