@@ -14,6 +14,8 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
 /**
  * Created by D060644 on 6/24/2016.
+ *
+ * INFO: Please be logged out before testing. Please interact with device in person, to choose a photo.
  */
 public class MyProfileUploadPhotoTest {
 
@@ -24,20 +26,16 @@ public class MyProfileUploadPhotoTest {
     public void test() throws InterruptedException {
         Thread.sleep(5000);
 
-        //Upload Photo
+//Upload Photo
+//ACT
         onView(withId(R.id.myprofile_image)).perform(click());
         onView(withText("Upload Photo")).perform(click());
 
 
-        //Check
+//CHECK
         onView(withId(R.id.myprofile_image)).check(matches(isDisplayed()));
-
-
         Thread.sleep(50);
 
-
     }
-
-
 
 }

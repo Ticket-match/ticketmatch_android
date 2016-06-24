@@ -1,7 +1,6 @@
 package de.ticket_match.ticketmatch;
 
 
-import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
@@ -19,13 +18,14 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
 /**
  * Created by D060644 on 6/10/2016.
+ *
+ * INFO: Please be logged out before testing.
  */
 
 @RunWith(AndroidJUnit4.class)
 public class MainActivityTest {
 
     //Variables
-
     String mTestLoginMail;
     String mTestLoginPassword;
 
@@ -43,6 +43,8 @@ public class MainActivityTest {
 
     @Test
     public void test() {
+//Login
+//ACT
 
         //Insert text automatically
         onView(withId(R.id.login_mail))
@@ -51,21 +53,18 @@ public class MainActivityTest {
                 .perform(typeText(mTestLoginPassword));
 
 
-        //CheckValues
+//CHECK
         onView(withId(R.id.login_mail))
                 .check(matches(withText(mTestLoginMail)));
 
         onView(withId(R.id.login_password))
                 .check(matches(withText(mTestLoginPassword)));
 
-        //Click final Login Button to navigate to next view
+        //Click final Button to navigate to next view
         onView(withId(R.id.btn_login)).perform(click());
 
 
     }
-
-
-
 
 }
 

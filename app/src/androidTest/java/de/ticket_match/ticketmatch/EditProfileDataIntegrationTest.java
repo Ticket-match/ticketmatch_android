@@ -28,6 +28,7 @@ import static org.hamcrest.Matchers.is;
 
 /**
  * Created by D060644 on 6/24/2016.
+ * INFO: Please be logged out before testing.
  */
 public class EditProfileDataIntegrationTest {
 
@@ -51,7 +52,6 @@ public class EditProfileDataIntegrationTest {
     @Before
     public void initValidString() {
         // Specify a valid string.
-
         mTestLoginMail = "m@m.com";
         mTestLoginPassword = "maxmax";
         mTestFirstName = "Maxi";
@@ -68,14 +68,15 @@ public class EditProfileDataIntegrationTest {
     public void test() throws InterruptedException {
 
 //Login
-        //Insert text automatically
+//ACT
+        // Insert text automatically
         onView(withId(R.id.login_mail))
                 .perform(typeText(mTestLoginMail));
         onView(withId(R.id.login_password))
                 .perform(typeText(mTestLoginPassword));
 
 
-        //CheckValues
+//CHECK
         onView(withId(R.id.login_mail))
                 .check(matches(withText(mTestLoginMail)));
 
@@ -86,12 +87,13 @@ public class EditProfileDataIntegrationTest {
         onView(withId(R.id.btn_login)).perform(click());
         Thread.sleep(500);
 
+
 //Edit Profile
+//ACT
         // Open Edit Profile Page
         onView(withId(R.id.overflow_button)).perform(click());
         onView(withText("Edit profile")).perform(click());
         Thread.sleep(500);
-
 
         //Insert text automatically
         onView(withId(R.id.edit_myprofile_firstname)).perform(clearText())
@@ -100,29 +102,24 @@ public class EditProfileDataIntegrationTest {
         onView(withId(R.id.edit_myprofile_lastname)).perform(clearText())
                 .perform(typeText(mTestLastName));
 
-
-
-        // Datepicker Birthdate
+                // Datepicker Birthdate
         onView(withId(R.id.edit_myprofile_birthdate)).perform(click());
         onView(withClassName(Matchers.equalTo(DatePicker.class.getName()))).perform(PickerActions.setDate(year, month, day));
         onView(withText("OK")).perform(click());
 
-        //Spinner Value (Gender)
+                //Spinner Value (Gender)
         onView(withId(R.id.edit_myprofile_gender)).perform(click());
         onData(allOf(is(instanceOf(String.class)), is(gender))).perform(click());
 
         onView(withId(R.id.edit_myprofile_location)).perform(clearText())
                 .perform(typeText(mTestLocation)).perform(closeSoftKeyboard());
 
-
-        //Check Values
-
+//CHECK
         onView(withId(R.id.edit_myprofile_firstname))
                 .check(matches(withText(mTestFirstName)));
 
         onView(withId(R.id.edit_myprofile_lastname))
                 .check(matches(withText(mTestLastName)));
-
 
         onView(withId(R.id.edit_myprofile_birthdate)).check(matches(withText(day + "." + month + "." + year)));
 
@@ -133,31 +130,31 @@ public class EditProfileDataIntegrationTest {
                 .check(matches(withText(mTestLocation)));
 
 
-        //Click final Save Button to navigate to next view
+        //Click final Button to navigate to next view
         onView(withId(R.id.fab_btn_edit_myprofile)).perform(click());
         Thread.sleep(5000);
 
 //Change Photo
-
+//ACT
         //Upload Photo
         onView(withId(R.id.myprofile_image)).perform(click());
         onView(withText("Upload Photo")).perform(click());
 
 
-        //Check
+//CHECK
         onView(withId(R.id.myprofile_image)).check(matches(isDisplayed()));
         Thread.sleep(500);
 
 
 //Logout
+//ACT
         onView(withId(R.id.overflow_button)).perform(click());
         onView(withText("Logout")).perform(click());
         Thread.sleep(500);
 
-        //Check
+//CHECK
         onView(withId(R.id.login_mail)).check(matches(isDisplayed()));
         Thread.sleep(500);
-
 
     }
 }

@@ -27,11 +27,12 @@ import static org.hamcrest.Matchers.is;
 
 /**
  * Created by D060644 on 6/21/2016.
+ * INFO: Please be logged in before testing.
+ *
  */
 public class EditMyProfileTest {
 
     //Variables
-
     String mTestFirstName;
     String mTestLastName;
     String mTestLocation;
@@ -60,6 +61,8 @@ public class EditMyProfileTest {
     @Test
     public void test()throws InterruptedException {
 
+//ACT
+
         // Open Edit Profile Pageb by Clicking name
        // onView(withId(R.id.myprofile_name)).perform(click());
        // Thread.sleep(5000);
@@ -80,28 +83,25 @@ public class EditMyProfileTest {
 
 
 
-        // Datepicker Birthdate
+                // Datepicker Birthdate
        onView(withId(R.id.edit_myprofile_birthdate)).perform(click());
       onView(withClassName(Matchers.equalTo(DatePicker.class.getName()))).perform(PickerActions.setDate(year, month, day));
        onView(withText("OK")).perform(click());
 
-        //Spinner Value (Gender)
+                //Spinner Value (Gender)
         onView(withId(R.id.edit_myprofile_gender)).perform(click());
         onData(allOf(is(instanceOf(String.class)), is(gender))).perform(click());
 
         onView(withId(R.id.edit_myprofile_location)).perform(clearText())
                 .perform(typeText(mTestLocation)).perform(closeSoftKeyboard());
 
-
-
-        //Check Values
+//CHECK
 
         onView(withId(R.id.edit_myprofile_firstname))
                 .check(matches(withText(mTestFirstName)));
 
         onView(withId(R.id.edit_myprofile_lastname))
                 .check(matches(withText(mTestLastName)));
-
 
         onView(withId(R.id.edit_myprofile_birthdate)).check(matches(withText(day + "." + month + "." + year)));
 
@@ -112,11 +112,8 @@ public class EditMyProfileTest {
                 .check(matches(withText(mTestLocation)));
 
 
-        //Click final Save Button to navigate to next view
+        //Click final Button to navigate to next view
         onView(withId(R.id.fab_btn_edit_myprofile)).perform(click());
-
-
-
 
 
     }

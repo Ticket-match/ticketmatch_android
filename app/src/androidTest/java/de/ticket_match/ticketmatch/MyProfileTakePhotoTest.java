@@ -15,6 +15,8 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
 /**
  * Created by D060644 on 6/22/2016.
+ *
+ * INFO: Please be logged out before testing. Please interact with camera in person, to take a photo.
  */
 public class MyProfileTakePhotoTest{
 
@@ -23,17 +25,16 @@ public class MyProfileTakePhotoTest{
     @Test
     public void test() throws InterruptedException {
         Thread.sleep(5000);
-        //Take Photo
+
+//Take Photo
+//ACT
         onView(withId(R.id.myprofile_image)).perform(click());
         onView(withText("Take Photo")).perform(click());
 
-        //Check
+//Check
         onView(withId(R.id.myprofile_image)).check(matches(isDisplayed()));
-
-       Thread.sleep(50);
+        Thread.sleep(50);
 
     }
-
-
 
 }

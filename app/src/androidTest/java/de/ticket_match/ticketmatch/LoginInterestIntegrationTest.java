@@ -18,6 +18,7 @@ import static org.hamcrest.Matchers.hasToString;
 
 /**
  * Created by D060644 on 6/23/2016.
+ * INFO: Please remove interests "Running", "Tennis", "Cinema" and be logged out before testing.
  */
 public class LoginInterestIntegrationTest {
     //Variables
@@ -40,34 +41,35 @@ public class LoginInterestIntegrationTest {
 
         mTestLoginMail = "m@m.com";
         mTestLoginPassword = "maxmax";
-        mTestInterest = "Joggen";
+        mTestInterest = "Running";
         mTestInterest2 = "Tennis";
-        mTestInterest3 = "Konzerte";
+        mTestInterest3 = "Cinema";
     }
 
     @Test
     public void test() throws InterruptedException {
 
 //Login
+//ACT
         //Insert text automatically
         onView(withId(R.id.login_mail))
                 .perform(typeText(mTestLoginMail));
         onView(withId(R.id.login_password))
                 .perform(typeText(mTestLoginPassword));
 
-
-        //CheckValues
+//CHECK
         onView(withId(R.id.login_mail))
                 .check(matches(withText(mTestLoginMail)));
 
         onView(withId(R.id.login_password))
                 .check(matches(withText(mTestLoginPassword)));
 
-        //Click final Login Button to navigate to next view
+        //Click final Button to navigate to next view
         onView(withId(R.id.btn_login)).perform(click());
 
 
 //Add Interest
+//ACT
         //Insert text automatically
         onView(withId(R.id.newinterest_text))
                 .perform(typeText(mTestInterest)).perform(closeSoftKeyboard());
@@ -85,14 +87,7 @@ public class LoginInterestIntegrationTest {
                 .perform(click());
         Thread.sleep(500);
 
-
-
-        //tobedone:  CheckValues- Listview Entry
-
-        //onView(withId(R.id.listitem_text)).check(matches(withText(mTestInterest)))
-
-
-        // Delete Interest
+// Delete Interest
         onData(hasToString(mTestInterest))
                 .inAdapterView(withId(R.id.myprofile_interests))
                 .onChildView(withId(R.id.listitem_interests_delete))
@@ -104,20 +99,17 @@ public class LoginInterestIntegrationTest {
                 .perform(click());
         Thread.sleep(50);
 
-      //  Check Values
+//CHECK
 
         onView(withId(R.id.listitem_text)).check(matches(withText(mTestInterest3)));
 
-
-        //Logout
+//ACT
+//Logout
         onView(withId(R.id.overflow_button)).perform(click());
         onView(withText("Logout")).perform(click());
         Thread.sleep(500);
 
     }
-
-
-
 
 }
 

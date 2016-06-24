@@ -7,10 +7,14 @@ import org.junit.Test;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 
 /**
  * Created by D060644 on 6/21/2016.
+ *
+ * INFO: Please be logged out before testing.
  */
 public class MainActivityRedirectForgotTest {
 
@@ -21,16 +25,16 @@ public class MainActivityRedirectForgotTest {
 
     @Test
 
-    public void test(){
-
+    public void test() throws InterruptedException {
+//ACT
         onView(withId(R.id.textView2)).perform(click());
 
-        //stilltodo: Program a check that forgot password page openes up --> need help with tabhost
-        // (-->Manual/Visual check that forgot password page opens up is possible)
+//CHECK
+        onView(withId(R.id.forgotAccount_mail)).check(matches(isDisplayed()));
+        Thread.sleep(500);
 
 
     }
-
 
 
 }
