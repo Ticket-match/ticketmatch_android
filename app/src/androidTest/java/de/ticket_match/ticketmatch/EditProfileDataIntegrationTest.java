@@ -16,6 +16,7 @@ import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withClassName;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withSpinnerText;
@@ -26,12 +27,13 @@ import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 
 /**
- * Created by D060644 on 6/21/2016.
+ * Created by D060644 on 6/24/2016.
  */
-public class EditMyProfileTest {
+public class EditProfileDataIntegrationTest {
 
     //Variables
-
+    String mTestLoginMail;
+    String mTestLoginPassword;
     String mTestFirstName;
     String mTestLastName;
     String mTestLocation;
@@ -40,14 +42,18 @@ public class EditMyProfileTest {
     int day;
     String gender;
 
+
     @Rule
-    public ActivityTestRule<MainActivityTabHost> mActivityRule = new ActivityTestRule<MainActivityTabHost>(
-            MainActivityTabHost.class);
+    public ActivityTestRule<MainActivity> mActivityRule = new ActivityTestRule<MainActivity>(
+            MainActivity.class);
+
 
     @Before
     public void initValidString() {
         // Specify a valid string.
 
+        mTestLoginMail = "m@m.com";
+        mTestLoginPassword = "maxmax";
         mTestFirstName = "Maxi";
         mTestLastName = "Musterfrauchen";
         mTestLocation = "Heidelberg";
@@ -55,20 +61,36 @@ public class EditMyProfileTest {
         month = 9;
         day = 29;
         gender = "Female";
+
     }
 
     @Test
-    public void test()throws InterruptedException {
+    public void test() throws InterruptedException {
 
-        // Open Edit Profile Pageb by Clicking name
-       // onView(withId(R.id.myprofile_name)).perform(click());
-       // Thread.sleep(5000);
+//Login
+        //Insert text automatically
+        onView(withId(R.id.login_mail))
+                .perform(typeText(mTestLoginMail));
+        onView(withId(R.id.login_password))
+                .perform(typeText(mTestLoginPassword));
 
 
-        //Open Edit Profile Page by Clicking Edit Profile
+        //CheckValues
+        onView(withId(R.id.login_mail))
+                .check(matches(withText(mTestLoginMail)));
+
+        onView(withId(R.id.login_password))
+                .check(matches(withText(mTestLoginPassword)));
+
+        //Click final Login Button to navigate to next view
+        onView(withId(R.id.btn_login)).perform(click());
+        Thread.sleep(500);
+
+//Edit Profile
+        // Open Edit Profile Page
         onView(withId(R.id.overflow_button)).perform(click());
         onView(withText("Edit profile")).perform(click());
-        Thread.sleep(5000);
+        Thread.sleep(500);
 
 
         //Insert text automatically
@@ -81,9 +103,9 @@ public class EditMyProfileTest {
 
 
         // Datepicker Birthdate
-       onView(withId(R.id.edit_myprofile_birthdate)).perform(click());
-      onView(withClassName(Matchers.equalTo(DatePicker.class.getName()))).perform(PickerActions.setDate(year, month, day));
-       onView(withText("OK")).perform(click());
+        onView(withId(R.id.edit_myprofile_birthdate)).perform(click());
+        onView(withClassName(Matchers.equalTo(DatePicker.class.getName()))).perform(PickerActions.setDate(year, month, day));
+        onView(withText("OK")).perform(click());
 
         //Spinner Value (Gender)
         onView(withId(R.id.edit_myprofile_gender)).perform(click());
@@ -91,7 +113,6 @@ public class EditMyProfileTest {
 
         onView(withId(R.id.edit_myprofile_location)).perform(clearText())
                 .perform(typeText(mTestLocation)).perform(closeSoftKeyboard());
-
 
 
         //Check Values
@@ -114,9 +135,28 @@ public class EditMyProfileTest {
 
         //Click final Save Button to navigate to next view
         onView(withId(R.id.fab_btn_edit_myprofile)).perform(click());
+        Thread.sleep(5000);
+
+//Change Photo
+
+        //Upload Photo
+        onView(withId(R.id.myprofile_image)).perform(click());
+        onView(withText("Upload Photo")).perform(click());
 
 
+        //Check
+        onView(withId(R.id.myprofile_image)).check(matches(isDisplayed()));
+        Thread.sleep(500);
 
+
+//Logout
+        onView(withId(R.id.overflow_button)).perform(click());
+        onView(withText("Logout")).perform(click());
+        Thread.sleep(500);
+
+        //Check
+        onView(withId(R.id.login_mail)).check(matches(isDisplayed()));
+        Thread.sleep(500);
 
 
     }
