@@ -74,7 +74,7 @@ public class RegisterTest {
         onView(withId(R.id.textViewRegister)).perform(click());
         Thread.sleep(500);
 
-        //Insert text automatically
+        //Insert texts automatically
         onView(withId(R.id.register_firstname))
                 .perform(typeText(mTestFirstName));
 
