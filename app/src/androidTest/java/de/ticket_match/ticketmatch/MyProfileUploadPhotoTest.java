@@ -12,11 +12,11 @@ import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
-
 /**
- * Created by D060644 on 6/22/2016.
+ * Created by D060644 on 6/24/2016.
  */
-public class MyProfileTakePhotoTest{
+public class MyProfileUploadPhotoTest {
+
 
     @Rule
     public ActivityTestRule<MainActivityTabHost> mActivityRule = new ActivityTestRule<MainActivityTabHost>(MainActivityTabHost.class);
@@ -24,14 +24,17 @@ public class MyProfileTakePhotoTest{
     public void test() throws InterruptedException {
         Thread.sleep(5000);
 
-        //Take Photo
+        //Upload Photo
         onView(withId(R.id.myprofile_image)).perform(click());
-        onView(withText("Take Photo")).perform(click());
+        onView(withText("Upload Photo")).perform(click());
+
 
         //Check
         onView(withId(R.id.myprofile_image)).check(matches(isDisplayed()));
 
-       Thread.sleep(50);
+
+        Thread.sleep(50);
+
 
     }
 
