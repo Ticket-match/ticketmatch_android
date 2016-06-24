@@ -104,7 +104,7 @@ public class LoginInterestIntegrationTest {
                 .perform(click());
         Thread.sleep(50);
 
-      //  tobedone:  CheckValues- Listview Entry
+      //  Check Values
 
         onView(withId(R.id.listitem_text)).check(matches(withText(mTestInterest3)));
 

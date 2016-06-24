@@ -23,7 +23,6 @@ public class MyProfileTakePhotoTest{
     @Test
     public void test() throws InterruptedException {
         Thread.sleep(5000);
-
         //Take Photo
         onView(withId(R.id.myprofile_image)).perform(click());
         onView(withText("Take Photo")).perform(click());
