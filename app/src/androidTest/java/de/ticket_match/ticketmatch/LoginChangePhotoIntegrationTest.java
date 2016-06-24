@@ -74,7 +74,7 @@ public class LoginChangePhotoIntegrationTest {
         onView(withText("Logout")).perform(click());
         Thread.sleep(500);
 
-        //Check
+        //Check Value
         onView(withId(R.id.login_mail)).check(matches(isDisplayed()));
         Thread.sleep(500);
 
