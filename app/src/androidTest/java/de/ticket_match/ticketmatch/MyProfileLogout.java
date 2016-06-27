@@ -14,6 +14,8 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
 /**
  * Created by D060644 on 6/27/2016.
+ *
+ * INFO: Please be logged in before running test.
  */
 public class MyProfileLogout {
 
