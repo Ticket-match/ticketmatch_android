@@ -36,10 +36,12 @@ public class MyProfileChangePWTest {
         mNewPW = "654321";
 
 
-        //Open Edit Profile Page by Clicking Edit Profile
+//Open Edit Profile Page by Clicking Edit Profile
         onView(withId(R.id.overflow_button)).perform(click());
         onView(withText("Change Password")).perform(click());
         Thread.sleep(5000);
+
+//Change Password
 //ACT
 
         //Insert text automatically
@@ -63,6 +65,31 @@ public class MyProfileChangePWTest {
         onView(withId(R.id.fab_btn_change_password)).perform(click());
 
         Thread.sleep(500);
+
+//Reset Password again
+//ACT
+        //Insert text automatically
+        onView(withId(R.id.changePassword_currentPassword)).perform(clearText())
+                .perform(typeText(mNewPW));
+
+        onView(withId(R.id.changePassword_newPassword)).perform(clearText())
+                .perform(typeText(mOldPW));
+
+        onView(withId(R.id.changePassword_newPassword_reenter)).perform(clearText())
+                .perform(typeText(mOldPW)).perform(closeSoftKeyboard());
+
+//CHECK
+        onView(withId(R.id.changePassword_currentPassword)).check(matches(withText(mNewPW)));
+        onView(withId(R.id.changePassword_newPassword)).check(matches(withText(mOldPW)));
+        onView(withId(R.id.changePassword_newPassword_reenter)).check(matches(withText(mOldPW)));
+
+
+//Click final Button to navigate to next view
+
+        onView(withId(R.id.fab_btn_change_password)).perform(click());
+
+        Thread.sleep(500);
+
 
 
     }
