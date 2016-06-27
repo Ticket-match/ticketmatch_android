@@ -16,10 +16,12 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
 /**
  * Created by D060644 on 6/21/2016.
+ *
+ * INFO: Please be logged in before testing. Please make sure that interest "Blablabla" does not already exist.
  */
 public class MyProfileAddInterestTest {
-    //Variables
 
+    //Variables
     String mTestInterest;
 
     @Rule
@@ -28,29 +30,27 @@ public class MyProfileAddInterestTest {
 
     @Before
     public void initValidString() {
-        // Specify a valid string.
 
+        // Specify a valid string.
         mTestInterest = "Blablabla";
             }
 
     @Test
     public void test() throws InterruptedException {
 
+//ACT
         //Insert text automatically
         onView(withId(R.id.newinterest_text))
               .perform(typeText(mTestInterest)).perform(closeSoftKeyboard());
         Thread.sleep(500);
 
-       //Click final Add Button to add new interest
+       //Click add Button to add new interest
         onView(withId(R.id.btn_newinterest))
                 .perform(click());
         Thread.sleep(500);
 
-        //CheckValues- Listview Entry
-
+//CHECK
         onView(withId(R.id.listitem_text)).check(matches(withText(mTestInterest)));
-
-
 
     }
 }

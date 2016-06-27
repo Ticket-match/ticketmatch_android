@@ -16,6 +16,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
 /**
  * Created by D060644 on 6/24/2016.
+ * INFO: Please be logged out before testing. Please interact with camera in person, to take a photo.
  */
 public class LoginChangePhotoIntegrationTest {
     //Variables
@@ -41,6 +42,8 @@ public class LoginChangePhotoIntegrationTest {
     public void test() throws InterruptedException {
 
 //Login
+//ACT
+
         //Insert text automatically
         onView(withId(R.id.login_mail))
                 .perform(typeText(mTestLoginMail));
@@ -48,7 +51,7 @@ public class LoginChangePhotoIntegrationTest {
                 .perform(typeText(mTestLoginPassword));
 
 
-        //CheckValues
+//CHECK
         onView(withId(R.id.login_mail))
                 .check(matches(withText(mTestLoginMail)));
 
@@ -58,28 +61,28 @@ public class LoginChangePhotoIntegrationTest {
         //Click final Login Button to navigate to next view
         onView(withId(R.id.btn_login)).perform(click());
 
-//Change Photo
 
+//Change Photo
+//ACT
         Thread.sleep(5000);
+
         //Take Photo
         onView(withId(R.id.myprofile_image)).perform(click());
         onView(withText("Take Photo")).perform(click());
 
-        //Check
+//CHECK
         onView(withId(R.id.myprofile_image)).check(matches(isDisplayed()));
 
 
 //Logout
+//ACT
         onView(withId(R.id.overflow_button)).perform(click());
         onView(withText("Logout")).perform(click());
         Thread.sleep(500);
 
-        //Check
+//CHECK
         onView(withId(R.id.login_mail)).check(matches(isDisplayed()));
         Thread.sleep(500);
-
-
-
 
     }
 }
