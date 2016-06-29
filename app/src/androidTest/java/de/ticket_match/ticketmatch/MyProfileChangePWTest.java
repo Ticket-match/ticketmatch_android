@@ -28,8 +28,8 @@ public class MyProfileChangePWTest {
     String mNewPW;
 
     @Rule
-    public ActivityTestRule<MainActivityTabHost> mActivityRule = new ActivityTestRule<MainActivityTabHost>(
-            MainActivityTabHost.class);
+    public ActivityTestRule<MainActivity> mActivityRule = new ActivityTestRule<MainActivity>(
+            MainActivity.class);
 
     @Before
     public void initValidString() throws InterruptedException {
@@ -68,7 +68,7 @@ public class MyProfileChangePWTest {
 //Click final Button to navigate to next view
 
         onView(withId(R.id.fab_btn_change_password)).perform(click());
-         Thread.sleep(50);
+         Thread.sleep(2500);
 
 //Reset Password again
 //ACT
