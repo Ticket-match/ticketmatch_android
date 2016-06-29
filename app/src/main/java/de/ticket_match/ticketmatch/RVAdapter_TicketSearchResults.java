@@ -61,7 +61,7 @@ public class RVAdapter_TicketSearchResults extends RecyclerView.Adapter<RVAdapte
             public void onClick(View v) {
                 final Ticket text = tickets.get(position);
 
-                final String message = "Hello, " + "\n" + "I am interested in your tickets: " + "\n" + text.getName() + "\n" + text.getType() + "\n" + text.getDate() + " | " + text.getTime() + "\n" + text.getQuantity() + " pc. | " + text.getPrice().get("value") + " " + text.getPrice().get("currency");
+                final String message = "Hello, " + "\n" + "I am interested in your tickets: " + "\n" + text.getName() + "\n" + text.getType() + "\n" + text.getLocation() + "\n" + text.getDate() + " | " + text.getTime() + "\n" + text.getQuantity() + " pc. | " + text.getPrice().get("value") + " " + text.getPrice().get("currency");
 
 
                 //create Dialog for asking if the vendor should be contacted

@@ -57,7 +57,7 @@ public class RVAdapter_MakeadateSearchresults extends RecyclerView.Adapter<RVAda
             @Override
             public void onClick(View v) {
                 final MakeDate date = currentDate;
-                final String message = "Hello, " + "\n" + "I am interested to meet you in " + currentDate.getLocation()+ " on " + currentDate.getDate() + " at " + currentDate.getTime();
+                final String message = "Hello, " + "\n" + "I am interested to meet you in " + currentDate.getLocation()+ " on " + currentDate.getDate() + " at " + currentDate.getTime() + " for " + currentDate.getName() + ".";
 
 
                 //create Dialog for asking if the vendor should be contacted
