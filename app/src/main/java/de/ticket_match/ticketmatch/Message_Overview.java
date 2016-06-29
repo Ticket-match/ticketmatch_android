@@ -67,7 +67,7 @@ public class Message_Overview extends AppCompatActivity {
                         chats_keys.add(d.getKey());
                     } else if(chats_keys.contains(d.getKey())) {
                         Chat ref = chats.get(chats_keys.indexOf(d.getKey()));
-                        if (!chat.getLastMessage().get("text").equals(ref.getLastMessage().get("text"))) {
+                        if (!chat.getLastMessage().get("text").equals(ref.getLastMessage().get("text")) || !chat.getLastMessage().get("timestamp").equals(ref.getLastMessage().get("timestamp")) || !chat.getLastMessage().get("date").equals(ref.getLastMessage().get("date"))) {
                             chats.remove(chats_keys.indexOf(d.getKey()));
                             chats.add(chats_keys.indexOf(d.getKey()), chat);
                         }
@@ -92,7 +92,7 @@ public class Message_Overview extends AppCompatActivity {
                         chats_keys.add(d.getKey());
                     } else if(chats_keys.contains(d.getKey())) {
                         Chat ref = chats.get(chats_keys.indexOf(d.getKey()));
-                        if (!chat.getLastMessage().get("text").equals(ref.getLastMessage().get("text"))) {
+                        if (!chat.getLastMessage().get("text").equals(ref.getLastMessage().get("text")) || !chat.getLastMessage().get("timestamp").equals(ref.getLastMessage().get("timestamp")) || !chat.getLastMessage().get("date").equals(ref.getLastMessage().get("date"))) {
                             chats.remove(chats_keys.indexOf(d.getKey()));
                             chats.add(chats_keys.indexOf(d.getKey()), chat);
                         }

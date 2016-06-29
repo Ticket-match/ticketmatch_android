@@ -31,6 +31,7 @@ import com.facebook.GraphResponse;
 import com.facebook.HttpMethod;
 import com.facebook.Profile;
 import com.facebook.appevents.AppEventsLogger;
+import com.facebook.login.LoginBehavior;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
@@ -115,8 +116,6 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onSuccess(LoginResult loginResult) {
                 Log.d(TAG, "facebook:onSuccess:" + loginResult);
-                final ProgressDialog progressDialog = ProgressDialog.show(MainActivity.this, "Please wait ...", "Logging in ...", true);
-                progressDialog.setCancelable(true);
                 handleFacebookAccessToken(loginResult.getAccessToken());
             }
 
@@ -184,7 +183,7 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if (!task.isSuccessful()) {
-                        Toast.makeText(MainActivity.this, "Authentication failed!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MainActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                         progressDialog.dismiss();
                     }
                 }
@@ -204,27 +203,23 @@ public class MainActivity extends AppCompatActivity {
     //Authentication Facebook User with Firebase
     private void handleFacebookAccessToken(final AccessToken token) {
         Log.d(TAG, "handleFacebookAccessToken:" + token);
-
-        AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
-        Task<AuthResult> signInWithCredential = mAuth.signInWithCredential(credential)
+        final ProgressDialog progressDialog = ProgressDialog.show(MainActivity.this, "Please wait ...", "Logging in ...", true);
+        progressDialog.setCancelable(true);
+        mAuth.signInWithCredential(FacebookAuthProvider.getCredential(token.getToken()))
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        Log.d(TAG, "signInWithCredential:onComplete:" + task.isSuccessful());
-                        uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                        if (task.isSuccessful()) {
+                            Log.d(TAG, "signInWithCredential:onComplete:" + task.isSuccessful());
+                            uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
                             Log.d(TAG, "Daten werden von Facebook geladen....");
                             requestFacebookData(token);
-
-                        // If sign in fails, display a message to the user. If sign in succeeds
-                        // the auth state listener will be notified and logic to handle the
-                        // signed in user can be handled in the listener.
-                        if (!task.isSuccessful()) {
+                        } else {
                             Log.w(TAG, "signInWithCredential", task.getException());
-                            Toast.makeText(getApplicationContext(), "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                            progressDialog.dismiss();
+                            LoginManager.getInstance().logOut();
                         }
-
-                        // ...
                     }
                 });
     }
