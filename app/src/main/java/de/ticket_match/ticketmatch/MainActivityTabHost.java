@@ -300,7 +300,9 @@ public class MainActivityTabHost extends AppCompatActivity {
             public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()){
                     case R.id.edit_profile:
-                        th.setCurrentTabByTag("edit_myprofile");
+                        Intent editprofile =  new Intent(getApplicationContext(), EditMyProfile.class);
+                        startActivity(editprofile);
+                        //th.setCurrentTabByTag("edit_myprofile");
                         return true;
                     case R.id.change_password:
                         Intent changepassword =  new Intent(getApplicationContext(), ChangePassword.class);
@@ -315,6 +317,7 @@ public class MainActivityTabHost extends AppCompatActivity {
                             stopService(mServiceIntent);
                         }
                         editor.remove("UID");
+                        editor.remove("PID");
                         editor.commit();
                         // Firebase Logout
                         FirebaseAuth.getInstance().signOut();

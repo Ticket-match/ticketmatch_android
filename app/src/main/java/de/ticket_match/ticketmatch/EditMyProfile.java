@@ -62,37 +62,28 @@ public class EditMyProfile extends AppCompatActivity {
             }
         });
 
-        mDatabase.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).addValueEventListener(
-                new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        user = dataSnapshot.getValue(User.class);
-                        TicketMatch.setCurrentUser(user);
-                        if(!user.getFirstName().equals("")) {
-                            ((EditText) findViewById(R.id.edit_myprofile_firstname)).setText(user.getFirstName());
-                        }
-                        if(!user.getLastName().equals("")){
-                            ((EditText) findViewById(R.id.edit_myprofile_lastname)).setText(user.getLastName());
-                        }
-                        if(!user.getLocation().equals("")){
-                            ((EditText) findViewById(R.id.edit_myprofile_location)).setText(user.getLocation());
-                        }
-                        if(!user.getBirthday().equals("")){
-                            ((TextView) findViewById(R.id.edit_myprofile_birthdate)).setText(user.getBirthday());
-                        }
-                        if(user.getGender().equals("Neutral")){
-                            ((Spinner) findViewById(R.id.edit_myprofile_gender)).setSelection(0);
-                        } else if(user.getGender().equals("Male")){
-                            ((Spinner) findViewById(R.id.edit_myprofile_gender)).setSelection(1);
-                        } else{
-                            ((Spinner) findViewById(R.id.edit_myprofile_gender)).setSelection(2);
-                        }
-                    }
 
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-                    }
-                });
+
+        user = TicketMatch.getCurrentUser();
+        if(!user.getFirstName().equals("")) {
+            ((EditText) findViewById(R.id.edit_myprofile_firstname)).setText(user.getFirstName());
+        }
+        if(!user.getLastName().equals("")){
+            ((EditText) findViewById(R.id.edit_myprofile_lastname)).setText(user.getLastName());
+        }
+        if(!user.getLocation().equals("")){
+            ((EditText) findViewById(R.id.edit_myprofile_location)).setText(user.getLocation());
+        }
+        if(!user.getBirthday().equals("")){
+            ((TextView) findViewById(R.id.edit_myprofile_birthdate)).setText(user.getBirthday());
+        }
+        if(user.getGender().equals("Neutral")){
+            ((Spinner) findViewById(R.id.edit_myprofile_gender)).setSelection(0);
+        } else if(user.getGender().equals("Male")){
+            ((Spinner) findViewById(R.id.edit_myprofile_gender)).setSelection(1);
+        } else{
+            ((Spinner) findViewById(R.id.edit_myprofile_gender)).setSelection(2);
+        }
     }
 
     public void btn_edit_myprofile(View view){
@@ -107,46 +98,11 @@ public class EditMyProfile extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), "Please fill out the required information!", Toast.LENGTH_SHORT).show();
         } else if (!isNetworkConnected()){
             Toast.makeText(getApplicationContext(), "No internet connection. Editing profile information failed.", Toast.LENGTH_SHORT).show();
-        }
-        else {
+        } else {
             // Create a User with attributes and the interests and ratings from screen MyProfile
             user = new User(firstname, lastname,gender, birthdate, location, user.getInterests(), user.getRatings());
             // Edit attributes by setting new values
             mDatabase.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(user);
-            // Open the tab MyProfile
-            ((TabHost)getParent().findViewById(R.id.tabHost)).setCurrentTabByTag("myprofile");
-
-            mDatabase.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).addValueEventListener(
-                    new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot dataSnapshot) {
-                            user = dataSnapshot.getValue(User.class);
-                            TicketMatch.setCurrentUser(user);
-                            if(!user.getFirstName().equals("")) {
-                                ((EditText) findViewById(R.id.edit_myprofile_firstname)).setText(user.getFirstName());
-                            }
-                            if(!user.getLastName().equals("")){
-                                ((EditText) findViewById(R.id.edit_myprofile_lastname)).setText(user.getLastName());
-                            }
-                            if(!user.getLocation().equals("")){
-                                ((EditText) findViewById(R.id.edit_myprofile_location)).setText(user.getLocation());
-                            }
-                            if(!user.getBirthday().equals("")){
-                                ((TextView) findViewById(R.id.edit_myprofile_birthdate)).setText(user.getBirthday());
-                            }
-                            if(user.getGender().equals("Neutral")){
-                                ((Spinner) findViewById(R.id.edit_myprofile_gender)).setSelection(0);
-                            } else if(user.getGender().equals("Male")){
-                                ((Spinner) findViewById(R.id.edit_myprofile_gender)).setSelection(1);
-                            } else{
-                                ((Spinner) findViewById(R.id.edit_myprofile_gender)).setSelection(2);
-                            }
-                        }
-
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-                        }
-                    });
 
             // hide keyboard
             View aview = this.getCurrentFocus();
@@ -156,43 +112,8 @@ public class EditMyProfile extends AppCompatActivity {
             }
 
             Toast.makeText(getApplicationContext(), "Profile edited successfully!", Toast.LENGTH_SHORT).show();
+            onBackPressed();
         }
-    }
-
-    @Override
-    public void onBackPressed() {
-        mDatabase.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).addValueEventListener(
-                new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        user = dataSnapshot.getValue(User.class);
-                        TicketMatch.setCurrentUser(user);
-                        if(!user.getFirstName().equals("")) {
-                            ((EditText) findViewById(R.id.edit_myprofile_firstname)).setText(user.getFirstName());
-                        }
-                        if(!user.getLastName().equals("")){
-                            ((EditText) findViewById(R.id.edit_myprofile_lastname)).setText(user.getLastName());
-                        }
-                        if(!user.getLocation().equals("")){
-                            ((EditText) findViewById(R.id.edit_myprofile_location)).setText(user.getLocation());
-                        }
-                        if(!user.getBirthday().equals("")){
-                            ((TextView) findViewById(R.id.edit_myprofile_birthdate)).setText(user.getBirthday());
-                        }
-                        if(user.getGender().equals("Neutral")){
-                            ((Spinner) findViewById(R.id.edit_myprofile_gender)).setSelection(0);
-                        } else if(user.getGender().equals("Male")){
-                            ((Spinner) findViewById(R.id.edit_myprofile_gender)).setSelection(1);
-                        } else{
-                            ((Spinner) findViewById(R.id.edit_myprofile_gender)).setSelection(2);
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-                    }
-                });
-        getParent().onBackPressed();
     }
 
     // Check Internet Status
