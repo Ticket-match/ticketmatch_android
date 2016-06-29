@@ -20,7 +20,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import de.ticket_match.ticketmatch.entities.MakeDate;
 
@@ -43,6 +45,46 @@ public class MakeADate extends AppCompatActivity {
                     dates.add(date);
                     dates_keys.add((String)d.getKey());
                 }
+
+                SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
+                SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
+                Date dl,dr;
+
+                for (int n = 0; n < dates.size(); n++) {
+                    for (int m = 0; m < (dates.size()-1) - n; m++) {
+                        try {
+                            dl = dateFormat.parse(dates.get(m).getDate());
+                            dr = dateFormat.parse(dates.get(m+1).getDate());
+                            int i = dl.compareTo(dr);
+
+                            if (i<0) {
+                                MakeDate swapDate = dates.get(m);
+                                dates.set(m,dates.get(m+1));
+                                dates.set(m+1,swapDate);
+
+                                String swapKey = dates_keys.get(m);
+                                dates_keys.set(m,dates_keys.get(m+1));
+                                dates_keys.set(m+1,swapKey);
+                            } else if (i==0) {
+                                dl = timeFormat.parse(dates.get(m).getTime());
+                                dr = timeFormat.parse(dates.get(m+1).getTime());
+                                i = dl.compareTo(dr);
+
+                                if (i<0) {
+                                    MakeDate swapDate = dates.get(m);
+                                    dates.set(m,dates.get(m+1));
+                                    dates.set(m+1,swapDate);
+
+                                    String swapKey = dates_keys.get(m);
+                                    dates_keys.set(m,dates_keys.get(m+1));
+                                    dates_keys.set(m+1,swapKey);
+                                }
+                            }
+                        } catch (Exception e) {
+                        }
+                    }
+                }
+
                 ((((RecyclerView)findViewById(R.id.makedate_overview)).getAdapter())).notifyDataSetChanged();
             }
 

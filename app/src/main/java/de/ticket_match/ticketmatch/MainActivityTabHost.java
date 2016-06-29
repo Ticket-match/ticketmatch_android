@@ -53,6 +53,9 @@ public class MainActivityTabHost extends AppCompatActivity {
             mn = MessageNotifications.getInstance();
         }
 
+        //set header text of my profile the first time
+        ((TextView)findViewById(R.id.headerTitle)).setText("My Profile");
+
         // TabHost Setup
         th = (TabHost)findViewById(R.id.tabHost);
         LocalActivityManager mLocalActivityManager = new LocalActivityManager(this, false);
@@ -185,35 +188,35 @@ public class MainActivityTabHost extends AppCompatActivity {
             @Override
             public void onTabChanged(String tabId) {
                 if(tabId.equals("myprofile")) {
-                    ((TextView)findViewById(R.id.headerTitle)).setText("My profile");
+                    ((TextView)findViewById(R.id.headerTitle)).setText("My Profile");
                 } else if(tabId.equals("messages")) {
-                    ((TextView)findViewById(R.id.headerTitle)).setText("My messages");
+                    ((TextView)findViewById(R.id.headerTitle)).setText("My Messages");
                 } else if(tabId.equals("tickets")) {
-                    ((TextView)findViewById(R.id.headerTitle)).setText("My tickets");
+                    ((TextView)findViewById(R.id.headerTitle)).setText("My Tickets");
                 } else if(tabId.equals("search")) {
-                    ((TextView)findViewById(R.id.headerTitle)).setText("Search results");
+                    ((TextView)findViewById(R.id.headerTitle)).setText("Search Results");
                 } else if(tabId.equals("makeadate")) {
-                    ((TextView)findViewById(R.id.headerTitle)).setText("My dates");
+                    ((TextView)findViewById(R.id.headerTitle)).setText("My Dates");
                 } else if(tabId.equals("myprofile_ratings")) {
-                    ((TextView)findViewById(R.id.headerTitle)).setText("My ratings");
+                    ((TextView)findViewById(R.id.headerTitle)).setText("My Ratings");
                 } else if(tabId.equals("messages_chat")) {
                     ((TextView)findViewById(R.id.headerTitle)).setText("Chat");
                 } else if(tabId.equals("tickets_newoffer")) {
-                    ((TextView)findViewById(R.id.headerTitle)).setText("Offer your ticket");
+                    ((TextView)findViewById(R.id.headerTitle)).setText("Offer Your Ticket");
                 } else if(tabId.equals("makeadate_new")) {
-                    ((TextView)findViewById(R.id.headerTitle)).setText("Create a new date");
+                    ((TextView)findViewById(R.id.headerTitle)).setText("Create A New Date");
                 } else if(tabId.equals("makeadate_search")) {
-                    ((TextView)findViewById(R.id.headerTitle)).setText("Search for dates");
+                    ((TextView)findViewById(R.id.headerTitle)).setText("Search For Dates");
                 } else if(tabId.equals("makeadate_search_result")) {
-                    ((TextView)findViewById(R.id.headerTitle)).setText("Searchs results");
+                    ((TextView)findViewById(R.id.headerTitle)).setText("Searchs Results");
                 } else if(tabId.equals("foreign_profile")) {
                     ((TextView)findViewById(R.id.headerTitle)).setText("Profile");
                 } else if(tabId.equals("foreign_profile_ratings")) {
                     ((TextView)findViewById(R.id.headerTitle)).setText("Ratings");
                 } else if (tabId.equals("tickets_search")) {
-                    ((TextView)findViewById(R.id.headerTitle)).setText("Search for tickets");
+                    ((TextView)findViewById(R.id.headerTitle)).setText("Search For Tickets");
                 } else if (tabId.equals("edit_myprofile")) {
-                    ((TextView)findViewById(R.id.headerTitle)).setText("Edit my profile");
+                    ((TextView)findViewById(R.id.headerTitle)).setText("Edit My Profile");
                 } /*else if (tabId.equals("change_password")) {
                     ((TextView) findViewById(R.id.headerTitle)).setText("Change your password");
                 } */else {
@@ -288,14 +291,18 @@ public class MainActivityTabHost extends AppCompatActivity {
     public void btn_tm_logo(View view) {
         PopupMenu popup = new PopupMenu(this, view);
         MenuInflater inflater = popup.getMenuInflater();
-        inflater.inflate(R.menu.popup_menu, popup.getMenu());
+        String pid = settings.getString("PID","");
+        if (pid.equals("firebase")) inflater.inflate(R.menu.popup_menu, popup.getMenu());
+        else if (pid.equals("facebook")) inflater.inflate(R.menu.popup_menu_fb, popup.getMenu());
 
         popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()){
                     case R.id.edit_profile:
-                        th.setCurrentTabByTag("edit_myprofile");
+                        Intent editprofile =  new Intent(getApplicationContext(), EditMyProfile.class);
+                        startActivity(editprofile);
+                        //th.setCurrentTabByTag("edit_myprofile");
                         return true;
                     case R.id.change_password:
                         Intent changepassword =  new Intent(getApplicationContext(), ChangePassword.class);
@@ -310,6 +317,7 @@ public class MainActivityTabHost extends AppCompatActivity {
                             stopService(mServiceIntent);
                         }
                         editor.remove("UID");
+                        editor.remove("PID");
                         editor.commit();
                         // Firebase Logout
                         FirebaseAuth.getInstance().signOut();

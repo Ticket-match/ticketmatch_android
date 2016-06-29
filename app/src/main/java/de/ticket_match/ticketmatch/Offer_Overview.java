@@ -22,7 +22,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import de.ticket_match.ticketmatch.entities.Ticket;
 
@@ -61,6 +63,46 @@ public class Offer_Overview extends AppCompatActivity {
                     tickets.add(ticket);
                     tickets_keys.add((String)d.getKey());
                 }
+
+                SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
+                SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
+                Date dl,dr;
+
+                for (int n = 0; n < tickets.size(); n++) {
+                    for (int m = 0; m < (tickets.size()-1) - n; m++) {
+                        try {
+                            dl = dateFormat.parse(tickets.get(m).getDate());
+                            dr = dateFormat.parse(tickets.get(m+1).getDate());
+                            int i = dl.compareTo(dr);
+
+                            if (i<0) {
+                                Ticket swapTicket = tickets.get(m);
+                                tickets.set(m,tickets.get(m+1));
+                                tickets.set(m+1,swapTicket);
+
+                                String swapKey = tickets_keys.get(m);
+                                tickets_keys.set(m,tickets_keys.get(m+1));
+                                tickets_keys.set(m+1,swapKey);
+                            } else if (i==0) {
+                                dl = timeFormat.parse(tickets.get(m).getTime());
+                                dr = timeFormat.parse(tickets.get(m+1).getTime());
+                                i = dl.compareTo(dr);
+
+                                if (i<0) {
+                                    Ticket swapTicket = tickets.get(m);
+                                    tickets.set(m,tickets.get(m+1));
+                                    tickets.set(m+1,swapTicket);
+
+                                    String swapKey = tickets_keys.get(m);
+                                    tickets_keys.set(m,tickets_keys.get(m+1));
+                                    tickets_keys.set(m+1,swapKey);
+                                }
+                            }
+                        } catch (Exception e) {
+                        }
+                    }
+                }
+
                 (((RecyclerView) findViewById(R.id.offeroverview_list)).getAdapter()).notifyDataSetChanged();
             }
 

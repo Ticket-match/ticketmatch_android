@@ -35,24 +35,7 @@
             android:layout_gravity="center"
             android:alpha="0.12"/>
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_gravity="bottom">
 
-            <RatingBar
-                android:id="@+id/newrating_stars"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:numStars="5"
-                android:stepSize="0.5"
-                android:isIndicator="false"
-                android:scaleX="0.5"
-                android:scaleY="0.5"
-                android:layout_marginLeft="-50dp"
-                android:alpha="0.54"
-                />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -60,28 +43,39 @@
                 android:orientation="horizontal"
                 >
 
-                <EditText
+                <LinearLayout
                     android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_gravity="bottom"
+                    android:layout_weight="1">
+
+                <RatingBar
+                    android:id="@+id/newrating_stars"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:numStars="5"
+                    android:stepSize="0.5"
+                    android:isIndicator="false"
+                    android:scaleX="0.5"
+                    android:scaleY="0.5"
+                    android:layout_marginLeft="-55dp"
+                    android:layout_marginBottom="-20dp"
+                    android:alpha="0.54"
+                    />
+
+                <EditText
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="text"
                     android:hint="Type your description!"
                     android:ems="10"
                     android:layout_gravity="bottom"
-                    android:layout_weight="1"
                     android:id="@+id/newrating_text"
                     android:alpha="0.38"
                     />
 
-
-
-               <!-- <Button
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:onClick="btn_newrating"
-                    android:text="Send"
-                    android:alpha="0.54"
-
-                    />-->
+                </LinearLayout>
 
                 <android.support.design.widget.FloatingActionButton
                     android:id="@+id/fab_rate"
@@ -94,11 +88,8 @@
                     app:elevation="3dp"
                     android:onClick="btn_newrating"
                     app:backgroundTint="#FFAB00"
-                    android:clickable="true"
-                    android:layout_alignParentBottom="true"
-                    android:layout_alignParentRight="true"/>
+                    android:clickable="true"/>
 
-            </LinearLayout>
 
         </LinearLayout>
 
