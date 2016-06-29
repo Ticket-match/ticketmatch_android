@@ -39,7 +39,7 @@
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:id="@+id/makeadate_row_date"
                 android:layout_column="1"
-                android:layout_weight="1"
+                android:layout_weight="1.1"
                 android:gravity="left" />
 
             <TextView
