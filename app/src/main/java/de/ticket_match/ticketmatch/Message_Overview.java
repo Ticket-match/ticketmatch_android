@@ -30,7 +30,12 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 
 import de.ticket_match.ticketmatch.entities.Chat;
@@ -73,6 +78,46 @@ public class Message_Overview extends AppCompatActivity {
                         }
                     }
                 }
+
+                SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
+                SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
+                Date dl,dr;
+
+                for (int n = 0; n < chats.size(); n++) {
+                    for (int m = 0; m < (chats.size()-1) - n; m++) {
+                        try {
+                            dl = dateFormat.parse(chats.get(m).getLastMessage().get("date"));
+                            dr = dateFormat.parse(chats.get(m+1).getLastMessage().get("date"));
+                            int i = dl.compareTo(dr);
+
+                            if (i<0) {
+                                Chat swapChat = chats.get(m);
+                                chats.set(m,chats.get(m+1));
+                                chats.set(m+1,swapChat);
+
+                                String swapKey = chats_keys.get(m);
+                                chats_keys.set(m,chats_keys.get(m+1));
+                                chats_keys.set(m+1,swapKey);
+                            } else if (i==0) {
+                                dl = timeFormat.parse(chats.get(m).getLastMessage().get("timestamp"));
+                                dr = timeFormat.parse(chats.get(m+1).getLastMessage().get("timestamp"));
+                                i = dl.compareTo(dr);
+
+                                if (i<0) {
+                                    Chat swapChat = chats.get(m);
+                                    chats.set(m,chats.get(m+1));
+                                    chats.set(m+1,swapChat);
+
+                                    String swapKey = chats_keys.get(m);
+                                    chats_keys.set(m,chats_keys.get(m+1));
+                                    chats_keys.set(m+1,swapKey);
+                                }
+                            }
+                        } catch (Exception e) {
+                        }
+                    }
+                }
+
                 adapter.notifyDataSetChanged();
             }
 
@@ -98,6 +143,46 @@ public class Message_Overview extends AppCompatActivity {
                         }
                     }
                 }
+
+                SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
+                SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
+                Date dl,dr;
+
+                for (int n = 0; n < chats.size(); n++) {
+                    for (int m = 0; m < (chats.size()-1) - n; m++) {
+                        try {
+                            dl = dateFormat.parse(chats.get(m).getLastMessage().get("date"));
+                            dr = dateFormat.parse(chats.get(m+1).getLastMessage().get("date"));
+                            int i = dl.compareTo(dr);
+
+                            if (i<0) {
+                                Chat swapChat = chats.get(m);
+                                chats.set(m,chats.get(m+1));
+                                chats.set(m+1,swapChat);
+
+                                String swapKey = chats_keys.get(m);
+                                chats_keys.set(m,chats_keys.get(m+1));
+                                chats_keys.set(m+1,swapKey);
+                            } else if (i==0) {
+                                dl = timeFormat.parse(chats.get(m).getLastMessage().get("timestamp"));
+                                dr = timeFormat.parse(chats.get(m+1).getLastMessage().get("timestamp"));
+                                i = dl.compareTo(dr);
+
+                                if (i<0) {
+                                    Chat swapChat = chats.get(m);
+                                    chats.set(m,chats.get(m+1));
+                                    chats.set(m+1,swapChat);
+
+                                    String swapKey = chats_keys.get(m);
+                                    chats_keys.set(m,chats_keys.get(m+1));
+                                    chats_keys.set(m+1,swapKey);
+                                }
+                            }
+                        } catch (Exception e) {
+                        }
+                    }
+                }
+
                 adapter.notifyDataSetChanged();
             }
 

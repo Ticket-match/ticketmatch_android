@@ -150,7 +150,8 @@ public class Message_Chat extends AppCompatActivity {
         if (!e.getText().toString().equals("")) {
             //get actual Date
             final Calendar c = Calendar.getInstance();
-            String date = "" + c.get(Calendar.DAY_OF_MONTH) + "." + (c.get(Calendar.MONTH)+1) + "." + c.get(Calendar.YEAR);
+            int month =c.get(Calendar.MONTH)+1;
+            String date = "" + (c.get(Calendar.DAY_OF_MONTH)<10?"0"+c.get(Calendar.DAY_OF_MONTH):c.get(Calendar.DAY_OF_MONTH)) + "." + (month<10?"0"+month:month) + "." + c.get(Calendar.YEAR);
 
             //get actual Time, if hours are less than 10 a zero will be added
             String time;

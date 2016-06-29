@@ -55,7 +55,8 @@ public class NewOffer extends AppCompatActivity {
                 DatePickerDialog dpd = new DatePickerDialog(getParent(), new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                        String date = dayOfMonth + "." + (monthOfYear+1) + "." + year;
+                        int month = monthOfYear+1;
+                        String date = (dayOfMonth<10?"0"+dayOfMonth:dayOfMonth) + "." + (month<10?"0"+month:month) + "." + year;
                         ((TextView)((TabHost)((MainActivityTabHost)getParent()).findViewById(R.id.tabHost)).getCurrentView().findViewById(R.id.date)).setText(date);
                         ticketDate = new GregorianCalendar(year, monthOfYear, dayOfMonth-1);
                     }
