@@ -288,8 +288,11 @@ public class MainActivity extends AppCompatActivity {
                                         e.printStackTrace();
                                     }
 
-                                    user = new User(firstname, lastname, gender, birthday, location, new ArrayList<String>(0), new ArrayList<HashMap<String, String>>(0));
-                                    mDatabase.child("users").child(uid).setValue(user);
+                                    mDatabase.child("users").child(uid).child("firstName").setValue(firstname);
+                                    mDatabase.child("users").child(uid).child("lastName").setValue(lastname);
+                                    mDatabase.child("users").child(uid).child("birthday").setValue(birthday);
+                                    mDatabase.child("users").child(uid).child("gender").setValue(gender);
+                                    mDatabase.child("users").child(uid).child("location").setValue(location);
                                 }
                             }
                         });
