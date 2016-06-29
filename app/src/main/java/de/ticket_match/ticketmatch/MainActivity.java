@@ -3,6 +3,7 @@ package de.ticket_match.ticketmatch;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
@@ -101,6 +102,9 @@ public class MainActivity extends AppCompatActivity {
     public String uid;
     public boolean tmpExists;
 
+    SharedPreferences settings;
+    SharedPreferences.Editor editor;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -111,7 +115,7 @@ public class MainActivity extends AppCompatActivity {
 
         mCallbackManager = CallbackManager.Factory.create();
         loginButton = (LoginButton)findViewById(R.id.fb_login_button);
-        loginButton.setReadPermissions("email","public_profile","user_birthday","user_location");
+        loginButton.setReadPermissions(Arrays.asList("public_profile","user_about_me","user_birthday","user_location"));
         loginButton.registerCallback(mCallbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
@@ -127,6 +131,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onError(FacebookException error) {
                 Log.d(TAG, "facebook:onError", error);
+                if (error.getMessage().equals("net::ERR_INTERNET_DISCONNECTED"))
+                    Toast.makeText(getApplicationContext(), "No internet connection. Login failed.", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -136,7 +142,6 @@ public class MainActivity extends AppCompatActivity {
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
-
                     // User is signed in
                     Intent maintab = new Intent(getApplicationContext(), MainActivityTabHost.class);
                     startActivity(maintab);
@@ -185,6 +190,11 @@ public class MainActivity extends AppCompatActivity {
                     if (!task.isSuccessful()) {
                         Toast.makeText(MainActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                         progressDialog.dismiss();
+                    } else {
+                        settings = getSharedPreferences("TicketMatch", 0);
+                        editor = settings.edit();
+                        editor.putString("PID", "firebase");
+                        editor.commit();
                     }
                 }
             });
@@ -212,6 +222,10 @@ public class MainActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             Log.d(TAG, "signInWithCredential:onComplete:" + task.isSuccessful());
                             uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                            settings = getSharedPreferences("TicketMatch", 0);
+                            editor = settings.edit();
+                            editor.putString("PID", "facebook");
+                            editor.commit();
                             Log.d(TAG, "Daten werden von Facebook geladen....");
                             requestFacebookData(token);
                         } else {
@@ -234,12 +248,12 @@ public class MainActivity extends AppCompatActivity {
                         accessToken,
                         new GraphRequest.GraphJSONObjectCallback() {
 
-                            String firstname = "Firstname";
-                            String lastname = "Lastname";
-                            String birthday = "1.1.1900";
-                            String gender = "Male";
+                            String firstname = "";
+                            String lastname = "";
+                            String birthday = "";
+                            String gender = "";
                             String userID = "";
-                            String location = "Default";
+                            String location = "";
 
                             @Override
                             public void onCompleted(
@@ -251,10 +265,14 @@ public class MainActivity extends AppCompatActivity {
                                     userID = object.getString("id");
                                     if(object.has("first_name")) firstname = object.getString("first_name");
                                     if(object.has("last_name")) lastname = object.getString("last_name");
-                                    if(object.has("birthday")) birthday = object.getString("birthday");
-                                    birthday = birthday.substring(3,5) + "." + birthday.substring(0,2) + "." + birthday.substring(6);
-                                    if(object.has("gender")) gender = object.getString("gender");
-                                    gender = gender.substring(0,1).toUpperCase() + gender.substring(1).toLowerCase();
+                                    if(object.has("birthday")) {
+                                        birthday = object.getString("birthday");
+                                        birthday = birthday.substring(3,5) + "." + birthday.substring(0,2) + "." + birthday.substring(6);
+                                    }
+                                    if(object.has("gender")) {
+                                        gender = object.getString("gender");
+                                        gender = gender.substring(0,1).toUpperCase() + gender.substring(1).toLowerCase();
+                                    }
                                     if(object.has("location")) location = object.getJSONObject("location").getString("name");
                                 } catch (JSONException e){
                                     e.printStackTrace();
@@ -283,11 +301,11 @@ public class MainActivity extends AppCompatActivity {
                                         e.printStackTrace();
                                     }
 
-                                    mDatabase.child("users").child(uid).child("firstName").setValue(firstname);
-                                    mDatabase.child("users").child(uid).child("lastName").setValue(lastname);
-                                    mDatabase.child("users").child(uid).child("birthday").setValue(birthday);
-                                    mDatabase.child("users").child(uid).child("gender").setValue(gender);
-                                    mDatabase.child("users").child(uid).child("location").setValue(location);
+                                    if (!firstname.equals("")) mDatabase.child("users").child(uid).child("firstName").setValue(firstname);
+                                    if (!lastname.equals("")) mDatabase.child("users").child(uid).child("lastName").setValue(lastname);
+                                    if (!birthday.equals("")) mDatabase.child("users").child(uid).child("birthday").setValue(birthday);
+                                    if (!gender.equals("")) mDatabase.child("users").child(uid).child("gender").setValue(gender);
+                                    if (!location.equals("")) mDatabase.child("users").child(uid).child("location").setValue(location);
                                 }
                             }
                         });

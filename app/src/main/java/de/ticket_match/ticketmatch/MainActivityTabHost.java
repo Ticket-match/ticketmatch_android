@@ -288,7 +288,9 @@ public class MainActivityTabHost extends AppCompatActivity {
     public void btn_tm_logo(View view) {
         PopupMenu popup = new PopupMenu(this, view);
         MenuInflater inflater = popup.getMenuInflater();
-        inflater.inflate(R.menu.popup_menu, popup.getMenu());
+        String pid = settings.getString("PID","");
+        if (pid.equals("firebase")) inflater.inflate(R.menu.popup_menu, popup.getMenu());
+        else if (pid.equals("facebook")) inflater.inflate(R.menu.popup_menu_fb, popup.getMenu());
 
         popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
