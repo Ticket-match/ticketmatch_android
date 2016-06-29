@@ -4,6 +4,7 @@ import android.support.test.rule.ActivityTestRule;
 
 import org.junit.Before;
 import org.junit.Rule;
+import org.junit.Test;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.clearText;
@@ -34,14 +35,16 @@ public class MyProfileChangePWTest {
     public void initValidString() throws InterruptedException {
         // Specify a valid string.
 
-        mOldPW = "123465";
+        mOldPW = "123456";
         mNewPW = "654321";
-
+    }
+    @Test
+     public void test() throws InterruptedException {
 
 //Open Edit Profile Page by Clicking Edit Profile
         onView(withId(R.id.overflow_button)).perform(click());
         onView(withText("Change Password")).perform(click());
-        Thread.sleep(5000);
+        Thread.sleep(500);
 
 //Change Password
 //ACT
@@ -65,11 +68,15 @@ public class MyProfileChangePWTest {
 //Click final Button to navigate to next view
 
         onView(withId(R.id.fab_btn_change_password)).perform(click());
-
-        Thread.sleep(500);
+         Thread.sleep(50);
 
 //Reset Password again
 //ACT
+        //Open Edit Profile Page by Clicking Edit Profile
+        onView(withId(R.id.overflow_button)).perform(click());
+        onView(withText("Change Password")).perform(click());
+        Thread.sleep(500);
+
         //Insert text automatically
         onView(withId(R.id.changePassword_currentPassword)).perform(clearText())
                 .perform(typeText(mNewPW));
