@@ -23,8 +23,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
@@ -45,6 +47,8 @@ public class MakeADate_SearchResults extends AppCompatActivity {
 
         dates = (ArrayList<MakeDate>)((MainActivityTabHost) getParent()).baseBundle.getSerializable("makeadate_search_result");
 
+        sortAndDelete();
+
         RecyclerView rv = (RecyclerView) findViewById(R.id.makedate_searchresults);
         LinearLayoutManager llm = new LinearLayoutManager(this);
         rv.setLayoutManager(llm);
@@ -57,6 +61,54 @@ public class MakeADate_SearchResults extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         getParent().onBackPressed();
+    }
+
+    public void sortAndDelete() {
+        SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
+        Date dl,dr, t, today = null;
+
+        try {
+            today = dateFormat.parse(dateFormat.format(new Date()));
+            for (MakeDate ti : dates) {
+                try {
+                    t = dateFormat.parse(ti.getDate());
+                    if (t.compareTo(today)<=0) {
+                        dates.remove(ti);
+                    }
+                } catch (Exception e) {
+                }
+            }
+        } catch (Exception e) {
+
+        }
+
+        for (int n = 0; n < dates.size(); n++) {
+            for (int m = 0; m < (dates.size()-1) - n; m++) {
+                try {
+                    dl = dateFormat.parse(dates.get(m).getDate());
+                    dr = dateFormat.parse(dates.get(m+1).getDate());
+                    int i = dl.compareTo(dr);
+
+                    if (i>0) {
+                        MakeDate swapTicket = dates.get(m);
+                        dates.set(m,dates.get(m+1));
+                        dates.set(m+1,swapTicket);
+                    } else if (i==0) {
+                        dl = timeFormat.parse(dates.get(m).getTime());
+                        dr = timeFormat.parse(dates.get(m+1).getTime());
+                        i = dl.compareTo(dr);
+
+                        if (i>0) {
+                            MakeDate swapTicket = dates.get(m);
+                            dates.set(m,dates.get(m+1));
+                            dates.set(m+1,swapTicket);
+                        }
+                    }
+                } catch (Exception e) {
+                }
+            }
+        }
     }
 
 }
