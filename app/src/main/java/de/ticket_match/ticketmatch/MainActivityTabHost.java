@@ -53,6 +53,9 @@ public class MainActivityTabHost extends AppCompatActivity {
             mn = MessageNotifications.getInstance();
         }
 
+        //set header text of my profile the first time
+        ((TextView)findViewById(R.id.headerTitle)).setText("My Profile");
+
         // TabHost Setup
         th = (TabHost)findViewById(R.id.tabHost);
         LocalActivityManager mLocalActivityManager = new LocalActivityManager(this, false);
