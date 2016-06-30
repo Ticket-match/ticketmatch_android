@@ -67,6 +67,7 @@ public class MainActivityTabHost extends AppCompatActivity {
         View ts1Ind = getLayoutInflater().inflate(R.layout.activity_main_activity_tab_indicator, th.getTabWidget(), false);
         ((TextView) ts1Ind.findViewById(android.R.id.title)).setText("My Profile");
         ((ImageView) ts1Ind.findViewById(android.R.id.icon)).setImageResource(R.drawable.contacts);
+        ((ImageView) ts1Ind.findViewById(android.R.id.icon)).setContentDescription("myprofile");
         ts1.setIndicator(ts1Ind);
         ts1.setContent(new Intent(this, MyProfile.class));
 
@@ -81,6 +82,7 @@ public class MainActivityTabHost extends AppCompatActivity {
         View ts2Ind = getLayoutInflater().inflate(R.layout.activity_main_activity_tab_indicator, th.getTabWidget(), false);
         ((TextView) ts2Ind.findViewById(android.R.id.title)).setText("My Messages");
         ((ImageView) ts2Ind.findViewById(android.R.id.icon)).setImageResource(R.drawable.message);
+        ((ImageView) ts2Ind.findViewById(android.R.id.icon)).setContentDescription("messages");
         ts2.setIndicator(ts2Ind);
         ts2.setContent(new Intent(this, Message_Overview.class));
 
@@ -95,6 +97,7 @@ public class MainActivityTabHost extends AppCompatActivity {
         View ts3Ind = getLayoutInflater().inflate(R.layout.activity_main_activity_tab_indicator, th.getTabWidget(), false);
         ((TextView) ts3Ind.findViewById(android.R.id.title)).setText("My Tickets");
         ((ImageView) ts3Ind.findViewById(android.R.id.icon)).setImageResource(R.drawable.ticket);
+        ((ImageView) ts3Ind.findViewById(android.R.id.icon)).setContentDescription("tickets");
         ts3.setIndicator(ts3Ind);
         ts3.setContent(new Intent(this, Offer_Overview.class));
 
@@ -121,6 +124,7 @@ public class MainActivityTabHost extends AppCompatActivity {
         View ts5Ind = getLayoutInflater().inflate(R.layout.activity_main_activity_tab_indicator, th.getTabWidget(), false);
         ((TextView) ts5Ind.findViewById(android.R.id.title)).setText("My Dates");
         ((ImageView) ts5Ind.findViewById(android.R.id.icon)).setImageResource(R.drawable.group);
+        ((ImageView) ts5Ind.findViewById(android.R.id.icon)).setContentDescription("makeadate");
         ts5.setIndicator(ts5Ind);
         ts5.setContent(new Intent(this, MakeADate.class));
 
