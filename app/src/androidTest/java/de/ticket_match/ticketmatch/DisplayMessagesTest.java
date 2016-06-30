@@ -66,18 +66,22 @@ public class DisplayMessagesTest{
 
     @Rule
 
-    //public ActivityTestRule<MainActivityTabHost> mActivityRule = new ActivityTestRule<MainActivityTabHost>(MainActivityTabHost.class);
-   public ActivityTestRule<Message_Overview> mActivityRule = new ActivityTestRule<>(Message_Overview.class);
+    public ActivityTestRule<MainActivity> mActivityRule = new ActivityTestRule<>(MainActivity.class);
 
 
     @Test
 
     public void DisplayingMessages() throws InterruptedException{
 
-        //Choose Chat
-        onView(withId(R.id.messages_list)).perform(RecyclerViewActions.actionOnItemAtPosition(1,click()));
-     //   onData(anything()).inAdapterView(withId(R.id.messages_list)).atPosition(0).perform(click());
-      // onView(withText("Max Musterfrauchen\n" + "yfychcgxhvkbjv")).perform(click());
+        //Open Message Tab
+        onView(withContentDescription(messagenametest)).check(matches(isDisplayed()));
+
+        onView(withContentDescription(messagenametest)).perform(click());
+        Thread.sleep(500);
+
+        //Check
+        onView(withId(R.id.messages_list)).check(matches(isDisplayed()));
+
 
     }
 }
