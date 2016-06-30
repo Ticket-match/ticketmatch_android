@@ -2,19 +2,15 @@ package de.ticket_match.ticketmatch;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
-import android.content.Context;
-import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TabHost;
 import android.widget.TextView;
@@ -62,7 +58,7 @@ public class NewOffer extends AppCompatActivity {
         this.ticketKey = ticketKey;
     }
 
-    public Boolean getEditTicket() {
+    public Boolean isEditTicket() {
         return editTicket;
     }
 
@@ -196,24 +192,18 @@ public class NewOffer extends AppCompatActivity {
                 setEmtpyTicketTextFields();
 
                 // hide keyboard
-                View aview = this.getCurrentFocus();
-                if (aview != null) {
-                    InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(aview.getWindowToken(), 0);
-                }
+                ((TicketMatch)getApplication()).minimizeKeyboard(view);
 
                 Toast.makeText(getApplicationContext(),"Your ticket is registered!",Toast.LENGTH_SHORT).show();
                 ((TabHost)getParent().findViewById(R.id.tabHost)).setCurrentTabByTag("tickets");
 
-            if(getEditTicket()){
+            if(isEditTicket()){
                 TabHost tabHost = ((TabHost)getParent().findViewById(R.id.tabHost));
                 Offer_Overview offerOverview = (Offer_Overview) tabHost.getCurrentView().getContext();
                 offerOverview.deleteTicket(ticketKey);
                 this.setEditTicket(false);
                 this.setTicketKey("");
             }
-                //((Offer_Overview.MyTicketAdapter)((HeaderViewListAdapter)((ListView)((TabHost)getParent().findViewById(R.id.tabHost)).getCurrentView().findViewById(R.id.offeroverview_list)).getAdapter()).getWrappedAdapter()).notifyDataSetChanged();
-                //((Offer_Overview.MyTicketAdapter)(((ListView)((TabHost)getParent().findViewById(R.id.tabHost)).getCurrentView().findViewById(R.id.offeroverview_list)).getAdapter())).notifyDataSetChanged();
                 ((((RecyclerView)((TabHost)getParent().findViewById(R.id.tabHost)).getCurrentView().findViewById(R.id.offeroverview_list)).getAdapter())).notifyDataSetChanged();
 
         }
