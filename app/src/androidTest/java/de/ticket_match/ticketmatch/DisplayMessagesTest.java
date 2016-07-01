@@ -73,14 +73,25 @@ public class DisplayMessagesTest{
 
     public void DisplayingMessages() throws InterruptedException{
 
+        Thread.sleep(500);
         //Open Message Tab
         onView(withContentDescription(messagenametest)).check(matches(isDisplayed()));
 
         onView(withContentDescription(messagenametest)).perform(click());
-        Thread.sleep(500);
+        Thread.sleep(800);
 
         //Check
         onView(withId(R.id.messages_list)).check(matches(isDisplayed()));
+        Thread.sleep(500);
+
+
+        //Choose Chat
+        onView(withId(R.id.messages_list)).perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
+
+        Thread.sleep(500);
+
+        //Check
+        onView(withId(R.id.messageInput)).check(matches(isDisplayed()));
 
 
     }
