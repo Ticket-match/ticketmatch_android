@@ -78,7 +78,7 @@ public class SearchTicketTest{
 
         //Open Ticket Tab
         Thread.sleep(500);
-        //Open Message Tab
+
         onView(withContentDescription(tabetest)).check(matches(isDisplayed()));
 
         onView(withContentDescription(tabetest)).perform(click());
