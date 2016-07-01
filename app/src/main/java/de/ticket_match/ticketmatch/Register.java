@@ -103,11 +103,6 @@ public class Register extends AppCompatActivity {
                                 byte[] ba = bytes.toByteArray();
                                 mStorage.child("images/" + FirebaseAuth.getInstance().getCurrentUser().getUid() + ".jpg").putBytes(ba);
                                 mDatabase.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(user);
-                                try{
-                                    Thread.sleep(1000);
-                                } catch (Exception e) {
-
-                                }
                             } else {
                                 progressDialog.dismiss();
                                 Toast.makeText(getApplicationContext(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();

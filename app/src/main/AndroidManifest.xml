@@ -85,7 +85,7 @@
 
         <service
             android:name=".MessageNotifications"
-            android:exported="false"></service>
+            android:exported="false" />
         <activity android:name="com.facebook.FacebookActivity"
             android:configChanges=
                 "keyboard|keyboardHidden|screenLayout|screenSize|orientation"
@@ -101,10 +101,8 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
-            android:exported="false" />
-
         <activity android:name=".EditMyProfile"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>
