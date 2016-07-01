@@ -1,5 +1,6 @@
-package de.ticket_match.ticketmatch;
+package de.ticket_match.ticketmatch.IntegrationTests;
 
+import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.runner.AndroidJUnit4;
 import android.content.Intent;
 import android.support.design.widget.TabLayout;
@@ -46,6 +47,9 @@ import static org.hamcrest.Matchers.startsWith;
 
 import org.junit.runner.RunWith;
 
+import de.ticket_match.ticketmatch.MainActivity;
+import de.ticket_match.ticketmatch.R;
+
 @RunWith(AndroidJUnit4.class)
 public class AddAndDeleteInterestsTest {
 
@@ -55,7 +59,7 @@ public class AddAndDeleteInterestsTest {
 
 
     @Rule
-    public ActivityTestRule<MainActivity> mActivityRule = new ActivityTestRule<MainActivity>(MainActivity.class);
+    public ActivityTestRule<MainActivity> mActivityRule = new ActivityTestRule<>(MainActivity.class);
 
     @Before
     public void initValidString() {
@@ -72,7 +76,7 @@ public class AddAndDeleteInterestsTest {
 
 
         //Login
-        onView(withId(R.id.login_mail)).perform(typeText(mTestLoginMail));
+        onView(ViewMatchers.withId(R.id.login_mail)).perform(typeText(mTestLoginMail));
         onView(withId(R.id.login_password)).perform(typeText(mTestLoginPassword));
 
         onView(withId(R.id.login_mail)).check(matches(withText(mTestLoginMail)));
