@@ -1,5 +1,6 @@
 package de.ticket_match.ticketmatch;
 
+import android.support.test.espresso.contrib.RecyclerViewActions;
 import android.support.test.espresso.intent.rule.IntentsTestRule;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
@@ -14,6 +15,7 @@ import static android.support.test.espresso.action.ViewActions.clearText;
 import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isClickable;
+import static android.support.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.Espresso.onData;
@@ -36,35 +38,49 @@ import static org.hamcrest.Matchers.is;
 @RunWith(AndroidJUnit4.class)
 public class WritingMessagesTest {
     String lovelyMessage;
-
+    String messagenametest = "messages";
 
     @Rule
 
-    public ActivityTestRule<Message_Chat> messageTest = new ActivityTestRule<>(Message_Chat.class);
-
-   // public ActivityTestRule<MainActivityTabHost> mActivityRule = new ActivityTestRule<MainActivityTabHost>(MainActivityTabHost.class);
-   // public IntentsTestRule<Message_Chat> myProfileIntentsTestRule = new IntentsTestRule<>(Message_Chat.class);
-
+    public ActivityTestRule<MainActivity> mActivityRule = new ActivityTestRule<>(MainActivity.class);
 
     @Before
     public void initValidString() {
         // Specify a valid string.
 
-        lovelyMessage = "Hello.";
+        lovelyMessage = "Hey lover boy";
     }
 
     @Test
 
+     public void writingMessage() throws InterruptedException{
 
-     public void writingMessage(){
+        Thread.sleep(500);
+        //Open Message Tab
+        onView(withContentDescription(messagenametest)).check(matches(isDisplayed()));
+
+        onView(withContentDescription(messagenametest)).perform(click());
+        Thread.sleep(800);
+
+        //Choose Chat
+        onView(withId(R.id.messages_list)).perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
+
+        Thread.sleep(500);
+
+        //Check
+        onView(withId(R.id.messageInput)).check(matches(isDisplayed()));
 
          //Send Message
          onView(withId(R.id.messageInput)).perform(clearText()).perform(typeText(lovelyMessage)).perform(closeSoftKeyboard());
-     //    onView(withId(R.id.fab_send_message)).perform(click());
+    Thread.sleep(500);
 
+
+        //Check
         onView(withId(R.id.messageInput)).check(matches(withText(lovelyMessage)));
 
+        //Input
         onView(withId(R.id.fab_send_message)).check(matches(isClickable()));
+        onView(withId(R.id.fab_send_message)).perform(click());
 
     }
 
