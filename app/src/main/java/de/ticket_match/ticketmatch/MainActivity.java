@@ -143,6 +143,11 @@ public class MainActivity extends AppCompatActivity {
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if (user != null) {
                     // User is signed in
+                    try{
+                        Thread.sleep(1000);
+                    } catch (Exception e) {
+
+                    }
                     Intent maintab = new Intent(getApplicationContext(), MainActivityTabHost.class);
                     startActivity(maintab);
                 }
@@ -320,7 +325,6 @@ public class MainActivity extends AppCompatActivity {
 
         try{
             t.join();
-            Thread.sleep(1000);
         } catch (Exception e) {
 
         }
