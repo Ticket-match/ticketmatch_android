@@ -48,7 +48,7 @@ public class WritingMessagesTest {
     public void initValidString() {
         // Specify a valid string.
 
-        lovelyMessage = "Hey lover boy";
+        lovelyMessage = "Gib mir, kauf mir, schenk mir";
     }
 
     @Test
@@ -81,6 +81,7 @@ public class WritingMessagesTest {
         //Input
         onView(withId(R.id.fab_send_message)).check(matches(isClickable()));
         onView(withId(R.id.fab_send_message)).perform(click());
+
 
     }
 

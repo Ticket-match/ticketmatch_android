@@ -1,5 +1,6 @@
 package de.ticket_match.ticketmatch;
 
+import android.support.test.espresso.contrib.RecyclerViewActions;
 import android.support.test.rule.ActivityTestRule;
 import android.widget.RatingBar;
 
@@ -8,6 +9,7 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.matcher.ViewMatchers.withContentDescription;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.Espresso.onData;
@@ -34,10 +36,11 @@ import static android.support.test.espresso.matcher.ViewMatchers.withParent;
 public class ForeignProfileRatingTest {
 
     String Nachricht;
+    String messagenametest = "messages";
 
     @Rule
 
-    public ActivityTestRule<ForeignProfileRating> myProfileTest = new ActivityTestRule<>(ForeignProfileRating.class);
+    public ActivityTestRule<MainActivity> mActivityRule = new ActivityTestRule<>(MainActivity.class);
 
 
     @Before
@@ -51,16 +54,38 @@ public class ForeignProfileRatingTest {
 
     public void ratingtest() throws InterruptedException{
 
+        Thread.sleep(500);
+        //Open Message Tab
+        onView(withContentDescription(messagenametest)).check(matches(isDisplayed()));
 
+        onView(withContentDescription(messagenametest)).perform(click());
+        Thread.sleep(800);
 
-        onView(withId(R.id.newrating_text)).perform(clearText()).perform(typeText(Nachricht)).perform(closeSoftKeyboard());
+        //Choose Chat
+        onView(withId(R.id.messages_list)).perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
 
         Thread.sleep(500);
+
+        onView(withId(R.id.messageInput)).check(matches(isDisplayed()));
+        onView(withId(R.id.chat_with_name)).check(matches(isDisplayed()));
+
+        onView(withId(R.id.chat_with_name)).perform(click());
+        Thread.sleep(500);
+
+        //Rate ForeignProfile
+
+        onView(withId(R.id.foreignprofile_rating)).perform(click());
+        Thread.sleep(500);
+
+        onView(withId(R.id.newrating_text)).perform(clearText()).perform(typeText(Nachricht)).perform(closeSoftKeyboard());
+        Thread.sleep(500);
+
+        //Check
         onView(withId(R.id.newrating_text)).check(matches(withText(Nachricht)));
 
-      //  onView(withClassName(Matchers.equalTo(RatingBar.class.getName()))).perform(click());
-      //  onView(withId(R.id.newrating_stars)).perform(click());
+        //Click
         onView(withId(R.id.fab_rate)).check(matches(isClickable()));
+        onView(withId(R.id.fab_rate)).perform(click());
     }
 
 }
