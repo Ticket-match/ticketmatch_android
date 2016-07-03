@@ -23,8 +23,12 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Set;
 
@@ -45,18 +49,67 @@ public class Find extends AppCompatActivity {
 
         listitems_find = (ArrayList<Ticket>)((MainActivityTabHost) getParent()).baseBundle.getSerializable("tickets_search_result");
 
+        sortAndDelete();
+
         final RecyclerView rv = (RecyclerView) findViewById(R.id.find_results);
         LinearLayoutManager llm = new LinearLayoutManager(this);
         rv.setLayoutManager(llm);
 
         final RVAdapter_TicketSearchResults adapter = new RVAdapter_TicketSearchResults(listitems_find, this);
         rv.setAdapter(adapter);
-
     }
 
     @Override
     public void onBackPressed() {
         getParent().onBackPressed();
+    }
+
+    public void sortAndDelete() {
+        SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
+        Date dl,dr, t, today = null;
+
+        try {
+            today = dateFormat.parse(dateFormat.format(new Date()));
+            for (Ticket ti : listitems_find) {
+                try {
+                    t = dateFormat.parse(ti.getDate());
+                    if (t.compareTo(today)<=0) {
+                        listitems_find.remove(ti);
+                    }
+                } catch (Exception e) {
+                }
+            }
+        } catch (Exception e) {
+
+        }
+
+        for (int n = 0; n < listitems_find.size(); n++) {
+            for (int m = 0; m < (listitems_find.size()-1) - n; m++) {
+                try {
+                    dl = dateFormat.parse(listitems_find.get(m).getDate());
+                    dr = dateFormat.parse(listitems_find.get(m+1).getDate());
+                    int i = dl.compareTo(dr);
+
+                    if (i>0) {
+                        Ticket swapTicket = listitems_find.get(m);
+                        listitems_find.set(m,listitems_find.get(m+1));
+                        listitems_find.set(m+1,swapTicket);
+                    } else if (i==0) {
+                        dl = timeFormat.parse(listitems_find.get(m).getTime());
+                        dr = timeFormat.parse(listitems_find.get(m+1).getTime());
+                        i = dl.compareTo(dr);
+
+                        if (i>0) {
+                            Ticket swapTicket = listitems_find.get(m);
+                            listitems_find.set(m,listitems_find.get(m+1));
+                            listitems_find.set(m+1,swapTicket);
+                        }
+                    }
+                } catch (Exception e) {
+                }
+            }
+        }
     }
 
 }

@@ -97,8 +97,10 @@ public class ForeignProfile extends AppCompatActivity {
                 if(event.getAction()==MotionEvent.ACTION_DOWN){
                     //put rating information from user into bundle to give that to new Screen myprofile_ratings
                     if (user.getRatings() != null) {
-                        ((TabHost) getParent().findViewById(R.id.tabHost)).setCurrentTabByTag("foreign_profile_ratings");
-                        ((ForeignProfileRating)((TabHost)getParent().findViewById(R.id.tabHost)).getCurrentView().getContext()).updateFRating(user.getRatings());
+                        if (user.getRatings().size() != 0) {
+                            ((TabHost) getParent().findViewById(R.id.tabHost)).setCurrentTabByTag("foreign_profile_ratings");
+                            ((ForeignProfileRating) ((TabHost) getParent().findViewById(R.id.tabHost)).getCurrentView().getContext()).updateFRating(user.getRatings());
+                        }
                     }
                 }
                 return true;

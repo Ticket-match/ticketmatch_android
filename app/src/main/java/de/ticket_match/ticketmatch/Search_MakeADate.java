@@ -1,6 +1,7 @@
 package de.ticket_match.ticketmatch;
 
 import android.app.DatePickerDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -53,7 +54,8 @@ public class Search_MakeADate extends AppCompatActivity {
                 DatePickerDialog dpd = new DatePickerDialog(getParent(), new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                        String date = dayOfMonth + "." + (monthOfYear+1) + "." + year;
+                        int month = monthOfYear+1;
+                        String date = (dayOfMonth<10?"0"+dayOfMonth:dayOfMonth) + "." + (month<10?"0"+month:month) + "." + year;
                         ((TextView)((TabHost)((MainActivityTabHost)getParent()).findViewById(R.id.tabHost)).getCurrentView().findViewById(R.id.search_makeadate_date)).setText(date);
                     }
                 }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH));
@@ -90,6 +92,10 @@ public class Search_MakeADate extends AppCompatActivity {
             if(command.size()==0){
                 Toast.makeText(getApplicationContext(),"You have to enter at least one search condition",Toast.LENGTH_SHORT).show();
             } else {
+                final ProgressDialog progressDialog;
+                progressDialog = ProgressDialog.show(Search_MakeADate.this, "Please wait ...", "Loading results ...", true);
+                progressDialog.setCancelable(true);
+
                 mDatabase.child("makedates").orderByChild(command.get(0)[0]).equalTo(command.get(0)[1]).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot dataSnapshot) {
@@ -146,7 +152,13 @@ public class Search_MakeADate extends AppCompatActivity {
                                 }
                             }
                         }
+
+                        //set dates in a bundle to push it to the next activity (Find)
+                        ((MainActivityTabHost) getParent()).baseBundle.putSerializable("makeadate_search_result", dates);
+                        ((TabHost)getParent().findViewById(R.id.tabHost)).setCurrentTabByTag("makeadate_search_result");
+                        ((MakeADate_SearchResults)((TabHost) getParent().findViewById(R.id.tabHost)).getCurrentView().getContext()).sortAndDelete();
                         ( ((RecyclerView) ((TabHost) getParent().findViewById(R.id.tabHost)).getCurrentView().findViewById(R.id.makedate_searchresults)).getAdapter()).notifyDataSetChanged();
+                        progressDialog.dismiss();
                     }
 
                     @Override
@@ -166,10 +178,6 @@ public class Search_MakeADate extends AppCompatActivity {
                     InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(aview.getWindowToken(), 0);
                 }
-
-                //set dates in a bundle to push it to the next activity (Find)
-                ((MainActivityTabHost) getParent()).baseBundle.putSerializable("makeadate_search_result", dates);
-                ((TabHost)getParent().findViewById(R.id.tabHost)).setCurrentTabByTag("makeadate_search_result");
         }
     }
 }

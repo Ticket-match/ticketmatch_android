@@ -1,6 +1,7 @@
 package de.ticket_match.ticketmatch;
 
 import android.app.DatePickerDialog;
+import android.app.ProgressDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
@@ -51,7 +52,8 @@ public class Ticket_Search extends AppCompatActivity {
                 DatePickerDialog dpd = new DatePickerDialog(getParent(), new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                        String date = dayOfMonth + "." + (monthOfYear+1) + "." + year;
+                        int month = monthOfYear+1;
+                        String date = (dayOfMonth<10?"0"+dayOfMonth:dayOfMonth) + "." + (month<10?"0"+month:month) + "." + year;
                         ((TextView)((TabHost)((MainActivityTabHost)getParent()).findViewById(R.id.tabHost)).getCurrentView().findViewById(R.id.date)).setText(date);
                     }
                 }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH));
@@ -88,6 +90,10 @@ public class Ticket_Search extends AppCompatActivity {
         if(command.size()==0){
             Toast.makeText(getApplicationContext(),"You have to enter at least one search condition",Toast.LENGTH_SHORT).show();
         } else {
+            final ProgressDialog progressDialog;
+            progressDialog = ProgressDialog.show(Ticket_Search.this, "Please wait ...", "Loading results ...", true);
+            progressDialog.setCancelable(true);
+
             mDatabase.child("tickets").orderByChild(command.get(0)[0]).equalTo(command.get(0)[1]).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -144,8 +150,12 @@ public class Ticket_Search extends AppCompatActivity {
                             }
                         }
                     }
+                    //set tickets in a bundle to push it to the next activity (Find)
+                    ((MainActivityTabHost) getParent()).baseBundle.putSerializable("tickets_search_result", tickets);
+                    ((TabHost) getParent().findViewById(R.id.tabHost)).setCurrentTabByTag("search");
+                    ((Find)((TabHost) getParent().findViewById(R.id.tabHost)).getCurrentView().getContext()).sortAndDelete();
                     (((RecyclerView) ((TabHost) getParent().findViewById(R.id.tabHost)).getCurrentView().findViewById(R.id.find_results)).getAdapter()).notifyDataSetChanged();
-                    //((Find.CustomAdapter) ((ListView) ((TabHost) getParent().findViewById(R.id.tabHost)).getCurrentView().findViewById(R.id.find_results)).getAdapter()).notifyDataSetChanged();
+                    progressDialog.dismiss();
                 }
 
                 @Override
@@ -158,10 +168,6 @@ public class Ticket_Search extends AppCompatActivity {
             ((EditText) findViewById(R.id.eventlocation)).setText("");
             ((TextView) findViewById(R.id.date)).setText("Date");
             ((Spinner) findViewById(R.id.event_type)).setSelection(0);
-
-            //set tickets in a bundle to push it to the next activity (Find)
-            ((MainActivityTabHost) getParent()).baseBundle.putSerializable("tickets_search_result", tickets);
-            ((TabHost) getParent().findViewById(R.id.tabHost)).setCurrentTabByTag("search");
         }
     }
 }

@@ -2,18 +2,15 @@ package de.ticket_match.ticketmatch;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
-import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TabHost;
 import android.widget.TextView;
@@ -30,14 +27,39 @@ import de.ticket_match.ticketmatch.entities.MakeDate;
 
 public class New_MakeAdate extends AppCompatActivity {
 
+
+    TextView mDate;
+    TextView mTime;
+    EditText mName;
+    EditText mLocation;
+    Spinner mType;
+    CheckBox mWithMan;
+    CheckBox mwithWoman;
+
+    ArrayAdapter<CharSequence> adapterEventType;
+
+    //Used to edit a Date
+    Boolean editMakeDate = false;
+    String makeDateKey;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new__make_adate);
 
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.event_type, R.layout.support_simple_spinner_dropdown_item);
-        adapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
-        ((Spinner)findViewById(R.id.new_makeadate_eventtype)).setAdapter(adapter);
+
+        mDate = ((TextView)findViewById(R.id.new_makeadate_date));
+        mTime = ((TextView)findViewById(R.id.new_makeadate_time));
+        mName = ((EditText)findViewById(R.id.new_makeadate_eventname));
+        mLocation = ((EditText)findViewById(R.id.new_makeadate_eventlocation));
+        mType = ((Spinner)findViewById(R.id.new_makeadate_eventtype));
+        mWithMan = ((CheckBox)findViewById(R.id.new_makeadate_withman));
+        mwithWoman = ((CheckBox)findViewById(R.id.new_makeadate_withwoman));
+
+
+        adapterEventType = ArrayAdapter.createFromResource(this, R.array.event_type, R.layout.support_simple_spinner_dropdown_item);
+        adapterEventType.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
+        ((Spinner)findViewById(R.id.new_makeadate_eventtype)).setAdapter(adapterEventType);
 
 
         //Datepicker
@@ -49,7 +71,8 @@ public class New_MakeAdate extends AppCompatActivity {
                 DatePickerDialog dpd = new DatePickerDialog(getParent(), new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                        String date = dayOfMonth + "." + (monthOfYear+1) + "." + year;
+                        int month = monthOfYear+1;
+                        String date = (dayOfMonth<10?"0"+dayOfMonth:dayOfMonth) + "." + (month<10?"0"+month:month) + "." + year;
                         ((TextView)((TabHost)((MainActivityTabHost)getParent()).findViewById(R.id.tabHost)).getCurrentView().findViewById(R.id.new_makeadate_date)).setText(date);
                     }
                 }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH));
@@ -93,13 +116,13 @@ public class New_MakeAdate extends AppCompatActivity {
     public void btn_new_makeadate(View view){
 
         //check if all values are entered, if yes save data in database and delete input fields
-        String date = ((TextView)findViewById(R.id.new_makeadate_date)).getText().toString();
-        String time = ((TextView)findViewById(R.id.new_makeadate_time)).getText().toString();
-        String name = ((EditText)findViewById(R.id.new_makeadate_eventname)).getText().toString();
-        String location = ((EditText)findViewById(R.id.new_makeadate_eventlocation)).getText().toString();
-        String type = ((Spinner)findViewById(R.id.new_makeadate_eventtype)).getSelectedItem().toString();
-        boolean withman = ((CheckBox)findViewById(R.id.new_makeadate_withman)).isChecked();
-        boolean withwoman = ((CheckBox)findViewById(R.id.new_makeadate_withwoman)).isChecked();
+        String date = mDate.getText().toString();
+        String time = mTime.getText().toString();
+        String name = mName.getText().toString();
+        String location = mLocation.getText().toString();
+        String type = mType.getSelectedItem().toString();
+        boolean withman = mWithMan.isChecked();
+        boolean withwoman = mwithWoman.isChecked();
 
         String swithman = (withman?"true": "false");
         String swithwoman = (withwoman?"true": "false");
@@ -116,26 +139,62 @@ public class New_MakeAdate extends AppCompatActivity {
             FirebaseDatabase.getInstance().getReference().child("makedates").child(key).setValue(new_date);
 
             //delete input fields
-            ((TextView) findViewById(R.id.new_makeadate_date)).setText("Date");
-            ((TextView) findViewById(R.id.new_makeadate_time)).setText("Time");
-            ((EditText) findViewById(R.id.new_makeadate_eventname)).setText("");
-            ((EditText) findViewById(R.id.new_makeadate_eventlocation)).setText("");
-            ((Spinner) findViewById(R.id.new_makeadate_eventtype)).setSelection(0);
-            ((CheckBox) findViewById(R.id.new_makeadate_withman)).setChecked(false);
-            ((CheckBox) findViewById(R.id.new_makeadate_withwoman)).setChecked(false);
+            setEmtpyTicketTextFields();
 
             // hide keyboard
-            View aview = this.getCurrentFocus();
-            if (aview != null) {
-                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(aview.getWindowToken(), 0);
-            }
+            ((TicketMatch)getApplication()).minimizeKeyboard(view);
 
             Toast.makeText(getApplicationContext(), "Your date is registered!", Toast.LENGTH_SHORT).show();
             ((TabHost) getParent().findViewById(R.id.tabHost)).setCurrentTabByTag("makeadate");
+
+
+            if(isEditMakeDate()){
+                TabHost tabHost = ((TabHost)getParent().findViewById(R.id.tabHost));
+                MakeADate makeADate = (MakeADate) tabHost.getCurrentView().getContext();
+                makeADate.deleteMakeDate(getMakeDateKey());
+                this.setEditMakeDate(false);
+                this.setMakeDateKey("");
+            }
+
+
             ((((RecyclerView)((TabHost)getParent().findViewById(R.id.tabHost)).getCurrentView().findViewById(R.id.makedate_overview)).getAdapter())).notifyDataSetChanged();
         }
 
     }
 
+
+    public void setMakeDateTextFields(MakeDate date){
+        boolean isWithMan = Boolean.parseBoolean(date.isWithman());
+        boolean isWithWoman = Boolean.parseBoolean(date.isWithwoman());
+
+        mDate.setText(date.getDate());
+        mTime.setText(date.getTime());
+        mName.setText(date.getName());
+        mType.setSelection(adapterEventType.getPosition(date.getType()));;
+        mLocation.setText(date.getLocation());
+        mWithMan.setChecked(isWithMan);
+        mwithWoman.setChecked(isWithWoman);
+    }
+
+    public void setEmtpyTicketTextFields(){
+        MakeDate emptyDate = new MakeDate("","","","","","","false","false");
+        setMakeDateTextFields(emptyDate);
+    }
+
+
+    public Boolean isEditMakeDate() {
+        return editMakeDate;
+    }
+
+    public void setEditMakeDate(Boolean editMakeDate) {
+        this.editMakeDate = editMakeDate;
+    }
+
+    public String getMakeDateKey() {
+        return makeDateKey;
+    }
+
+    public void setMakeDateKey(String makeDateKey) {
+        this.makeDateKey = makeDateKey;
+    }
 }

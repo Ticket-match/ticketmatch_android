@@ -103,11 +103,6 @@ public class Register extends AppCompatActivity {
                                 byte[] ba = bytes.toByteArray();
                                 mStorage.child("images/" + FirebaseAuth.getInstance().getCurrentUser().getUid() + ".jpg").putBytes(ba);
                                 mDatabase.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(user);
-                                try{
-                                    Thread.sleep(1000);
-                                } catch (Exception e) {
-
-                                }
                             } else {
                                 progressDialog.dismiss();
                                 Toast.makeText(getApplicationContext(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
@@ -147,7 +142,8 @@ public class Register extends AppCompatActivity {
         }
         public void onDateSet(DatePicker view, int year, int month, int day) {
             //month+1: array starts at 0
-            String date = day + "." + (month+1) + "." + year;
+            month = month+1;
+            String date = (day<10?"0"+day:day) + "." + (month<10?"0"+month:month) + "." + year;
             ((TextView)getActivity().findViewById(R.id.register_birthdate)).setText(date);
         }
     }

@@ -97,7 +97,7 @@ public class ForeignProfileRating extends AppCompatActivity {
 
 
     public void btn_newrating (View view) {
-        String rating = Float.toString(((RatingBar)findViewById(R.id.newrating_stars)).getRating()).substring(0,2);
+        String rating = Float.toString(((RatingBar)findViewById(R.id.newrating_stars)).getRating()).substring(0,3);
         String rating_text = ((EditText)findViewById(R.id.newrating_text)).getText().toString();
 
         if (rating.equals("") | rating_text.equals("")) {
