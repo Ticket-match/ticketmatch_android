@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
@@ -23,6 +24,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import de.ticket_match.ticketmatch.entities.Ticket;
 import de.ticket_match.ticketmatch.entities.User;
 
 /**
@@ -38,8 +40,16 @@ public class TicketMatch extends Application{
     public final static String FOREIGN_PROFILE_UID = "foreign_profile_uid";
     public final static String TM_WEBSITE = "http://ticket-match.de";
 
+    public static SharedPreferences settings;
+    public static SharedPreferences.Editor editor;
+
     //
     private static User currentUser;
+
+    public static void doSharedPreferences(SharedPreferences sp) {
+        settings = sp;
+        editor = settings.edit();
+    }
 
 
     public void onCreate() {

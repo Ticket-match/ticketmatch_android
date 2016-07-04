@@ -103,17 +103,13 @@ public class MainActivity extends AppCompatActivity {
     public boolean tmpExists;
     private String fbp;
 
-    SharedPreferences settings;
-    SharedPreferences.Editor editor;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         FacebookSdk.sdkInitialize(getApplicationContext());
         setContentView(R.layout.activity_main);
 
-        settings = getSharedPreferences("TicketMatch", 0);
-        editor = settings.edit();
+        TicketMatch.doSharedPreferences(getSharedPreferences("TicketMatch", 0));
 
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
 
@@ -194,8 +190,8 @@ public class MainActivity extends AppCompatActivity {
             progressDialog = ProgressDialog.show(MainActivity.this, "Please wait ...", "Logging in ...", true);
             progressDialog.setCancelable(true);
             fbp = "firebase";
-            editor.putString("PID", fbp);
-            editor.commit();
+            TicketMatch.editor.putString("PID", fbp);
+            TicketMatch.editor.commit();
             mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
@@ -223,8 +219,8 @@ public class MainActivity extends AppCompatActivity {
         final ProgressDialog progressDialog = ProgressDialog.show(MainActivity.this, "Please wait ...", "Logging in ...", true);
         progressDialog.setCancelable(true);
         fbp = "facebook";
-        editor.putString("PID", fbp);
-        editor.commit();
+        TicketMatch.editor.putString("PID", fbp);
+        TicketMatch.editor.commit();
         mAuth.signInWithCredential(FacebookAuthProvider.getCredential(token.getToken()))
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override

@@ -42,6 +42,7 @@ public class Register extends AppCompatActivity {
     private DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
     private StorageReference mStorage = FirebaseStorage.getInstance().getReference();
     private User user;
+    private String fbp;
 
 
     @Override
@@ -94,6 +95,9 @@ public class Register extends AppCompatActivity {
             //Create a User class with attributes
             user = new User(firstname,lastname,gender,birthdate,location, new ArrayList<String>(0), new ArrayList<HashMap<String, String>>(0));
             // Create an Account via Firebase Authentication
+            fbp = "firebase";
+            TicketMatch.editor.putString("PID", fbp);
+            TicketMatch.editor.commit();
             FirebaseAuth.getInstance().createUserWithEmailAndPassword(email, password)
                     .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                         @Override
