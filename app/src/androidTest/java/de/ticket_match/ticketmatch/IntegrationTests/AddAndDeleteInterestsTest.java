@@ -65,8 +65,8 @@ public class AddAndDeleteInterestsTest {
     public void initValidString() {
         // Specify a valid string.
 
-        mTestLoginMail="rapunzel@turm.com";
-        mTestLoginPassword="12345abc";
+        mTestLoginMail="petra.tester@home.comm";
+        mTestLoginPassword="1234abc";
         mTestInterest="Schlafen";
     }
 

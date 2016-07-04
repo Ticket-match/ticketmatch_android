@@ -50,8 +50,8 @@ public class SearchTicketAndSendMessageIntegrationTest {
     public void initValidString() {
         // Specify a valid string.
 
-        mTestLoginMail="rapunzel@turm.com";
-        mTestLoginPassword="12345abc";
+        mTestLoginMail="petra.tester@home.comm";
+        mTestLoginPassword="1234abc";
         testLocation = "Mannheim";
         testEvent = "Cinema";
         lovelyMessage = "Ich will das Ticket.";
