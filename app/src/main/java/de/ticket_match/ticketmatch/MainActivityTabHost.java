@@ -366,6 +366,7 @@ public class MainActivityTabHost extends AppCompatActivity {
             th.setCurrentTabByTag("messages_chat");
         } else if(tabId.equals("foreign_profile_ratings")) {
             th.setCurrentTabByTag("foreign_profile");
+            ((ForeignProfile)th.getCurrentView().getContext()).updateFProfile(baseBundle.getString(TicketMatch.FOREIGN_PROFILE_UID));
         } else if (tabId.equals("tickets_search")) {
             th.setCurrentTabByTag("tickets");
         } else if (tabId.equals("edit_myprofile")) {

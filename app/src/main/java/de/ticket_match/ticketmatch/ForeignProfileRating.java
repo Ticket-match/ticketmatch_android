@@ -122,7 +122,7 @@ public class ForeignProfileRating extends AppCompatActivity {
 
             ((RatingListAdapter)((ListView) findViewById(R.id.foreignprofile_ratings)).getAdapter()).notifyDataSetChanged();
 
-            mDatabase.child("users").child(foreignUid).child("ratings").child(String.valueOf(ratings_list.size()-1)).setValue(hm);
+            mDatabase.child("users").child(foreignUid).child("ratings").child(String.valueOf(ratings_list.size()-1==-1?0:ratings_list.size()-1)).setValue(hm);
 
             //String rt = "me|" + new SimpleDateFormat("dd.MM.yyyy").format(new Date()) + "|" + rating_text;
             ((EditText)findViewById(R.id.newrating_text)).setText("");
