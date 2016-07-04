@@ -27,8 +27,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 
 import de.ticket_match.ticketmatch.entities.User;
 
@@ -106,7 +108,7 @@ public class EditMyProfile extends AppCompatActivity {
         ((TicketMatch)getApplication()).minimizeKeyboard(view);
         EditmyProfileBirthdateDialog rbd = new EditmyProfileBirthdateDialog();
 
-        rbd.show(getFragmentManager(), "rbd");
+        rbd.show(getFragmentManager(), "erbd");
     }
 
     public static class EditmyProfileBirthdateDialog extends DialogFragment implements DatePickerDialog.OnDateSetListener {
@@ -114,15 +116,21 @@ public class EditMyProfile extends AppCompatActivity {
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState){
             //Use the current date as the default date in the date picker
-            final Calendar c = Calendar.getInstance();
+            Calendar c = Calendar.getInstance();
             int year = c.get(Calendar.YEAR);
             int month = c.get(Calendar.MONTH);
             int day = c.get(Calendar.DAY_OF_MONTH);
+
+            String s = TicketMatch.getCurrentUser().getBirthday();
+            day = Integer.parseInt(s.substring(0,2));
+            month = Integer.parseInt(s.substring(3,5))-1;
+            year = Integer.parseInt(s.substring(6));
+
             DatePickerDialog dpd = new DatePickerDialog(getActivity(), this, year, month, day);
             dpd.getDatePicker().setMaxDate(System.currentTimeMillis());
             return dpd;
-
         }
+
         public void onDateSet(DatePicker view, int year, int month, int day) {
             //month+1: array starts at 0
             month = month+1;
