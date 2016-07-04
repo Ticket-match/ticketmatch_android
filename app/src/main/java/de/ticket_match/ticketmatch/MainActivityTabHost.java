@@ -330,7 +330,7 @@ public class MainActivityTabHost extends AppCompatActivity {
                         // Firebase Logout
                         FirebaseAuth.getInstance().signOut();
                         //Facebook Logout
-                        LoginManager.getInstance().logOut();
+                        if (pid.equals("facebook")) LoginManager.getInstance().logOut();
                         Intent mainActivity = new Intent(getApplicationContext(), MainActivity.class);
                         mainActivity.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(mainActivity);
