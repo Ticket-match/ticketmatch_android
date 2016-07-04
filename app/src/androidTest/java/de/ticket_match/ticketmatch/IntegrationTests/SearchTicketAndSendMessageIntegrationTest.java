@@ -52,7 +52,7 @@ public class SearchTicketAndSendMessageIntegrationTest {
 
         mTestLoginMail="petra.tester@home.comm";
         mTestLoginPassword="1234abc";
-        testLocation = "Mannheim";
+        testLocation = "Berlin";
         testEvent = "Cinema";
         lovelyMessage = "Ich will das Ticket.";
     }
