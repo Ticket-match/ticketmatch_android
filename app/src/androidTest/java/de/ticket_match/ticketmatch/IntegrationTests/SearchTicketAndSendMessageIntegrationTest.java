@@ -81,7 +81,6 @@ public class SearchTicketAndSendMessageIntegrationTest {
         Thread.sleep(800);
 
         //Check
-
         onView(withId(R.id.fab_search_ticket)).check(matches(isDisplayed()));
 
         //SearchTicket
