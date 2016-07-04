@@ -106,9 +106,21 @@ public class MyProfile extends AppCompatActivity {
                     public void onDataChange(DataSnapshot dataSnapshot) {
                         user = dataSnapshot.getValue(User.class);
                         TicketMatch.setCurrentUser(user);
-                        ((TextView) findViewById(R.id.myprofile_name)).setText(user.getFirstName() + " " + user.getLastName());
-                        ((TextView) findViewById(R.id.myprofile_gender_age)).setText(user.getGender() + " " + user.getBirthday());
-                        ((TextView) findViewById(R.id.myprofile_location)).setText(user.getLocation());
+
+                        String s = "";
+                        if (user.getFirstName()!=null) s = user.getFirstName() + " ";
+                        if (user.getLastName()!=null) s = s + user.getLastName();
+                        ((TextView) findViewById(R.id.myprofile_name)).setText(s);
+
+                        s = "";
+                        if (user.getGender()!=null) s = user.getGender() + " ";
+                        if (user.getBirthday()!=null) s = s + user.getBirthday();
+                        ((TextView) findViewById(R.id.myprofile_gender_age)).setText(s);
+
+                        s = "";
+                        if (user.getLocation()!=null) s = user.getLocation();
+                        ((TextView) findViewById(R.id.myprofile_location)).setText(s);
+
                         if (user.getInterests()!= null) {
                             if (user.getInterests().size()!=0) {
                                 ((ListView) findViewById(R.id.myprofile_interests)).setAdapter(new InterestListAdapter(that, user.getInterests()));
@@ -135,7 +147,7 @@ public class MyProfile extends AppCompatActivity {
                         ((ImageButton)findViewById(R.id.myprofile_image)).setImageBitmap(bm);
                         profileImage();
 
-                        ((MainActivityTabHost)getParent()).baseBundle.putString("myprofile_name", user.getFirstName() + " " + user.getLastName());
+                        ((MainActivityTabHost)getParent()).baseBundle.putString("myprofile_name", ((TextView) findViewById(R.id.myprofile_name)).getText().toString());
                     }
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
