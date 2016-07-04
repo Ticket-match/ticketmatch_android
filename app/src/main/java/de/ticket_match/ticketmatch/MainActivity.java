@@ -101,6 +101,7 @@ public class MainActivity extends AppCompatActivity {
     public User user;
     public String uid;
     public boolean tmpExists;
+    private String fbp;
 
     SharedPreferences settings;
     SharedPreferences.Editor editor;
@@ -110,6 +111,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         FacebookSdk.sdkInitialize(getApplicationContext());
         setContentView(R.layout.activity_main);
+
+        settings = getSharedPreferences("TicketMatch", 0);
+        editor = settings.edit();
 
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
 
@@ -189,17 +193,15 @@ public class MainActivity extends AppCompatActivity {
         } else {
             progressDialog = ProgressDialog.show(MainActivity.this, "Please wait ...", "Logging in ...", true);
             progressDialog.setCancelable(true);
+            fbp = "firebase";
+            editor.putString("PID", fbp);
+            editor.commit();
             mAuth.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if (!task.isSuccessful()) {
                         Toast.makeText(MainActivity.this, task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                         progressDialog.dismiss();
-                    } else {
-                        settings = getSharedPreferences("TicketMatch", 0);
-                        editor = settings.edit();
-                        editor.putString("PID", "firebase");
-                        editor.commit();
                     }
                 }
             });
@@ -220,6 +222,9 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG, "handleFacebookAccessToken:" + token);
         final ProgressDialog progressDialog = ProgressDialog.show(MainActivity.this, "Please wait ...", "Logging in ...", true);
         progressDialog.setCancelable(true);
+        fbp = "facebook";
+        editor.putString("PID", fbp);
+        editor.commit();
         mAuth.signInWithCredential(FacebookAuthProvider.getCredential(token.getToken()))
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -227,10 +232,6 @@ public class MainActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             Log.d(TAG, "signInWithCredential:onComplete:" + task.isSuccessful());
                             uid = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                            settings = getSharedPreferences("TicketMatch", 0);
-                            editor = settings.edit();
-                            editor.putString("PID", "facebook");
-                            editor.commit();
                             Log.d(TAG, "Daten werden von Facebook geladen....");
                             requestFacebookData(token);
                         } else {

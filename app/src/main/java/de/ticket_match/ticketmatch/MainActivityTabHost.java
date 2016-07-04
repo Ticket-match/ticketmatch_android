@@ -33,6 +33,8 @@ public class MainActivityTabHost extends AppCompatActivity {
     MessageNotifications mn;
     SharedPreferences settings;
     SharedPreferences.Editor editor;
+    Bundle b;
+    String pid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +45,8 @@ public class MainActivityTabHost extends AppCompatActivity {
         editor = settings.edit();
         editor.putString("UID", FirebaseAuth.getInstance().getCurrentUser().getUid());
         editor.commit();
+
+        pid = settings.getString("PID","");
 
         if (MessageNotifications.getInstance() == null) {
             //Send work request to the MessageNotification class
@@ -295,7 +299,6 @@ public class MainActivityTabHost extends AppCompatActivity {
     public void btn_tm_logo(View view) {
         PopupMenu popup = new PopupMenu(this, view);
         MenuInflater inflater = popup.getMenuInflater();
-        String pid = settings.getString("PID","");
         if (pid.equals("firebase")) inflater.inflate(R.menu.popup_menu, popup.getMenu());
         else if (pid.equals("facebook")) inflater.inflate(R.menu.popup_menu_fb, popup.getMenu());
 

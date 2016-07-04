@@ -34,6 +34,7 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.ChatViewHolder>{
 
     List<Chat> chats;
     List<String> chat_keys;
+    HashMap<String,Bitmap> cImages;
     private static DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
     private static StorageReference mStorage = FirebaseStorage.getInstance().getReference();
     Activity prevActivity;
@@ -43,6 +44,7 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.ChatViewHolder>{
         this.chats = chats;
         this.prevActivity = prevActivity;
         this.chat_keys = chat_keys;
+        cImages = new HashMap<String, Bitmap>(0);
     }
 
     public static class ChatViewHolder extends RecyclerView.ViewHolder {
@@ -89,7 +91,7 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.ChatViewHolder>{
 
         Chat chat = chats.get(position);
 
-        String fuid;
+        final String fuid;
         if (chat.getParticipant1().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
             fuid = chat.getParticipant2();
         } else {
@@ -128,13 +130,18 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.ChatViewHolder>{
 
         final ImageView i = holder.pic;
 
-        mStorage.child("images/"+fuid+".jpg").getBytes(512*1024).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-            @Override
-            public void onSuccess(byte[] bytes) {
-                Bitmap bm = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                i.setImageBitmap(bm);
-            }
-        });
+        if (cImages.containsKey(fuid)) {
+            i.setImageBitmap(cImages.get(fuid));
+        } else {
+            mStorage.child("images/"+fuid+".jpg").getBytes(512*1024).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                @Override
+                public void onSuccess(byte[] bytes) {
+                    Bitmap bm = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                    cImages.put(fuid,bm);
+                    i.setImageBitmap(bm);
+                }
+            });
+        }
     }
 
     @Override
