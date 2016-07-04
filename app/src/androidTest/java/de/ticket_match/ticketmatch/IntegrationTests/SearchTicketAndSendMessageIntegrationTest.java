@@ -52,7 +52,7 @@ public class SearchTicketAndSendMessageIntegrationTest {
 
         mTestLoginMail="petra.tester@home.comm";
         mTestLoginPassword="1234abc";
-        testLocation = "Mannheim";
+        testLocation = "Berlin";
         testEvent = "Cinema";
         lovelyMessage = "Ich will das Ticket.";
     }
@@ -81,7 +81,6 @@ public class SearchTicketAndSendMessageIntegrationTest {
         Thread.sleep(800);
 
         //Check
-
         onView(withId(R.id.fab_search_ticket)).check(matches(isDisplayed()));
 
         //SearchTicket
