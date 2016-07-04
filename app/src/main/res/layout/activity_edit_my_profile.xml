@@ -135,7 +135,8 @@
             android:background="?attr/editTextBackground"
             android:gravity="bottom"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            android:alpha="0.54"/>
+            android:alpha="0.54"
+            android:onClick="editmyprofile_birthdate" />
 
         <Spinner
             android:layout_width="300dp"

@@ -1,6 +1,8 @@
 package de.ticket_match.ticketmatch;
 
 import android.app.DatePickerDialog;
+import android.app.Dialog;
+import android.app.DialogFragment;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
@@ -45,26 +47,6 @@ public class EditMyProfile extends AppCompatActivity {
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.register_gender, R.layout.support_simple_spinner_dropdown_item);
         adapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
         ((Spinner) findViewById(R.id.edit_myprofile_gender)).setAdapter(adapter);
-
-        //Datepicker
-        ((TextView)findViewById(R.id.edit_myprofile_birthdate)).setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                ((TicketMatch)getApplication()).minimizeKeyboard(v);
-                Calendar c = Calendar.getInstance();
-                DatePickerDialog dpd = new DatePickerDialog(getParent(), new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                        int month = monthOfYear+1;
-                        String date = (dayOfMonth<10?"0"+dayOfMonth:dayOfMonth) + "." + (month<10?"0"+month:month) + "." + year;
-                        ((TextView)((TabHost)((MainActivityTabHost)getParent()).findViewById(R.id.tabHost)).getCurrentView().findViewById(R.id.edit_myprofile_birthdate)).setText(date);
-                    }
-                }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH));
-                dpd.show();
-                return false;
-            }
-        });
-
 
 
         user = TicketMatch.getCurrentUser();
@@ -118,6 +100,37 @@ public class EditMyProfile extends AppCompatActivity {
             onBackPressed();
         }
     }
+
+    // Birthday Date Picker
+    public void editmyprofile_birthdate(View view) {
+        ((TicketMatch)getApplication()).minimizeKeyboard(view);
+        EditmyProfileBirthdateDialog rbd = new EditmyProfileBirthdateDialog();
+
+        rbd.show(getFragmentManager(), "rbd");
+    }
+
+    public static class EditmyProfileBirthdateDialog extends DialogFragment implements DatePickerDialog.OnDateSetListener {
+
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState){
+            //Use the current date as the default date in the date picker
+            final Calendar c = Calendar.getInstance();
+            int year = c.get(Calendar.YEAR);
+            int month = c.get(Calendar.MONTH);
+            int day = c.get(Calendar.DAY_OF_MONTH);
+            DatePickerDialog dpd = new DatePickerDialog(getActivity(), this, year, month, day);
+            dpd.getDatePicker().setMaxDate(System.currentTimeMillis());
+            return dpd;
+
+        }
+        public void onDateSet(DatePicker view, int year, int month, int day) {
+            //month+1: array starts at 0
+            month = month+1;
+            String date = (day<10?"0"+day:day) + "." + (month<10?"0"+month:month) + "." + year;
+            ((TextView)getActivity().findViewById(R.id.edit_myprofile_birthdate)).setText(date);
+        }
+    }
+
 
     // Check Internet Status
     public boolean isNetworkConnected() {
