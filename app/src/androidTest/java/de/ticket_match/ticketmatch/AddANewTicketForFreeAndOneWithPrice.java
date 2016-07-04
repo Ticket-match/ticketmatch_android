@@ -119,6 +119,7 @@ public class AddANewTicketForFreeAndOneWithPrice {
         onView(withId(R.id.eventname)).perform(typeText("Film2"));
 
 
+        //Blabla
 //Act
         onView(withId(R.id.eventlocation)).perform(typeText("KinoMannheim"));
 
