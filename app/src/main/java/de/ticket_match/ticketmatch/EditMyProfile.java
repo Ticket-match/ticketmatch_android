@@ -2,7 +2,9 @@ package de.ticket_match.ticketmatch;
 
 import android.app.DatePickerDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.net.ConnectivityManager;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MotionEvent;
@@ -121,5 +123,10 @@ public class EditMyProfile extends AppCompatActivity {
     public boolean isNetworkConnected() {
         ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         return cm.getActiveNetworkInfo() != null;
+    }
+
+    public void btn_website(View view) {
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(TicketMatch.TM_WEBSITE));
+        startActivity(browserIntent);
     }
 }

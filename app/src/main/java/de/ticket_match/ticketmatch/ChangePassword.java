@@ -1,6 +1,8 @@
 package de.ticket_match.ticketmatch;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -88,5 +90,10 @@ public class ChangePassword extends AppCompatActivity {
                     });
 
         }
+    }
+
+    public void btn_website(View view) {
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(TicketMatch.TM_WEBSITE));
+        startActivity(browserIntent);
     }
 }

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -370,5 +371,10 @@ public class MainActivityTabHost extends AppCompatActivity {
         } else if (tabId.equals("edit_myprofile")) {
             th.setCurrentTabByTag("myprofile");
         }
+    }
+
+    public void btn_website(View view) {
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(TicketMatch.TM_WEBSITE));
+        startActivity(browserIntent);
     }
 }

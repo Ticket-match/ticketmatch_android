@@ -28,7 +28,8 @@
                     android:gravity="center"
                     android:layout_gravity="center"
                     android:background="@drawable/tm_logo"
-                    android:layout_margin="10dp" />
+                    android:layout_margin="10dp"
+                    android:onClick="btn_website"/>
 
                 <TextView
                     android:layout_width="match_parent"

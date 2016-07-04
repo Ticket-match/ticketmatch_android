@@ -5,9 +5,11 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -146,5 +148,10 @@ public class Register extends AppCompatActivity {
             String date = (day<10?"0"+day:day) + "." + (month<10?"0"+month:month) + "." + year;
             ((TextView)getActivity().findViewById(R.id.register_birthdate)).setText(date);
         }
+    }
+
+    public void btn_website(View view) {
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(TicketMatch.TM_WEBSITE));
+        startActivity(browserIntent);
     }
 }

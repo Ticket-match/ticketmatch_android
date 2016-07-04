@@ -36,6 +36,7 @@ public class TicketMatch extends Application{
 
     //Bundle Keys
     public final static String FOREIGN_PROFILE_UID = "foreign_profile_uid";
+    public final static String TM_WEBSITE = "http://ticket-match.de";
 
     //
     private static User currentUser;

@@ -390,5 +390,9 @@ public class MainActivity extends AppCompatActivity {
         AppIndex.AppIndexApi.end(client, viewAction);
         client.disconnect();
     }
-}
 
+    public void btn_website(View view) {
+        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(TicketMatch.TM_WEBSITE));
+        startActivity(browserIntent);
+    }
+}
