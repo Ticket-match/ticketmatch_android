@@ -9,6 +9,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -28,7 +29,10 @@ import android.widget.RatingBar;
 import android.widget.TabHost;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -40,6 +44,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 
 import de.ticket_match.ticketmatch.entities.Chat;
@@ -126,14 +131,9 @@ public class MyProfile extends AppCompatActivity {
                             user.setRatings(new ArrayList<HashMap<String, String>>(0));
                         }
 
-                        //get profile picture from database with a size of maximum 512KB
-                        mStorage.child("images/"+FirebaseAuth.getInstance().getCurrentUser().getUid()+".jpg").getBytes(512*1024).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-                            @Override
-                            public void onSuccess(byte[] bytes) {
-                                Bitmap bm = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                                ((ImageButton)findViewById(R.id.myprofile_image)).setImageBitmap(bm);
-                            }
-                        });
+                        Bitmap bm = BitmapFactory.decodeResource(getResources(), R.drawable.profilbild);
+                        ((ImageButton)findViewById(R.id.myprofile_image)).setImageBitmap(bm);
+                        profileImage();
 
                         ((MainActivityTabHost)getParent()).baseBundle.putString("myprofile_name", user.getFirstName() + " " + user.getLastName());
                     }
@@ -189,6 +189,21 @@ public class MyProfile extends AppCompatActivity {
             }
         });*/
 
+    }
+
+    public void profileImage() {
+        //get profile picture from database with a size of maximum 512KB
+        mStorage.child("images/"+FirebaseAuth.getInstance().getCurrentUser().getUid()+".jpg").getBytes(512*1024).addOnCompleteListener(new OnCompleteListener<byte[]>() {
+            @Override
+            public void onComplete(@NonNull Task<byte[]> task) {
+                if (task.isSuccessful()) {
+                    Bitmap bm = BitmapFactory.decodeByteArray(task.getResult(), 0, task.getResult().length);
+                    ((ImageButton)findViewById(R.id.myprofile_image)).setImageBitmap(bm);
+                } else {
+                    profileImage();
+                }
+            }
+        });
     }
 
     @Override
