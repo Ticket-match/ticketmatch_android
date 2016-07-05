@@ -39,11 +39,14 @@ public class EditMyProfile extends AppCompatActivity {
     private DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
     private User user;
     public ArrayList<String> interests;
+    public static EditMyProfile emp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_my_profile);
+
+        emp = this;
 
         // Dropdown Menu
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.register_gender, R.layout.support_simple_spinner_dropdown_item);
@@ -132,6 +135,13 @@ public class EditMyProfile extends AppCompatActivity {
         }
 
         public void onDateSet(DatePicker view, int year, int month, int day) {
+            final Calendar c = Calendar.getInstance();
+            if (day > c.get(Calendar.DAY_OF_MONTH) || month > c.get(Calendar.MONTH) || year > c.get(Calendar.YEAR)) {
+                Toast.makeText(emp,"Please don't use a future date!", Toast.LENGTH_SHORT).show();
+                day = c.get(Calendar.DAY_OF_MONTH);
+                month = c.get(Calendar.MONTH);
+                year = c.get(Calendar.YEAR);
+            }
             //month+1: array starts at 0
             month = month+1;
             String date = (day<10?"0"+day:day) + "." + (month<10?"0"+month:month) + "." + year;

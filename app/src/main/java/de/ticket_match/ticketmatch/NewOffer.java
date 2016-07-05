@@ -97,10 +97,16 @@ public class NewOffer extends AppCompatActivity {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 ((TicketMatch)getApplication()).minimizeKeyboard(v);
-                Calendar c = Calendar.getInstance();
+                final Calendar c = Calendar.getInstance();
                 DatePickerDialog dpd = new DatePickerDialog(getParent(), new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                        if (dayOfMonth < c.get(Calendar.DAY_OF_MONTH) || monthOfYear < c.get(Calendar.MONTH) || year < c.get(Calendar.YEAR)) {
+                            Toast.makeText(getApplicationContext(),"Please don't use a past date!", Toast.LENGTH_SHORT).show();
+                            dayOfMonth = c.get(Calendar.DAY_OF_MONTH);
+                            monthOfYear = c.get(Calendar.MONTH);
+                            year = c.get(Calendar.YEAR);
+                        }
                         int month = monthOfYear+1;
                         String date = (dayOfMonth<10?"0"+dayOfMonth:dayOfMonth) + "." + (month<10?"0"+month:month) + "." + year;
                         ((TextView)((TabHost)((MainActivityTabHost)getParent()).findViewById(R.id.tabHost)).getCurrentView().findViewById(R.id.date)).setText(date);
@@ -181,31 +187,32 @@ public class NewOffer extends AppCompatActivity {
         }
         else {
 
+            if (isEditTicket()) {
+                Ticket newticket = new Ticket(eventname, type, price_currency, numberoftickets, eventlocation, date, FirebaseAuth.getInstance().getCurrentUser().getUid(), time);
+                FirebaseDatabase.getInstance().getReference().child("tickets").child(ticketKey).setValue(newticket);
+
+                this.setEditTicket(false);
+                this.setTicketKey("");
+            } else {
+
                 // Create ticket in database
                 Ticket newticket = new Ticket(eventname, type, price_currency, numberoftickets, eventlocation, date, FirebaseAuth.getInstance().getCurrentUser().getUid(), time);
-                ((ArrayList<Ticket>)((MainActivityTabHost) getParent()).baseBundle.getSerializable("tickets_offerdetail")).add(newticket);
+                //((ArrayList<Ticket>) ((MainActivityTabHost) getParent()).baseBundle.getSerializable("tickets_offerdetail")).add(newticket);
                 String key = FirebaseDatabase.getInstance().getReference().child("tickets").push().getKey();
-                ((ArrayList<String>)((MainActivityTabHost) getParent()).baseBundle.getSerializable("tickets_offerdetail_keys")).add(key);
+                //((ArrayList<String>) ((MainActivityTabHost) getParent()).baseBundle.getSerializable("tickets_offerdetail_keys")).add(key);
                 FirebaseDatabase.getInstance().getReference().child("tickets").child(key).setValue(newticket);
+            }
 
                 // delete input fields
                 setEmtpyTicketTextFields();
 
                 // hide keyboard
-                ((TicketMatch)getApplication()).minimizeKeyboard(view);
+                ((TicketMatch) getApplication()).minimizeKeyboard(view);
 
-                Toast.makeText(getApplicationContext(),"Your ticket is registered!",Toast.LENGTH_SHORT).show();
-                ((TabHost)getParent().findViewById(R.id.tabHost)).setCurrentTabByTag("tickets");
+                Toast.makeText(getApplicationContext(), "Your ticket is registered!", Toast.LENGTH_SHORT).show();
+                ((TabHost) getParent().findViewById(R.id.tabHost)).setCurrentTabByTag("tickets");
 
-            if(isEditTicket()){
-                TabHost tabHost = ((TabHost)getParent().findViewById(R.id.tabHost));
-                Offer_Overview offerOverview = (Offer_Overview) tabHost.getCurrentView().getContext();
-                offerOverview.deleteTicket(ticketKey);
-                this.setEditTicket(false);
-                this.setTicketKey("");
-            }
-                ((((RecyclerView)((TabHost)getParent().findViewById(R.id.tabHost)).getCurrentView().findViewById(R.id.offeroverview_list)).getAdapter())).notifyDataSetChanged();
-
+                //((((RecyclerView)((TabHost)getParent().findViewById(R.id.tabHost)).getCurrentView().findViewById(R.id.offeroverview_list)).getAdapter())).notifyDataSetChanged();
         }
 
 

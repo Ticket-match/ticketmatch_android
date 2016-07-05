@@ -48,10 +48,16 @@ public class Ticket_Search extends AppCompatActivity {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 ((TicketMatch)getApplication()).minimizeKeyboard(v);
-                Calendar c = Calendar.getInstance();
+                final Calendar c = Calendar.getInstance();
                 DatePickerDialog dpd = new DatePickerDialog(getParent(), new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                        if (dayOfMonth < c.get(Calendar.DAY_OF_MONTH) || monthOfYear < c.get(Calendar.MONTH) || year < c.get(Calendar.YEAR)) {
+                            Toast.makeText(getApplicationContext(),"Please don't use a past date!", Toast.LENGTH_SHORT).show();
+                            dayOfMonth = c.get(Calendar.DAY_OF_MONTH);
+                            monthOfYear = c.get(Calendar.MONTH);
+                            year = c.get(Calendar.YEAR);
+                        }
                         int month = monthOfYear+1;
                         String date = (dayOfMonth<10?"0"+dayOfMonth:dayOfMonth) + "." + (month<10?"0"+month:month) + "." + year;
                         ((TextView)((TabHost)((MainActivityTabHost)getParent()).findViewById(R.id.tabHost)).getCurrentView().findViewById(R.id.date)).setText(date);
@@ -152,10 +158,10 @@ public class Ticket_Search extends AppCompatActivity {
                         }
                     }
                     //set tickets in a bundle to push it to the next activity (Find)
-                    ((MainActivityTabHost) getParent()).baseBundle.putSerializable("tickets_search_result", tickets);
+                    //((MainActivityTabHost) getParent()).baseBundle.putSerializable("tickets_search_result", tickets);
                     ((TabHost) getParent().findViewById(R.id.tabHost)).setCurrentTabByTag("search");
-                    ((Find)((TabHost) getParent().findViewById(R.id.tabHost)).getCurrentView().getContext()).sortAndDelete();
-                    (((RecyclerView) ((TabHost) getParent().findViewById(R.id.tabHost)).getCurrentView().findViewById(R.id.find_results)).getAdapter()).notifyDataSetChanged();
+                    ((Find)((TabHost) getParent().findViewById(R.id.tabHost)).getCurrentView().getContext()).sortAndDelete(tickets);
+                    //(((RecyclerView) ((TabHost) getParent().findViewById(R.id.tabHost)).getCurrentView().findViewById(R.id.find_results)).getAdapter()).notifyDataSetChanged();
                     progressDialog.dismiss();
                 }
 

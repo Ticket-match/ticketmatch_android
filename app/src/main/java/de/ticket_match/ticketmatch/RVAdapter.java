@@ -101,6 +101,9 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.ChatViewHolder>{
         HashMap<String, String> message = chat.getLastMessage();
         int text_length = 20;
         String text = message.get("text");
+        if (message.get("author").equals(((MainActivityTabHost)prevActivity.getParent()).baseBundle.getString("myprofile_name"))) {
+            text = "You: " + text;
+        }
         if(text.length() > text_length) {
             text = text.substring(0,text_length) + "...";
         }

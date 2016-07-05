@@ -55,9 +55,12 @@ public class Offer_Overview extends AppCompatActivity {
         final RVAdapter_OfferOverview adapter = new RVAdapter_OfferOverview(tickets, this, tickets_keys);
         rv.setAdapter(adapter);
 
-        mDatabase.child("tickets").orderByChild("user").equalTo(FirebaseAuth.getInstance().getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+        mDatabase.child("tickets").orderByChild("user").equalTo(FirebaseAuth.getInstance().getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                tickets.clear();
+                tickets_keys.clear();
+
                 for (DataSnapshot d:dataSnapshot.getChildren()) {
                     Ticket ticket = d.getValue(Ticket.class);
                     tickets.add(ticket);
@@ -75,7 +78,7 @@ public class Offer_Overview extends AppCompatActivity {
                             dr = dateFormat.parse(tickets.get(m+1).getDate());
                             int i = dl.compareTo(dr);
 
-                            if (i<0) {
+                            if (i>0) {
                                 Ticket swapTicket = tickets.get(m);
                                 tickets.set(m,tickets.get(m+1));
                                 tickets.set(m+1,swapTicket);
@@ -88,7 +91,7 @@ public class Offer_Overview extends AppCompatActivity {
                                 dr = timeFormat.parse(tickets.get(m+1).getTime());
                                 i = dl.compareTo(dr);
 
-                                if (i<0) {
+                                if (i>0) {
                                     Ticket swapTicket = tickets.get(m);
                                     tickets.set(m,tickets.get(m+1));
                                     tickets.set(m+1,swapTicket);
@@ -136,6 +139,7 @@ public class Offer_Overview extends AppCompatActivity {
         String ticket_key = getTicketKeyFromCardItem(view);
         Ticket ticket = getTicketFromCardItem(view);
         mTabHost.setCurrentTabByTag("tickets_newoffer");
+        ((TextView)getParent().findViewById(R.id.headerTitle)).setText("Edit A Ticket");
         NewOffer newOffer = (NewOffer) mTabHost.getCurrentView().getContext();
         newOffer.setEditTicket(true);
         newOffer.setTicketKey(ticket_key);
@@ -162,10 +166,10 @@ public class Offer_Overview extends AppCompatActivity {
      * @see Ticket
      */
     public void deleteTicket(String FirebaseTicketKey){
-        int ticketPosition = tickets_keys.indexOf(FirebaseTicketKey);
-        tickets_keys.remove(ticketPosition);
-        tickets.remove(ticketPosition);
-        (((RecyclerView) findViewById(R.id.offeroverview_list)).getAdapter()).notifyDataSetChanged();
+        //int ticketPosition = tickets_keys.indexOf(FirebaseTicketKey);
+        //tickets_keys.remove(ticketPosition);
+        //tickets.remove(ticketPosition);
+        //(((RecyclerView) findViewById(R.id.offeroverview_list)).getAdapter()).notifyDataSetChanged();
         mDatabase.child("tickets").child(FirebaseTicketKey).removeValue();
 
     }

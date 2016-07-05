@@ -50,10 +50,16 @@ public class Search_MakeADate extends AppCompatActivity {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 ((TicketMatch)getApplication()).minimizeKeyboard(v);
-                Calendar c = Calendar.getInstance();
+                final Calendar c = Calendar.getInstance();
                 DatePickerDialog dpd = new DatePickerDialog(getParent(), new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                        if (dayOfMonth < c.get(Calendar.DAY_OF_MONTH) || monthOfYear < c.get(Calendar.MONTH) || year < c.get(Calendar.YEAR)) {
+                            Toast.makeText(getApplicationContext(),"Please don't use a past date!", Toast.LENGTH_SHORT).show();
+                            dayOfMonth = c.get(Calendar.DAY_OF_MONTH);
+                            monthOfYear = c.get(Calendar.MONTH);
+                            year = c.get(Calendar.YEAR);
+                        }
                         int month = monthOfYear+1;
                         String date = (dayOfMonth<10?"0"+dayOfMonth:dayOfMonth) + "." + (month<10?"0"+month:month) + "." + year;
                         ((TextView)((TabHost)((MainActivityTabHost)getParent()).findViewById(R.id.tabHost)).getCurrentView().findViewById(R.id.search_makeadate_date)).setText(date);
@@ -155,10 +161,10 @@ public class Search_MakeADate extends AppCompatActivity {
                         }
 
                         //set dates in a bundle to push it to the next activity (Find)
-                        ((MainActivityTabHost) getParent()).baseBundle.putSerializable("makeadate_search_result", dates);
+                        //((MainActivityTabHost) getParent()).baseBundle.putSerializable("makeadate_search_result", dates);
                         ((TabHost)getParent().findViewById(R.id.tabHost)).setCurrentTabByTag("makeadate_search_result");
-                        ((MakeADate_SearchResults)((TabHost) getParent().findViewById(R.id.tabHost)).getCurrentView().getContext()).sortAndDelete();
-                        ( ((RecyclerView) ((TabHost) getParent().findViewById(R.id.tabHost)).getCurrentView().findViewById(R.id.makedate_searchresults)).getAdapter()).notifyDataSetChanged();
+                        ((MakeADate_SearchResults)((TabHost) getParent().findViewById(R.id.tabHost)).getCurrentView().getContext()).sortAndDelete(dates);
+                        //( ((RecyclerView) ((TabHost) getParent().findViewById(R.id.tabHost)).getCurrentView().findViewById(R.id.makedate_searchresults)).getAdapter()).notifyDataSetChanged();
                         progressDialog.dismiss();
                     }
 

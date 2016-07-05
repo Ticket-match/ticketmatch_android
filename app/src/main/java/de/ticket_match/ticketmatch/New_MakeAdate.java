@@ -67,10 +67,16 @@ public class New_MakeAdate extends AppCompatActivity {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 ((TicketMatch)getApplication()).minimizeKeyboard(v);
-                Calendar c = Calendar.getInstance();
+                final Calendar c = Calendar.getInstance();
                 DatePickerDialog dpd = new DatePickerDialog(getParent(), new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                        if (dayOfMonth < c.get(Calendar.DAY_OF_MONTH) || monthOfYear < c.get(Calendar.MONTH) || year < c.get(Calendar.YEAR)) {
+                            Toast.makeText(getApplicationContext(),"Please don't use a past date!", Toast.LENGTH_SHORT).show();
+                            dayOfMonth = c.get(Calendar.DAY_OF_MONTH);
+                            monthOfYear = c.get(Calendar.MONTH);
+                            year = c.get(Calendar.YEAR);
+                        }
                         int month = monthOfYear+1;
                         String date = (dayOfMonth<10?"0"+dayOfMonth:dayOfMonth) + "." + (month<10?"0"+month:month) + "." + year;
                         ((TextView)((TabHost)((MainActivityTabHost)getParent()).findViewById(R.id.tabHost)).getCurrentView().findViewById(R.id.new_makeadate_date)).setText(date);
@@ -132,12 +138,22 @@ public class New_MakeAdate extends AppCompatActivity {
             Toast.makeText(getApplicationContext(),"Please fill out the required information!",Toast.LENGTH_SHORT).show();
         }
         else {
-            // Create ticket in database
-            MakeDate new_date = new MakeDate(date, location, name, time, type, FirebaseAuth.getInstance().getCurrentUser().getUid(), swithman, swithwoman);
-            ((ArrayList<MakeDate>) ((MainActivityTabHost) getParent()).baseBundle.getSerializable("makeadate_list")).add(new_date);
-            String key = FirebaseDatabase.getInstance().getReference().child("makedates").push().getKey();
-            ((ArrayList<String>) ((MainActivityTabHost) getParent()).baseBundle.getSerializable("makeadate_list_keys")).add(key);
-            FirebaseDatabase.getInstance().getReference().child("makedates").child(key).setValue(new_date);
+
+            if (isEditMakeDate()) {
+                MakeDate new_date = new MakeDate(date, location, name, time, type, FirebaseAuth.getInstance().getCurrentUser().getUid(), swithman, swithwoman);
+                FirebaseDatabase.getInstance().getReference().child("makedates").child(makeDateKey).setValue(new_date);
+
+                this.setEditMakeDate(false);
+                this.setMakeDateKey("");
+            } else {
+                // Create ticket in database
+                MakeDate new_date = new MakeDate(date, location, name, time, type, FirebaseAuth.getInstance().getCurrentUser().getUid(), swithman, swithwoman);
+                //((ArrayList<MakeDate>) ((MainActivityTabHost) getParent()).baseBundle.getSerializable("makeadate_list")).add(new_date);
+                String key = FirebaseDatabase.getInstance().getReference().child("makedates").push().getKey();
+                //((ArrayList<String>) ((MainActivityTabHost) getParent()).baseBundle.getSerializable("makeadate_list_keys")).add(key);
+                FirebaseDatabase.getInstance().getReference().child("makedates").child(key).setValue(new_date);
+            }
+
 
             //delete input fields
             setEmtpyTicketTextFields();
@@ -148,17 +164,7 @@ public class New_MakeAdate extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), "Your date is registered!", Toast.LENGTH_SHORT).show();
             ((TabHost) getParent().findViewById(R.id.tabHost)).setCurrentTabByTag("makeadate");
 
-
-            if(isEditMakeDate()){
-                TabHost tabHost = ((TabHost)getParent().findViewById(R.id.tabHost));
-                MakeADate makeADate = (MakeADate) tabHost.getCurrentView().getContext();
-                makeADate.deleteMakeDate(getMakeDateKey());
-                this.setEditMakeDate(false);
-                this.setMakeDateKey("");
-            }
-
-
-            ((((RecyclerView)((TabHost)getParent().findViewById(R.id.tabHost)).getCurrentView().findViewById(R.id.makedate_overview)).getAdapter())).notifyDataSetChanged();
+            //((((RecyclerView)((TabHost)getParent().findViewById(R.id.tabHost)).getCurrentView().findViewById(R.id.makedate_overview)).getAdapter())).notifyDataSetChanged();
         }
 
     }
@@ -178,7 +184,7 @@ public class New_MakeAdate extends AppCompatActivity {
     }
 
     public void setEmtpyTicketTextFields(){
-        MakeDate emptyDate = new MakeDate("","","","","","","false","false");
+        MakeDate emptyDate = new MakeDate("Date","","","Time","","","false","false");
         setMakeDateTextFields(emptyDate);
     }
 

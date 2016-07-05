@@ -37,9 +37,12 @@ public class MakeADate extends AppCompatActivity {
 
         mTabHost = ((TabHost)getParent().findViewById(R.id.tabHost));
 
-        mDatabase.child("makedates").orderByChild("user").equalTo(FirebaseAuth.getInstance().getCurrentUser().getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+        mDatabase.child("makedates").orderByChild("user").equalTo(FirebaseAuth.getInstance().getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                dates.clear();
+                dates_keys.clear();
+
                 for (DataSnapshot d:dataSnapshot.getChildren()) {
                     MakeDate date = d.getValue(MakeDate.class);
                     dates.add(date);
@@ -57,7 +60,7 @@ public class MakeADate extends AppCompatActivity {
                             dr = dateFormat.parse(dates.get(m+1).getDate());
                             int i = dl.compareTo(dr);
 
-                            if (i<0) {
+                            if (i>0) {
                                 MakeDate swapDate = dates.get(m);
                                 dates.set(m,dates.get(m+1));
                                 dates.set(m+1,swapDate);
@@ -70,7 +73,7 @@ public class MakeADate extends AppCompatActivity {
                                 dr = timeFormat.parse(dates.get(m+1).getTime());
                                 i = dl.compareTo(dr);
 
-                                if (i<0) {
+                                if (i>0) {
                                     MakeDate swapDate = dates.get(m);
                                     dates.set(m,dates.get(m+1));
                                     dates.set(m+1,swapDate);
@@ -101,8 +104,8 @@ public class MakeADate extends AppCompatActivity {
         final RVAdapter_MakeadateOverview adapter = new RVAdapter_MakeadateOverview(dates, dates_keys);
         rv.setAdapter(adapter);
 
-        ((MainActivityTabHost) getParent()).baseBundle.putSerializable("makeadate_list", dates);
-        ((MainActivityTabHost) getParent()).baseBundle.putSerializable("makeadate_list_keys", dates_keys);
+        //((MainActivityTabHost) getParent()).baseBundle.putSerializable("makeadate_list", dates);
+        //((MainActivityTabHost) getParent()).baseBundle.putSerializable("makeadate_list_keys", dates_keys);
     }
 
     @Override
@@ -125,15 +128,14 @@ public class MakeADate extends AppCompatActivity {
     }
 
     public void btn_date_edit (View view){
-        Toast.makeText(getApplicationContext(), "Test", Toast.LENGTH_LONG);
         String DateKey = getMakeADateKeyFromCardItem(view);
         MakeDate makeADate = getMakeDateFromCardItem(view);
         mTabHost.setCurrentTabByTag("makeadate_new");
+        ((TextView)getParent().findViewById(R.id.headerTitle)).setText("Edit A Date");
         New_MakeAdate newMakeADate = (New_MakeAdate) mTabHost.getCurrentView().getContext();
         newMakeADate.setEditMakeDate(true);
         newMakeADate.setMakeDateKey(DateKey);
         newMakeADate.setMakeDateTextFields(makeADate);
-
     }
 
     public String getMakeADateKeyFromCardItem(View view){
@@ -150,10 +152,10 @@ public class MakeADate extends AppCompatActivity {
      * @see MakeDate
      */
     public void deleteMakeDate(String FirebaseMakeADateKey){
-        int DatePosition = dates_keys.indexOf(FirebaseMakeADateKey);
-        dates_keys.remove(DatePosition);
-        dates.remove(DatePosition);
-        (((RecyclerView) findViewById(R.id.makedate_overview)).getAdapter()).notifyDataSetChanged();
+        //int DatePosition = dates_keys.indexOf(FirebaseMakeADateKey);
+        //dates_keys.remove(DatePosition);
+        //dates.remove(DatePosition);
+        //(((RecyclerView) findViewById(R.id.makedate_overview)).getAdapter()).notifyDataSetChanged();
         mDatabase.child("makedates").child(FirebaseMakeADateKey).removeValue();
     }
 

@@ -1,14 +1,11 @@
 package de.ticket_match.ticketmatch;
 
-import android.*;
+
 import android.Manifest;
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -31,7 +28,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -44,10 +40,8 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 
-import de.ticket_match.ticketmatch.entities.Chat;
 import de.ticket_match.ticketmatch.entities.User;
 
 public class MyProfile extends AppCompatActivity {
@@ -56,6 +50,7 @@ public class MyProfile extends AppCompatActivity {
     private User user = null;
     private DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference();
     private StorageReference mStorage = FirebaseStorage.getInstance().getReference();
+    private ArrayList<String> interests;
 
     //creates entered interest with delete button in screen content
     public static class InterestListAdapter extends BaseAdapter {
@@ -98,8 +93,11 @@ public class MyProfile extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_profile);
 
+        interests = new ArrayList<String>(0);
+        final InterestListAdapter adapter = new InterestListAdapter(this,interests);
+        ((ListView) findViewById(R.id.myprofile_interests)).setAdapter(adapter);
+
         //Receive profile information from database and set user data in top of the screen (name, age, gender, location, ratings)
-        final MyProfile that = this;
         mDatabase.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).addValueEventListener(
                 new ValueEventListener() {
                     @Override
@@ -123,11 +121,14 @@ public class MyProfile extends AppCompatActivity {
 
                         if (user.getInterests()!= null) {
                             if (user.getInterests().size()!=0) {
-                                ((ListView) findViewById(R.id.myprofile_interests)).setAdapter(new InterestListAdapter(that, user.getInterests()));
+                                interests.clear();
+                                interests.addAll(user.getInterests());
+                                adapter.notifyDataSetChanged();
                             }
                         } else {
                             user.setInterests(new ArrayList<String>(0));
-                            ((ListView) findViewById(R.id.myprofile_interests)).setAdapter(new InterestListAdapter(that, user.getInterests()));
+                            interests.clear();
+                            adapter.notifyDataSetChanged();
                         }
 
                         if (user.getRatings() != null) {
@@ -143,10 +144,6 @@ public class MyProfile extends AppCompatActivity {
                             user.setRatings(new ArrayList<HashMap<String, String>>(0));
                         }
 
-                        Bitmap bm = BitmapFactory.decodeResource(getResources(), R.drawable.profilbild);
-                        ((ImageButton)findViewById(R.id.myprofile_image)).setImageBitmap(bm);
-                        profileImage();
-
                         ((MainActivityTabHost)getParent()).baseBundle.putString("myprofile_name", ((TextView) findViewById(R.id.myprofile_name)).getText().toString());
                     }
                     @Override
@@ -154,6 +151,10 @@ public class MyProfile extends AppCompatActivity {
                         //Log.w("MyProfile", "getUser:onCancelled", databaseError.toException());
                     }
                 });
+
+        Bitmap bm = BitmapFactory.decodeResource(getResources(), R.drawable.profilbild);
+        ((ImageButton)findViewById(R.id.myprofile_image)).setImageBitmap(bm);
+        profileImage();
 
         //for Ratingbar: if onclicked --> got to screen myprofile_ratings
         ((RatingBar)findViewById(R.id.myprofile_rating)).setOnTouchListener(new View.OnTouchListener() {
@@ -171,35 +172,6 @@ public class MyProfile extends AppCompatActivity {
                 return true;
             }
         });
-
-
-
-        /*mDatabase.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-
-                    user = dataSnapshot.getValue(User.class);
-                    TicketMatch.setCurrentUser(user);
-                    ((TextView) findViewById(R.id.myprofile_name)).setText(user.getFirstName() + " " + user.getLastName());
-                    ((TextView) findViewById(R.id.myprofile_gender_age)).setText(user.getGender() + " " + user.getBirthday());
-                    ((TextView) findViewById(R.id.myprofile_location)).setText(user.getLocation());
-                    if (user.getInterests()!= null) {
-                        if (user.getInterests().size()!=0) {
-                            ((ListView) findViewById(R.id.myprofile_interests)).setAdapter(new InterestListAdapter(that, user.getInterests()));
-                        }
-                    } else {
-                        user.setInterests(new ArrayList<String>(0));
-                        ((ListView) findViewById(R.id.myprofile_interests)).setAdapter(new InterestListAdapter(that, user.getInterests()));
-                    }
-
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });*/
 
     }
 
@@ -226,7 +198,7 @@ public class MyProfile extends AppCompatActivity {
     // method for deleting an interest
     public void btn_listitem_delete(View view) {
         user.getInterests().remove(((TextView)((View)view.getParent()).findViewById(R.id.listitem_text)).getText().toString());
-        ((InterestListAdapter)((ListView) findViewById(R.id.myprofile_interests)).getAdapter()).notifyDataSetChanged();
+        //((InterestListAdapter)((ListView) findViewById(R.id.myprofile_interests)).getAdapter()).notifyDataSetChanged();
         mDatabase.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("interests").setValue(user.getInterests());
     }
 
@@ -240,18 +212,19 @@ public class MyProfile extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), "Interest already exists!", Toast.LENGTH_SHORT).show();
         } else {
             user.getInterests().add(interest_text);
-            ((EditText)findViewById(R.id.newinterest_text)).setText("");
-            ((InterestListAdapter)((ListView) findViewById(R.id.myprofile_interests)).getAdapter()).notifyDataSetChanged();
+            //((InterestListAdapter)((ListView) findViewById(R.id.myprofile_interests)).getAdapter()).notifyDataSetChanged();
             mDatabase.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("interests").setValue(user.getInterests());
+
+            ((EditText)findViewById(R.id.newinterest_text)).setText("");
         }
     }
 
-        public boolean containsIgnoreCase (ArrayList<String> list, String string) {
-            for (String s : list) {
-                if (string.equalsIgnoreCase(s)) return true;
-            }
-            return false;
+    public boolean containsIgnoreCase (ArrayList<String> list, String string) {
+        for (String s : list) {
+            if (string.equalsIgnoreCase(s)) return true;
         }
+        return false;
+    }
 
     //method for image button
     public void btn_myprofile_image (View view) {
