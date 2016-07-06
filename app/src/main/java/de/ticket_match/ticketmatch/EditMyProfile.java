@@ -55,24 +55,26 @@ public class EditMyProfile extends AppCompatActivity {
 
 
         user = TicketMatch.getCurrentUser();
-        if(!user.getFirstName().equals("")) {
+        if(user.getFirstName()!=null) {
             ((EditText) findViewById(R.id.edit_myprofile_firstname)).setText(user.getFirstName());
         }
-        if(!user.getLastName().equals("")){
+        if(user.getLastName()!=null){
             ((EditText) findViewById(R.id.edit_myprofile_lastname)).setText(user.getLastName());
         }
-        if(!user.getLocation().equals("")){
+        if(user.getLocation()!=null){
             ((EditText) findViewById(R.id.edit_myprofile_location)).setText(user.getLocation());
         }
-        if(!user.getBirthday().equals("")){
+        if(user.getBirthday()!=null){
             ((TextView) findViewById(R.id.edit_myprofile_birthdate)).setText(user.getBirthday());
         }
-        if(user.getGender().equals("Neutral")){
-            ((Spinner) findViewById(R.id.edit_myprofile_gender)).setSelection(0);
-        } else if(user.getGender().equals("Male")){
-            ((Spinner) findViewById(R.id.edit_myprofile_gender)).setSelection(1);
-        } else{
-            ((Spinner) findViewById(R.id.edit_myprofile_gender)).setSelection(2);
+        if (user.getGender()!=null) {
+            if(user.getGender().equals("Neutral")){
+                ((Spinner) findViewById(R.id.edit_myprofile_gender)).setSelection(0);
+            } else if(user.getGender().equals("Male")){
+                ((Spinner) findViewById(R.id.edit_myprofile_gender)).setSelection(1);
+            } else{
+                ((Spinner) findViewById(R.id.edit_myprofile_gender)).setSelection(2);
+            }
         }
     }
 
@@ -124,10 +126,12 @@ public class EditMyProfile extends AppCompatActivity {
             int month = c.get(Calendar.MONTH);
             int day = c.get(Calendar.DAY_OF_MONTH);
 
-            String s = TicketMatch.getCurrentUser().getBirthday();
-            day = Integer.parseInt(s.substring(0,2));
-            month = Integer.parseInt(s.substring(3,5))-1;
-            year = Integer.parseInt(s.substring(6));
+            if (TicketMatch.getCurrentUser().getBirthday() != null) {
+                String s = TicketMatch.getCurrentUser().getBirthday();
+                day = Integer.parseInt(s.substring(0, 2));
+                month = Integer.parseInt(s.substring(3, 5)) - 1;
+                year = Integer.parseInt(s.substring(6));
+            }
 
             DatePickerDialog dpd = new DatePickerDialog(getActivity(), this, year, month, day);
             dpd.getDatePicker().setMaxDate(System.currentTimeMillis());

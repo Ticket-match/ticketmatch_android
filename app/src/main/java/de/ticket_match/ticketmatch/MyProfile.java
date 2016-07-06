@@ -148,7 +148,6 @@ public class MyProfile extends AppCompatActivity {
                     }
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
-                        //Log.w("MyProfile", "getUser:onCancelled", databaseError.toException());
                     }
                 });
 
@@ -211,11 +210,13 @@ public class MyProfile extends AppCompatActivity {
             ((EditText)findViewById(R.id.newinterest_text)).setText("");
             Toast.makeText(getApplicationContext(), "Interest already exists!", Toast.LENGTH_SHORT).show();
         } else {
-            user.getInterests().add(interest_text);
-            //((InterestListAdapter)((ListView) findViewById(R.id.myprofile_interests)).getAdapter()).notifyDataSetChanged();
-            mDatabase.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("interests").setValue(user.getInterests());
+            if (TicketMatch.getCurrentUser() != null) {
+                user.getInterests().add(interest_text);
+                //((InterestListAdapter)((ListView) findViewById(R.id.myprofile_interests)).getAdapter()).notifyDataSetChanged();
+                mDatabase.child("users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).child("interests").setValue(user.getInterests());
 
-            ((EditText)findViewById(R.id.newinterest_text)).setText("");
+                ((EditText) findViewById(R.id.newinterest_text)).setText("");
+            }
         }
     }
 

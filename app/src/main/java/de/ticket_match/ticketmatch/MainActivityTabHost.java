@@ -1,10 +1,14 @@
 package de.ticket_match.ticketmatch;
 
 import android.app.LocalActivityManager;
+import android.content.CursorLoader;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.Matrix;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
@@ -23,8 +27,13 @@ import com.facebook.login.LoginManager;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.ByteBuffer;
 
 public class MainActivityTabHost extends AppCompatActivity {
     Bundle baseBundle = new Bundle();
@@ -253,10 +262,31 @@ public class MainActivityTabHost extends AppCompatActivity {
             if (data != null) {
                 try {
                     Bitmap bm_upload = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), data.getData());
-                    ((ImageButton)th.getCurrentView().findViewById(R.id.myprofile_image)).setImageBitmap(bm_upload);
+
+                    // rotate if necessary
+                    String[] proj = { MediaStore.Images.Media.DATA };
+                    CursorLoader loader = new CursorLoader(this, data.getData(), proj, null, null, null);
+                    Cursor cursor = loader.loadInBackground();
+                    int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+                    cursor.moveToFirst();
+                    String result = cursor.getString(column_index);
+                    cursor.close();
+                    ExifInterface exif = new ExifInterface(result);
+                    int rotation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+                    int rotationInDegrees = 0;
+                    if (rotation == ExifInterface.ORIENTATION_ROTATE_90) rotationInDegrees = 90;
+                    else if (rotation == ExifInterface.ORIENTATION_ROTATE_180) rotationInDegrees = 180;
+                    else if (rotation == ExifInterface.ORIENTATION_ROTATE_270) rotationInDegrees = 270;
+                    Matrix matrix = new Matrix();
+                    if (rotation != 0f) {
+                        matrix.preRotate(rotationInDegrees);
+                    }
+                    Bitmap adjustedBitmap = Bitmap.createBitmap(bm_upload, 0, 0, bm_upload.getWidth(), bm_upload.getHeight(), matrix, true);
+
+                    ((ImageButton)th.getCurrentView().findViewById(R.id.myprofile_image)).setImageBitmap(adjustedBitmap);
 
                     ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-                    bm_upload.compress(Bitmap.CompressFormat.JPEG, 50, bytes);
+                    adjustedBitmap.compress(Bitmap.CompressFormat.JPEG, 50, bytes);
                     byte [] ba = bytes.toByteArray();
                     mStorage.child("images/"+FirebaseAuth.getInstance().getCurrentUser().getUid()+".jpg").putBytes(ba);
                 } catch (IOException e) {
@@ -308,9 +338,11 @@ public class MainActivityTabHost extends AppCompatActivity {
             public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()){
                     case R.id.edit_profile:
-                        Intent editprofile =  new Intent(getApplicationContext(), EditMyProfile.class);
-                        startActivity(editprofile);
-                        //th.setCurrentTabByTag("edit_myprofile");
+                        if (TicketMatch.getCurrentUser() != null) {
+                            Intent editprofile =  new Intent(getApplicationContext(), EditMyProfile.class);
+                            startActivity(editprofile);
+                            //th.setCurrentTabByTag("edit_myprofile");
+                        }
                         return true;
                     case R.id.change_password:
                         Intent changepassword =  new Intent(getApplicationContext(), ChangePassword.class);
@@ -327,10 +359,10 @@ public class MainActivityTabHost extends AppCompatActivity {
                         editor.remove("UID");
                         editor.remove("PID");
                         editor.commit();
-                        // Firebase Logout
-                        FirebaseAuth.getInstance().signOut();
                         //Facebook Logout
                         if (pid.equals("facebook")) LoginManager.getInstance().logOut();
+                        // Firebase Logout
+                        FirebaseAuth.getInstance().signOut();
                         Intent mainActivity = new Intent(getApplicationContext(), MainActivity.class);
                         mainActivity.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                         startActivity(mainActivity);

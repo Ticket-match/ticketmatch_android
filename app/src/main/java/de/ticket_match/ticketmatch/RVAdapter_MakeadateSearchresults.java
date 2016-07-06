@@ -104,7 +104,9 @@ public class RVAdapter_MakeadateSearchresults extends RecyclerView.Adapter<RVAda
 
                                                 //get actual Date
                                                 final Calendar c = Calendar.getInstance();
-                                                String date = "" + c.get(Calendar.DAY_OF_MONTH) + "." + (c.get(Calendar.MONTH)+1) + "." + c.get(Calendar.YEAR);
+                                                int day = c.get(Calendar.DAY_OF_MONTH);
+                                                int month = (c.get(Calendar.MONTH)+1);
+                                                String date = "" + (day<10?"0"+day:day) + "." + (month<10?"0"+month:month) + "." + c.get(Calendar.YEAR);
 
                                                 //get actual Time, if hours are less than 10 a zero will be added
                                                 final String time;
@@ -128,7 +130,9 @@ public class RVAdapter_MakeadateSearchresults extends RecyclerView.Adapter<RVAda
 
                                                 //get actual Date
                                                 final Calendar c = Calendar.getInstance();
-                                                String date = "" + c.get(Calendar.DAY_OF_MONTH) + "." + (c.get(Calendar.MONTH)+1) + "." + c.get(Calendar.YEAR);
+                                                int day = c.get(Calendar.DAY_OF_MONTH);
+                                                int month = (c.get(Calendar.MONTH)+1);
+                                                String date = "" + (day<10?"0"+day:day) + "." + (month<10?"0"+month:month) + "." + c.get(Calendar.YEAR);
 
                                                 //get actual Time, if hours are less than 10 a zero will be added
                                                 final String time;
@@ -163,7 +167,9 @@ public class RVAdapter_MakeadateSearchresults extends RecyclerView.Adapter<RVAda
 
                                     //get actual Date
                                     final Calendar c = Calendar.getInstance();
-                                    String date = "" + c.get(Calendar.DAY_OF_MONTH) + "." + (c.get(Calendar.MONTH)+1) + "." + c.get(Calendar.YEAR);
+                                    int day = c.get(Calendar.DAY_OF_MONTH);
+                                    int month = (c.get(Calendar.MONTH)+1);
+                                    String date = "" + (day<10?"0"+day:day) + "." + (month<10?"0"+month:month) + "." + c.get(Calendar.YEAR);
 
                                     //get actual Time, if hours are less than 10 a zero will be added
                                     final String time;
