@@ -22,8 +22,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 
 import de.ticket_match.ticketmatch.entities.Ticket;
 
@@ -52,14 +54,28 @@ public class Ticket_Search extends AppCompatActivity {
                 DatePickerDialog dpd = new DatePickerDialog(getParent(), new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                        if (dayOfMonth < c.get(Calendar.DAY_OF_MONTH) || monthOfYear < c.get(Calendar.MONTH) || year < c.get(Calendar.YEAR)) {
-                            Toast.makeText(getApplicationContext(),"Please don't use a past date!", Toast.LENGTH_SHORT).show();
-                            dayOfMonth = c.get(Calendar.DAY_OF_MONTH);
-                            monthOfYear = c.get(Calendar.MONTH);
-                            year = c.get(Calendar.YEAR);
+                        //month+1: array starts at 0
+                        monthOfYear = monthOfYear+1;
+                        String date = (dayOfMonth<10?"0"+dayOfMonth:dayOfMonth) + "." + (monthOfYear<10?"0"+monthOfYear:monthOfYear) + "." + year;
+
+                        SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
+                        Date today = null;
+
+                        try {
+                            today = dateFormat.parse(dateFormat.format(new Date()));
+                            if (dateFormat.parse(date).compareTo(today)<0) {
+                                Toast.makeText(getApplicationContext(),"Please don't use a past date!", Toast.LENGTH_SHORT).show();
+
+                                Calendar c = Calendar.getInstance();
+                                dayOfMonth = c.get(Calendar.DAY_OF_MONTH);
+                                monthOfYear = c.get(Calendar.MONTH);
+                                year = c.get(Calendar.YEAR);
+
+                                date = (dayOfMonth<10?"0"+dayOfMonth:dayOfMonth) + "." + (monthOfYear<10?"0"+monthOfYear:monthOfYear) + "." + year;
+                            }
+                        } catch (Exception e) {
                         }
-                        int month = monthOfYear+1;
-                        String date = (dayOfMonth<10?"0"+dayOfMonth:dayOfMonth) + "." + (month<10?"0"+month:month) + "." + year;
+
                         ((TextView)((TabHost)((MainActivityTabHost)getParent()).findViewById(R.id.tabHost)).getCurrentView().findViewById(R.id.date)).setText(date);
                     }
                 }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH));
@@ -157,11 +173,9 @@ public class Ticket_Search extends AppCompatActivity {
                             }
                         }
                     }
-                    //set tickets in a bundle to push it to the next activity (Find)
-                    //((MainActivityTabHost) getParent()).baseBundle.putSerializable("tickets_search_result", tickets);
+
                     ((TabHost) getParent().findViewById(R.id.tabHost)).setCurrentTabByTag("search");
                     ((Find)((TabHost) getParent().findViewById(R.id.tabHost)).getCurrentView().getContext()).sortAndDelete(tickets);
-                    //(((RecyclerView) ((TabHost) getParent().findViewById(R.id.tabHost)).getCurrentView().findViewById(R.id.find_results)).getAdapter()).notifyDataSetChanged();
                     progressDialog.dismiss();
                 }
 

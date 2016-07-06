@@ -178,11 +178,6 @@ public class MainActivityTabHost extends AppCompatActivity {
         ts19.setIndicator(ts19Ind);
         ts19.setContent(new Intent(this, EditMyProfile.class));
 
-        /*TabHost.TabSpec ts20 = th.newTabSpec("change_password");
-        View ts20Ind = getLayoutInflater().inflate(R.layout.activity_main_activity_tab_indicator_inv, th.getTabWidget(), false);
-        ts20.setIndicator(ts20Ind);
-        ts20.setContent(new Intent(this, ChangePassword.class));*/
-
         // Add Tabs to TabHost
         th.addTab(ts1);
         th.addTab(ts2);
@@ -235,9 +230,7 @@ public class MainActivityTabHost extends AppCompatActivity {
                     ((TextView)findViewById(R.id.headerTitle)).setText("Search For Tickets");
                 } else if (tabId.equals("edit_myprofile")) {
                     ((TextView)findViewById(R.id.headerTitle)).setText("Edit My Profile");
-                } /*else if (tabId.equals("change_password")) {
-                    ((TextView) findViewById(R.id.headerTitle)).setText("Change your password");
-                } */else {
+                } else {
                     ((TextView)findViewById(R.id.headerTitle)).setText("TicketMatch");
                 }
             }
@@ -263,7 +256,7 @@ public class MainActivityTabHost extends AppCompatActivity {
                 try {
                     Bitmap bm_upload = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), data.getData());
 
-                    // rotate if necessary
+                    // rotation of image (samsung device bug)
                     String[] proj = { MediaStore.Images.Media.DATA };
                     CursorLoader loader = new CursorLoader(this, data.getData(), proj, null, null, null);
                     Cursor cursor = loader.loadInBackground();
@@ -341,13 +334,11 @@ public class MainActivityTabHost extends AppCompatActivity {
                         if (TicketMatch.getCurrentUser() != null) {
                             Intent editprofile =  new Intent(getApplicationContext(), EditMyProfile.class);
                             startActivity(editprofile);
-                            //th.setCurrentTabByTag("edit_myprofile");
                         }
                         return true;
                     case R.id.change_password:
                         Intent changepassword =  new Intent(getApplicationContext(), ChangePassword.class);
                         startActivity(changepassword);
-                        //th.setCurrentTabByTag("change_password");
                         return true;
                     case R.id.logout:
                         //stops IntentService: MessageNotifications
@@ -378,7 +369,6 @@ public class MainActivityTabHost extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        //super.onBackPressed();
         String tabId = th.getCurrentTabTag();
         if(tabId.equals("search")) {
             th.setCurrentTabByTag("tickets_search");

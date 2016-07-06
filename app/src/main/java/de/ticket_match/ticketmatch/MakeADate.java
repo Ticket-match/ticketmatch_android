@@ -103,9 +103,6 @@ public class MakeADate extends AppCompatActivity {
 
         final RVAdapter_MakeadateOverview adapter = new RVAdapter_MakeadateOverview(dates, dates_keys);
         rv.setAdapter(adapter);
-
-        //((MainActivityTabHost) getParent()).baseBundle.putSerializable("makeadate_list", dates);
-        //((MainActivityTabHost) getParent()).baseBundle.putSerializable("makeadate_list_keys", dates_keys);
     }
 
     @Override
@@ -152,10 +149,6 @@ public class MakeADate extends AppCompatActivity {
      * @see MakeDate
      */
     public void deleteMakeDate(String FirebaseMakeADateKey){
-        //int DatePosition = dates_keys.indexOf(FirebaseMakeADateKey);
-        //dates_keys.remove(DatePosition);
-        //dates.remove(DatePosition);
-        //(((RecyclerView) findViewById(R.id.makedate_overview)).getAdapter()).notifyDataSetChanged();
         mDatabase.child("makedates").child(FirebaseMakeADateKey).removeValue();
     }
 

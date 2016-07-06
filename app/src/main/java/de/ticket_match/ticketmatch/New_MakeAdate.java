@@ -20,8 +20,10 @@ import android.widget.Toast;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 
 import de.ticket_match.ticketmatch.entities.MakeDate;
 
@@ -71,14 +73,28 @@ public class New_MakeAdate extends AppCompatActivity {
                 DatePickerDialog dpd = new DatePickerDialog(getParent(), new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                        if (dayOfMonth < c.get(Calendar.DAY_OF_MONTH) || monthOfYear < c.get(Calendar.MONTH) || year < c.get(Calendar.YEAR)) {
-                            Toast.makeText(getApplicationContext(),"Please don't use a past date!", Toast.LENGTH_SHORT).show();
-                            dayOfMonth = c.get(Calendar.DAY_OF_MONTH);
-                            monthOfYear = c.get(Calendar.MONTH);
-                            year = c.get(Calendar.YEAR);
+                        //month+1: array starts at 0
+                        monthOfYear = monthOfYear+1;
+                        String date = (dayOfMonth<10?"0"+dayOfMonth:dayOfMonth) + "." + (monthOfYear<10?"0"+monthOfYear:monthOfYear) + "." + year;
+
+                        SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
+                        Date today = null;
+
+                        try {
+                            today = dateFormat.parse(dateFormat.format(new Date()));
+                            if (dateFormat.parse(date).compareTo(today)<0) {
+                                Toast.makeText(getApplicationContext(),"Please don't use a past date!", Toast.LENGTH_SHORT).show();
+
+                                Calendar c = Calendar.getInstance();
+                                dayOfMonth = c.get(Calendar.DAY_OF_MONTH);
+                                monthOfYear = c.get(Calendar.MONTH);
+                                year = c.get(Calendar.YEAR);
+
+                                date = (dayOfMonth<10?"0"+dayOfMonth:dayOfMonth) + "." + (monthOfYear<10?"0"+monthOfYear:monthOfYear) + "." + year;
+                            }
+                        } catch (Exception e) {
                         }
-                        int month = monthOfYear+1;
-                        String date = (dayOfMonth<10?"0"+dayOfMonth:dayOfMonth) + "." + (month<10?"0"+month:month) + "." + year;
+
                         ((TextView)((TabHost)((MainActivityTabHost)getParent()).findViewById(R.id.tabHost)).getCurrentView().findViewById(R.id.new_makeadate_date)).setText(date);
                     }
                 }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH));
@@ -148,9 +164,7 @@ public class New_MakeAdate extends AppCompatActivity {
             } else {
                 // Create ticket in database
                 MakeDate new_date = new MakeDate(date, location, name, time, type, FirebaseAuth.getInstance().getCurrentUser().getUid(), swithman, swithwoman);
-                //((ArrayList<MakeDate>) ((MainActivityTabHost) getParent()).baseBundle.getSerializable("makeadate_list")).add(new_date);
                 String key = FirebaseDatabase.getInstance().getReference().child("makedates").push().getKey();
-                //((ArrayList<String>) ((MainActivityTabHost) getParent()).baseBundle.getSerializable("makeadate_list_keys")).add(key);
                 FirebaseDatabase.getInstance().getReference().child("makedates").child(key).setValue(new_date);
             }
 
@@ -163,8 +177,6 @@ public class New_MakeAdate extends AppCompatActivity {
 
             Toast.makeText(getApplicationContext(), "Your date is registered!", Toast.LENGTH_SHORT).show();
             ((TabHost) getParent().findViewById(R.id.tabHost)).setCurrentTabByTag("makeadate");
-
-            //((((RecyclerView)((TabHost)getParent().findViewById(R.id.tabHost)).getCurrentView().findViewById(R.id.makedate_overview)).getAdapter())).notifyDataSetChanged();
         }
 
     }

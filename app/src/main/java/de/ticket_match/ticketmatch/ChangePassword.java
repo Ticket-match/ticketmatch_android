@@ -33,11 +33,6 @@ public class ChangePassword extends AppCompatActivity {
         setContentView(R.layout.activity_change_password);
     }
 
-    /*@Override
-    public void onBackPressed() {
-        getParent().onBackPressed();
-    }*/
-
     public void btn_changepassword (View view){
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         String email = user.getEmail();

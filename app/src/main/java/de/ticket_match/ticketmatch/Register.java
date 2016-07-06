@@ -31,8 +31,10 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.io.ByteArrayOutputStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 
 import de.ticket_match.ticketmatch.entities.User;
@@ -144,22 +146,35 @@ public class Register extends AppCompatActivity {
             int year = c.get(Calendar.YEAR);
             int month = c.get(Calendar.MONTH);
             int day = c.get(Calendar.DAY_OF_MONTH);
+
             DatePickerDialog dpd = new DatePickerDialog(getActivity(), this, year, month, day);
             dpd.getDatePicker().setMaxDate(System.currentTimeMillis());
             return dpd;
 
         }
         public void onDateSet(DatePicker view, int year, int month, int day) {
-            final Calendar c = Calendar.getInstance();
-            if (day > c.get(Calendar.DAY_OF_MONTH) || month > c.get(Calendar.MONTH) || year > c.get(Calendar.YEAR)) {
-                Toast.makeText(reg,"Please don't use a future date!", Toast.LENGTH_SHORT).show();
-                day = c.get(Calendar.DAY_OF_MONTH);
-                month = c.get(Calendar.MONTH);
-                year = c.get(Calendar.YEAR);
-            }
             //month+1: array starts at 0
             month = month+1;
             String date = (day<10?"0"+day:day) + "." + (month<10?"0"+month:month) + "." + year;
+
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
+            Date today = null;
+
+            try {
+                today = dateFormat.parse(dateFormat.format(new Date()));
+                if (dateFormat.parse(date).compareTo(today)>0) {
+                    Toast.makeText(getActivity(),"Please don't use a future date!", Toast.LENGTH_SHORT).show();
+
+                    Calendar c = Calendar.getInstance();
+                    day = c.get(Calendar.DAY_OF_MONTH);
+                    month = c.get(Calendar.MONTH);
+                    year = c.get(Calendar.YEAR);
+
+                    date = (day<10?"0"+day:day) + "." + (month<10?"0"+month:month) + "." + year;
+                }
+            } catch (Exception e) {
+            }
+
             ((TextView)getActivity().findViewById(R.id.register_birthdate)).setText(date);
         }
     }

@@ -22,10 +22,6 @@ public class Find extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_find);
 
-        //listitems_find = (ArrayList<Ticket>)((MainActivityTabHost) getParent()).baseBundle.getSerializable("tickets_search_result");
-
-        //sortAndDelete();
-
         listitems_find = new ArrayList<Ticket>(0);
 
         final RecyclerView rv = (RecyclerView) findViewById(R.id.find_results);

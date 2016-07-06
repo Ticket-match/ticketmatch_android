@@ -139,16 +139,28 @@ public class EditMyProfile extends AppCompatActivity {
         }
 
         public void onDateSet(DatePicker view, int year, int month, int day) {
-            final Calendar c = Calendar.getInstance();
-            if (day > c.get(Calendar.DAY_OF_MONTH) || month > c.get(Calendar.MONTH) || year > c.get(Calendar.YEAR)) {
-                Toast.makeText(emp,"Please don't use a future date!", Toast.LENGTH_SHORT).show();
-                day = c.get(Calendar.DAY_OF_MONTH);
-                month = c.get(Calendar.MONTH);
-                year = c.get(Calendar.YEAR);
-            }
             //month+1: array starts at 0
             month = month+1;
             String date = (day<10?"0"+day:day) + "." + (month<10?"0"+month:month) + "." + year;
+
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
+            Date today = null;
+
+            try {
+                today = dateFormat.parse(dateFormat.format(new Date()));
+                if (dateFormat.parse(date).compareTo(today)>0) {
+                    Toast.makeText(getActivity(),"Please don't use a future date!", Toast.LENGTH_SHORT).show();
+
+                    Calendar c = Calendar.getInstance();
+                    day = c.get(Calendar.DAY_OF_MONTH);
+                    month = c.get(Calendar.MONTH);
+                    year = c.get(Calendar.YEAR);
+
+                    date = (day<10?"0"+day:day) + "." + (month<10?"0"+month:month) + "." + year;
+                }
+            } catch (Exception e) {
+            }
+
             ((TextView)getActivity().findViewById(R.id.edit_myprofile_birthdate)).setText(date);
         }
     }

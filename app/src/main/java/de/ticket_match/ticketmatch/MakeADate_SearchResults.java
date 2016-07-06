@@ -44,10 +44,6 @@ public class MakeADate_SearchResults extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_make_adate__search_results);
 
-        //dates = (ArrayList<MakeDate>)((MainActivityTabHost) getParent()).baseBundle.getSerializable("makeadate_search_result");
-
-        //sortAndDelete();
-
         dates_list = new ArrayList<MakeDate>(0);
 
         RecyclerView rv = (RecyclerView) findViewById(R.id.makedate_searchresults);

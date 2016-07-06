@@ -45,9 +45,6 @@ public class Offer_Overview extends AppCompatActivity {
 
         mTabHost = ((TabHost)getParent().findViewById(R.id.tabHost));
 
-        ((MainActivityTabHost) getParent()).baseBundle.putSerializable("tickets_offerdetail", tickets);
-        ((MainActivityTabHost) getParent()).baseBundle.putSerializable("tickets_offerdetail_keys", tickets_keys);
-
         final RecyclerView rv = (RecyclerView) findViewById(R.id.offeroverview_list);
         LinearLayoutManager llm = new LinearLayoutManager(this);
         rv.setLayoutManager(llm);
@@ -166,10 +163,6 @@ public class Offer_Overview extends AppCompatActivity {
      * @see Ticket
      */
     public void deleteTicket(String FirebaseTicketKey){
-        //int ticketPosition = tickets_keys.indexOf(FirebaseTicketKey);
-        //tickets_keys.remove(ticketPosition);
-        //tickets.remove(ticketPosition);
-        //(((RecyclerView) findViewById(R.id.offeroverview_list)).getAdapter()).notifyDataSetChanged();
         mDatabase.child("tickets").child(FirebaseTicketKey).removeValue();
 
     }
