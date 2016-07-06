@@ -34,6 +34,7 @@ import static org.hamcrest.Matchers.is;
 @RunWith(AndroidJUnit4.class)
 public class SearchTicketAndSendMessageIntegrationTest {
 
+    //to run this test, you need to logout first
     String mTestLoginMail;
     String mTestLoginPassword;
     String tabetest = "tickets";
@@ -52,7 +53,7 @@ public class SearchTicketAndSendMessageIntegrationTest {
 
         mTestLoginMail="petra.tester@home.comm";
         mTestLoginPassword="1234abc";
-        testLocation = "Berlin";
+        testLocation = "Mannheim";
         testEvent = "Cinema";
         lovelyMessage = "Ich will das Ticket.";
     }
