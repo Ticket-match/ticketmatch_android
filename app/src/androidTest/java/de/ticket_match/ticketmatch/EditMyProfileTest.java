@@ -48,8 +48,8 @@ public class EditMyProfileTest {
     public void initValidString() {
         // Specify a valid string.
 
-        mTestFirstName = "Maxi";
-        mTestLastName = "Musterfrauchen";
+        mTestFirstName = "Lischen";
+        mTestLastName = "Mueller";
         mTestLocation = "Heidelberg";
         year = 1993;
         month = 12;
