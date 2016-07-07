@@ -10,6 +10,7 @@ import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.media.ExifInterface;
 import android.net.Uri;
+import android.os.Build;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -257,29 +258,33 @@ public class MainActivityTabHost extends AppCompatActivity {
                     Bitmap bm_upload = MediaStore.Images.Media.getBitmap(getApplicationContext().getContentResolver(), data.getData());
 
                     // rotation of image (samsung device bug)
-                    String[] proj = { MediaStore.Images.Media.DATA };
-                    CursorLoader loader = new CursorLoader(this, data.getData(), proj, null, null, null);
-                    Cursor cursor = loader.loadInBackground();
-                    int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-                    cursor.moveToFirst();
-                    String result = cursor.getString(column_index);
-                    cursor.close();
-                    ExifInterface exif = new ExifInterface(result);
-                    int rotation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
-                    int rotationInDegrees = 0;
-                    if (rotation == ExifInterface.ORIENTATION_ROTATE_90) rotationInDegrees = 90;
-                    else if (rotation == ExifInterface.ORIENTATION_ROTATE_180) rotationInDegrees = 180;
-                    else if (rotation == ExifInterface.ORIENTATION_ROTATE_270) rotationInDegrees = 270;
-                    Matrix matrix = new Matrix();
-                    if (rotation != 0f) {
-                        matrix.preRotate(rotationInDegrees);
+                    if (Build.MANUFACTURER.equals("samsung")) {
+                        String[] proj = {MediaStore.Images.Media.DATA};
+                        CursorLoader loader = new CursorLoader(this, data.getData(), proj, null, null, null);
+                        Cursor cursor = loader.loadInBackground();
+                        int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+                        cursor.moveToFirst();
+                        String result = cursor.getString(column_index);
+                        cursor.close();
+                        ExifInterface exif = new ExifInterface(result);
+                        int rotation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+                        int rotationInDegrees = 0;
+                        if (rotation == ExifInterface.ORIENTATION_ROTATE_90) rotationInDegrees = 90;
+                        else if (rotation == ExifInterface.ORIENTATION_ROTATE_180)
+                            rotationInDegrees = 180;
+                        else if (rotation == ExifInterface.ORIENTATION_ROTATE_270)
+                            rotationInDegrees = 270;
+                        Matrix matrix = new Matrix();
+                        if (rotation != 0f) {
+                            matrix.preRotate(rotationInDegrees);
+                        }
+                        bm_upload = Bitmap.createBitmap(bm_upload, 0, 0, bm_upload.getWidth(), bm_upload.getHeight(), matrix, true);
                     }
-                    Bitmap adjustedBitmap = Bitmap.createBitmap(bm_upload, 0, 0, bm_upload.getWidth(), bm_upload.getHeight(), matrix, true);
 
-                    ((ImageButton)th.getCurrentView().findViewById(R.id.myprofile_image)).setImageBitmap(adjustedBitmap);
+                    ((ImageButton)th.getCurrentView().findViewById(R.id.myprofile_image)).setImageBitmap(bm_upload);
 
                     ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-                    adjustedBitmap.compress(Bitmap.CompressFormat.JPEG, 50, bytes);
+                    bm_upload.compress(Bitmap.CompressFormat.JPEG, 50, bytes);
                     byte [] ba = bytes.toByteArray();
                     mStorage.child("images/"+FirebaseAuth.getInstance().getCurrentUser().getUid()+".jpg").putBytes(ba);
                 } catch (IOException e) {
