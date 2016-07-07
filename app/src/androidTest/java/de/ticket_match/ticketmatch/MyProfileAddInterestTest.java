@@ -17,7 +17,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 /**
  * Created by D060644 on 6/21/2016.
  *
- * INFO: Please be logged in before testing. Please make sure that interest "Blablabla" does not already exist.
+ * INFO: Please be logged in before testing. Please make sure that no interest exist.
  */
 public class MyProfileAddInterestTest {
 

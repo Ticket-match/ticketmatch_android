@@ -42,19 +42,18 @@ public class EditMyProfileTest {
     String gender;
 
     @Rule
-    public ActivityTestRule<MainActivityTabHost> mActivityRule = new ActivityTestRule<MainActivityTabHost>(
-            MainActivityTabHost.class);
+    public ActivityTestRule<MainActivity> mActivityRule = new ActivityTestRule<>(MainActivity.class);
 
     @Before
     public void initValidString() {
         // Specify a valid string.
 
-        mTestFirstName = "Maxi";
-        mTestLastName = "Musterfrauchen";
+        mTestFirstName = "Lischen";
+        mTestLastName = "Mueller";
         mTestLocation = "Heidelberg";
-        year = 1999;
-        month = 9;
-        day = 29;
+        year = 1993;
+        month = 12;
+        day = 13;
         gender = "Female";
     }
 
@@ -65,11 +64,10 @@ public class EditMyProfileTest {
 
         // Open Edit Profile Pageb by Clicking name
        // onView(withId(R.id.myprofile_name)).perform(click());
-       // Thread.sleep(5000);
-
-
+        Thread.sleep(5000);
         //Open Edit Profile Page by Clicking Edit Profile
         onView(withId(R.id.overflow_button)).perform(click());
+        Thread.sleep(100);
         onView(withText("Edit profile")).perform(click());
         Thread.sleep(5000);
 

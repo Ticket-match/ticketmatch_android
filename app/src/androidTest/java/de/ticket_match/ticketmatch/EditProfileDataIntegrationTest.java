@@ -52,10 +52,10 @@ public class EditProfileDataIntegrationTest {
     @Before
     public void initValidString() {
         // Specify a valid string.
-        mTestLoginMail = "m@m.com";
-        mTestLoginPassword = "maxmax";
-        mTestFirstName = "Maxi";
-        mTestLastName = "Musterfrauchen";
+        mTestLoginMail = "lisa@mail.com";
+        mTestLoginPassword = "123456";
+        mTestFirstName = "Lischen";
+        mTestLastName = "Mueller";
         mTestLocation = "Heidelberg";
         year = 1999;
         month = 9;

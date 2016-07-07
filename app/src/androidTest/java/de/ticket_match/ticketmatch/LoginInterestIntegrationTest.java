@@ -28,6 +28,10 @@ public class LoginInterestIntegrationTest {
     String mTestInterest;
     String mTestInterest2;
     String mTestInterest3;
+    String mTestInterest4;
+    String mTestInterest5;
+    String mTestInterest6;
+
 
     @Rule
     public ActivityTestRule<MainActivity> mActivityRule = new ActivityTestRule<MainActivity>(
@@ -39,11 +43,15 @@ public class LoginInterestIntegrationTest {
     public void initValidString() {
         // Specify a valid string.
 
-        mTestLoginMail = "m@m.com";
-        mTestLoginPassword = "maxmax";
+        mTestLoginMail = "lisa@mail.com";
+        mTestLoginPassword = "123456";
         mTestInterest = "Running";
         mTestInterest2 = "Tennis";
         mTestInterest3 = "Cinema";
+        mTestInterest4 = "Fitness";
+        mTestInterest5 = "Cooking";
+        mTestInterest6 = "Reading";
+
     }
 
     @Test
@@ -86,6 +94,21 @@ public class LoginInterestIntegrationTest {
         onView(withId(R.id.btn_newinterest))
                 .perform(click());
         Thread.sleep(500);
+        onView(withId(R.id.newinterest_text))
+                .perform(typeText(mTestInterest4)).perform(closeSoftKeyboard());
+        onView(withId(R.id.btn_newinterest))
+                .perform(click());
+        Thread.sleep(500);
+        onView(withId(R.id.newinterest_text))
+                .perform(typeText(mTestInterest5)).perform(closeSoftKeyboard());
+        onView(withId(R.id.btn_newinterest))
+                .perform(click());
+        Thread.sleep(500);
+        onView(withId(R.id.newinterest_text))
+                .perform(typeText(mTestInterest6)).perform(closeSoftKeyboard());
+        onView(withId(R.id.btn_newinterest))
+                .perform(click());
+        Thread.sleep(500);
 
 // Delete Interest
         onData(hasToString(mTestInterest))
@@ -101,7 +124,10 @@ public class LoginInterestIntegrationTest {
 
 //CHECK
 
-        onView(withId(R.id.listitem_text)).check(matches(withText(mTestInterest3)));
+//        onView(withId(R.id.listitem_text)).check(matches(withText(mTestInterest3)));
+//        onView(withId(R.id.listitem_text)).check(matches(withText(mTestInterest4)));
+//        onView(withId(R.id.listitem_text)).check(matches(withText(mTestInterest5)));
+//        onView(withId(R.id.listitem_text)).check(matches(withText(mTestInterest6)));
 
 //ACT
 //Logout

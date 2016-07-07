@@ -60,7 +60,7 @@ public class RegisterTest {
         mTestEmail = "hans.hm36776@mail.com";
         mTestPassword = "hansmueller";
         mTestLocation = "Mannheim";
-        year = 1998;
+        year = 2015;
         month = 2;
         day = 16;
         gender = "Male";
@@ -98,6 +98,7 @@ public class RegisterTest {
         onView(withId(R.id.register_birthdate)).perform(click());
         onView(withClassName(Matchers.equalTo(DatePicker.class.getName()))).perform(PickerActions.setDate(year, month, day));
         onView(withText("OK")).perform(click());
+        Thread.sleep(50);
 
                 //Spinner Value (Gender)
         onView(withId(R.id.register_gender)).perform(ViewActions.scrollTo()).check(matches(isDisplayed()));
@@ -119,7 +120,7 @@ public class RegisterTest {
         onView(withId(R.id.register_password))
                 .check(matches(withText(mTestPassword)));
 
-        onView(withId(R.id.register_birthdate)).check(matches(withText(day + "." + month + "." + year)));
+        onView(withId(R.id.register_birthdate)).check(matches(withText(day + ".0" + month + "." + year)));
 
         onView(withId(R.id.register_gender))
                 .check(matches(withSpinnerText(containsString(gender))));

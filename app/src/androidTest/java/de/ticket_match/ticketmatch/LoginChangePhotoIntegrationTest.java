@@ -34,8 +34,8 @@ public class LoginChangePhotoIntegrationTest {
     public void initValidString() {
         // Specify a valid string.
 
-        mTestLoginMail = "m@m.com";
-        mTestLoginPassword = "maxmax";
+        mTestLoginMail = "lisa@mail.com";
+        mTestLoginPassword = "123456";
     }
 
     @Test

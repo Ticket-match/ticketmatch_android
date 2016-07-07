@@ -31,7 +31,7 @@ public class ForgotAccountTest {
     @Before
     public void initValidString() {
         // Specify a valid string
-        mTestForgotMail = "m@m.com";
+        mTestForgotMail = "lisa@mail.com";
     }
 
     @Test
